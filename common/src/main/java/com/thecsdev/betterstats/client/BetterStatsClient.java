@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.client;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
+import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -18,6 +19,9 @@ public class BetterStatsClient extends BetterStats
 	// ==================================================
 	public BetterStatsClient()
 	{
+		//register features
+		MenubarItem.bootstrap();
+
 		//modify the "Statistics" button on the game's pause screen
 		registerVanillaButtonMod(PauseScreen.class, translatable("gui.stats"), (button, vanillaOnClick) -> {
 			//if the user is holding down "Shift", run vanilla button functionality

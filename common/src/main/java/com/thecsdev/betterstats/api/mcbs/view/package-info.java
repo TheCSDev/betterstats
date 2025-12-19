@@ -10,9 +10,10 @@
  * to access these APIs from a server-side (be it a dedicated or an integrated server)! Use the game
  * client's render thread.
  *
- * @deprecated Moved to {@code com.thecsdev.betterstats.api.client.gui}
  * @see com.thecsdev.betterstats.api.mcbs
- * @see com.thecsdev.betterstats.api.client.gui.McbsEditorGUI
  */
-@Deprecated(forRemoval = true)
+@Environment(EnvType.CLIENT)
 package com.thecsdev.betterstats.api.mcbs.view;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;

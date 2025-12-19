@@ -1,7 +1,7 @@
 package com.thecsdev.betterstats.api.client.gui.screen;
 
 import com.thecsdev.betterstats.BetterStats;
-import com.thecsdev.betterstats.api.client.gui.statsview.StatsViewUtils;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.common.math.Bounds2i;
@@ -242,7 +242,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 							.append(BetterStatsConfigScreen.this.titleProperty().get()),
 					WindowElement.class);
 			closeOperationProperty().set(CloseOperation.CLOSE_SCREEN, WindowElement.class);
-			backgroundColorProperty().set(0xCD1D1D1D, WindowElement.class);
+			backgroundColorProperty().set(0xEF1D1D1D, WindowElement.class);
 		}
 		// ==================================================
 		protected final @Override void initBodyCallback(@NotNull TElement body)

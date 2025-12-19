@@ -1,11 +1,13 @@
-package com.thecsdev.betterstats.api.client.gui.statsview;
+package com.thecsdev.betterstats.api.mcbs.view.statsview;
 
-import com.thecsdev.betterstats.api.client.gui.McbsEditorGUI;
+import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
 import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.common.util.collections.GenericProperties;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +23,7 @@ import java.io.Serial;
  * of statistics views. It is the primary thing responsible for constructing GUI
  * interfaces for statistics.
  */
+@Environment(EnvType.CLIENT)
 public abstract class StatsView implements TDropdownWidget.Entry
 {
 	// ================================================== ==================================================

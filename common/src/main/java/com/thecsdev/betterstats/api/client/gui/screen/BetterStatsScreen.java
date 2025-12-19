@@ -1,6 +1,6 @@
 package com.thecsdev.betterstats.api.client.gui.screen;
 
-import com.thecsdev.betterstats.api.client.gui.McbsEditorGUI;
+import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;

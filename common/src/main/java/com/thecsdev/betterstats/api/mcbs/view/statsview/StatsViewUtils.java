@@ -1,11 +1,13 @@
-package com.thecsdev.betterstats.api.client.gui.statsview;
+package com.thecsdev.betterstats.api.mcbs.view.statsview;
 
-import com.thecsdev.betterstats.api.client.gui.McbsEditorGUI;
+import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import java.util.Objects;
 /**
  * Utilities for initializing {@link StatsView} GUI interfaces.
  */
+@Environment(EnvType.CLIENT)
 public final class StatsViewUtils
 {
 	// ==================================================

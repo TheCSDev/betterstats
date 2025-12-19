@@ -1,7 +1,8 @@
 package com.thecsdev.betterstats.api.client.registry;
 
 import com.thecsdev.betterstats.BetterStats;
-import com.thecsdev.betterstats.api.client.gui.statsview.StatsView;
+import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,14 @@ public class BClientRegistries
 	 * {@link Map.Entry#getKey()} = ID of registered feature<br>
 	 * {@link Map.Entry#getValue()} = Registered {@link NotNull} {@link StatsView}
 	 */
-	public static final Map<@NotNull Identifier, @NotNull StatsView> STATS_TAB = new LinkedHashMap<>();
+	public static final Map<@NotNull Identifier, @NotNull StatsView> STATS_VIEW = new LinkedHashMap<>();
+
+	/**
+	 * {@link Map} of registered {@link MenubarItem}s.
+	 * <p>
+	 * {@link Map.Entry#getKey()} = ID of registered feature<br>
+	 * {@link Map.Entry#getValue()} = Registered {@link NotNull} {@link MenubarItem}
+	 */
+	public static final Map<@NotNull Identifier, @NotNull MenubarItem> MENUBAR_ITEM = new LinkedHashMap<>();
 	// ==================================================
 }

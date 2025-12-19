@@ -1,10 +1,11 @@
-package com.thecsdev.betterstats.api.client.gui;
+package com.thecsdev.betterstats.api.mcbs.view;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsConfigScreen;
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
-import com.thecsdev.betterstats.api.client.gui.statsview.StatsView;
+import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.betterstats.resources.BSSTex;
@@ -19,17 +20,22 @@ import com.thecsdev.commonmc.api.client.gui.screen.TScreen;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.CrashReport;
+import net.minecraft.ReportedException;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 /**
  * {@link TElement} implementation that holds all of {@link BetterStatsScreen}'s
  * graphical user interface.
  */
+@Environment(EnvType.CLIENT)
 public final class McbsEditorGUI extends TElement
 {
 	// ================================================== ==================================================
@@ -38,7 +44,7 @@ public final class McbsEditorGUI extends TElement
 	private final @NotNull McbsEditor mcbsEditor;
 	// ==================================================
 	public McbsEditorGUI(@NotNull McbsEditor mcbsEditor) throws NullPointerException {
-		this.mcbsEditor = Objects.requireNonNull(mcbsEditor);
+		this.mcbsEditor = requireNonNull(mcbsEditor);
 	}
 	// ==================================================
 	/**
@@ -49,7 +55,7 @@ public final class McbsEditorGUI extends TElement
 	/**
 	 * Returns the current {@link McbsEditorTab} being edited in this GUI.
 	 */
-	public final @Nullable McbsEditorTab getCurrentMcbsFile() { return this.mcbsEditor.getCurrentTab(); }
+	public final @Nullable McbsEditorTab getCurrentTab() { return this.mcbsEditor.getCurrentTab(); }
 	// ==================================================
 	protected final @Override void initCallback()
 	{
@@ -81,7 +87,7 @@ public final class McbsEditorGUI extends TElement
 	 * featuring controls and options for the user to interact with.
 	 */
 	@ApiStatus.Internal
-	private static final class MenubarPanel extends TElement
+	private final class MenubarPanel extends TElement
 	{
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
@@ -98,12 +104,48 @@ public final class McbsEditorGUI extends TElement
 			//create and add the panel where the buttons will be placed
 			final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
 			panel.setBounds(getBounds().add(1, 1, -2, -2));
+			panel.scrollPaddingProperty().set(0, MenubarPanel.class);
 			add(panel);
 
 			//initialize the menubar buttons
-			//FIXME - Implement this GUI
+			for(final var item : BClientRegistries.MENUBAR_ITEM.entrySet())
+			{
+				//attempt to initialize the gui for a menubar item
+				try {
+					//current panel content bounding box
+					final var pcbb = panel.getContentBounds();
+					//the label
+					final var label = requireNonNull(
+							item.getValue().getDisplayName(), "Missing display name");
+					//the button
+					final var button = new Button();
+					button.getLabel().setText(label);
+					button.setBounds(
+							pcbb.endX, pcbb.y,
+							button.getLabel().fontProperty().get().width(label) + 10,
+							panel.getBounds().height);
+					button.contextMenuProperty().set(
+							__ -> requireNonNull(
+									item.getValue().createContextMenu(
+											requireNonNull(__.getClient(), "Missing 'client' instance"),
+											McbsEditorGUI.this.mcbsEditor),
+									"Menubar item failed to produce a context menu, ID " + item.getKey()),
+							MenubarPanel.class);
+					button.eClicked.register(TElement::showContextMenu);
+					panel.add(button);
+				}
+				//hold menubar items accountable for failures
+				catch(Exception e) {
+					throw new ReportedException(new CrashReport(
+							"Something went wrong creating menubar item ID " + item.getKey(),
+							e));
+				}
+			}
 		}
 		// ==================================================
+		/**
+		 * {@link TButtonWidget} implementation specifically for menubar items.
+		 */
 		private static final class Button extends TButtonWidget.Transparent {
 			protected final @Override void initCallback() {
 				getLabel().setBounds(getBounds());
@@ -169,8 +211,8 @@ public final class McbsEditorGUI extends TElement
 		private final void initGui(@Nullable McbsEditorTab tab, @Nullable StatsView view)
 		{
 			//not null argument requirements
-			Objects.requireNonNull(tab);
-			Objects.requireNonNull(view);
+			requireNonNull(tab);
+			requireNonNull(view);
 
 			//initialize the panel
 			final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
@@ -265,8 +307,8 @@ public final class McbsEditorGUI extends TElement
 		private final void initGui(@NotNull McbsEditorTab tab, @NotNull StatsView view)
 		{
 			//not null argument requirements
-			Objects.requireNonNull(tab);
-			Objects.requireNonNull(view);
+			requireNonNull(tab);
+			requireNonNull(view);
 
 			//initialize the panel
 			final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
@@ -315,7 +357,7 @@ public final class McbsEditorGUI extends TElement
 			final var btn_settings = new TButtonWidget();
 			btn_settings.setBounds(bb.endX - 40, bb.y, 20, 20);
 			btn_settings.eClicked.register(__ -> {
-				final var client = Objects.requireNonNull(__.getClient(), "Missing 'client' instance");
+				final var client = requireNonNull(__.getClient(), "Missing 'client' instance");
 				client.setScreen(new BetterStatsConfigScreen(client.screen).getAsScreen());
 			});
 			btn_settings.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_menubar_file_settings()), NavigationPanel.class);
