@@ -15,10 +15,10 @@ public final class BSSLang
 	// ==================================================
 	private BSSLang() {}
 	// ==================================================
+	public static final MutableComponent betterstats() { return translatable("betterstats"); }
+	// ==================================================
 	public static final MutableComponent config_common_registerCommands() { return translatable("betterstats.config.common.register_commands"); }
 	public static final MutableComponent config_common_registerCommands_tooltip() { return translatable("betterstats.config.common.register_commands.tooltip"); }
-	public static final MutableComponent config_client_theme() { return translatable("betterstats.config.client.theme"); }
-	public static final MutableComponent config_client_theme_tooltip() { return translatable("betterstats.config.client.theme.tooltip"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor_tooltip() { return translatable("betterstats.config.client.gui_mobs_follow_cursor.tooltip"); }
 	// --------------------------------------------------
