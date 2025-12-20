@@ -23,6 +23,8 @@ import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TCheckboxWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
 import com.thecsdev.commonmc.resources.TCDCLang;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,7 @@ import static net.minecraft.network.chat.Component.translatable;
 /**
  * {@link TScreen} implementation featuring GUI for configuring this mod.
  */
+@Environment(EnvType.CLIENT)
 public final class BetterStatsConfigScreen extends TScreenPlus implements ILastScreenProvider
 {
 	// ================================================== ==================================================

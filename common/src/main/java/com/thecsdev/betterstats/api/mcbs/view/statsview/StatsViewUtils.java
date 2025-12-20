@@ -9,10 +9,14 @@ import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 /**
  * Utilities for initializing {@link StatsView} GUI interfaces.
@@ -27,6 +31,26 @@ public final class StatsViewUtils
 	 */
 	public static final int GAP = 3;
 	// --------------------------------------------------
+	/**
+	 * {@link StatsView.Filters} key for the "Current {@link StatsView}" filter.
+	 * <p>
+	 * <b>Filter value type:</b> {@link StatsView}
+	 */
+	public static final Identifier FID_STATSVIEW = fromNamespaceAndPath(MOD_ID, "statsview");
+
+	/**
+	 * {@link StatsView.Filters} key for the "Search..." filter.
+	 * <p>
+	 * <b>Filter value type:</b> {@link String}
+	 */
+	public static final Identifier FID_SEARCH = fromNamespaceAndPath(MOD_ID, "search_query");
+
+	/**
+	 * {@link StatsView.Filters} key for the "Show empty stats" filter.
+	 * <p>
+	 * <b>Filter value type:</b> {@link Boolean}
+	 */
+	public static final Identifier FID_EMPTYSTATS = fromNamespaceAndPath(MOD_ID, "show_empty_stats");
 	// ==================================================
 	private StatsViewUtils() {}
 	// ==================================================

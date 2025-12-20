@@ -3,6 +3,7 @@ package com.thecsdev.betterstats.client;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -21,6 +22,7 @@ public class BetterStatsClient extends BetterStats
 	{
 		//register features
 		MenubarItem.bootstrap();
+		StatsView.bootstrap();
 
 		//modify the "Statistics" button on the game's pause screen
 		registerVanillaButtonMod(PauseScreen.class, translatable("gui.stats"), (button, vanillaOnClick) -> {
@@ -33,27 +35,5 @@ public class BetterStatsClient extends BetterStats
 			}
 		});
 	}
-	// ==================================================
-	/*
-	 * Opens a {@link ConfirmLinkScreen} that asks the user whether
-	 * they want to open the specified URI.
-	 * @param uri The URI to show.
-	 * @param isTrusted Whether the URI is trusted.
-	 *
-	@SuppressWarnings("SameParameterValue")
-	private static final void showUrlScreen(@NotNull String uri, boolean isTrusted)
-	{
-		//argument validity assertion
-		Objects.requireNonNull(uri);
-		//obtain client variables stuff
-		final var client     = Objects.requireNonNull(Minecraft.getInstance());
-		final var lastScreen = client.screen;
-		//create and set the confirmation screen
-		final var screen     = new ConfirmLinkScreen(accepted -> {
-			if(accepted) Util.getPlatform().openUri(uri);
-			client.setScreen(lastScreen);
-		}, uri, isTrusted);
-		client.setScreen(screen);
-	}*/
 	// ==================================================
 }

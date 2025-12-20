@@ -3,6 +3,8 @@ package com.thecsdev.betterstats.api.client.registry;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +18,7 @@ import java.util.Map;
  * Note that this does not use the game's native {@link Registry} system, instead
  * relying on {@link Map}s for simplicity.
  */
+@Environment(EnvType.CLIENT)
 public class BClientRegistries
 {
 	// ==================================================

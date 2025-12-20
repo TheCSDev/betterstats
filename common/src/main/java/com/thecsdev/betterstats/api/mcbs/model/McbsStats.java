@@ -1,5 +1,7 @@
 package com.thecsdev.betterstats.api.mcbs.model;
 
+import com.thecsdev.commonmc.api.stats.IStatsProvider;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stat;
@@ -16,16 +18,21 @@ import static java.util.Objects.requireNonNull;
 /**
  * Container for holding statistics values, used by {@link McbsFile}.
  */
-public final class McbsStats
+public final class McbsStats implements IStatsProvider
 {
-	// ==================================================
+	// ================================================== ==================================================
+	//                                          McbsStats IMPLEMENTATION
+	// ================================================== ==================================================
 	private final ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> intStats = new ConcurrentHashMap<>();
+	// ==================================================
+	public McbsStats() {}
+	public McbsStats(@NotNull IStatsProvider copyFrom) { setAll(Objects.requireNonNull(copyFrom)); }
 	// ==================================================
 	/**
 	 * Returns raw direct access to the main {@link Map} that holds all
 	 * integer-based statistics values.
 	 */
-	public final @NotNull ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> getIntStats() {
+	public final @NotNull ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> getIntValues() {
 		cleanUp();
 		return this.intStats;
 	}
@@ -49,7 +56,7 @@ public final class McbsStats
 	 * @throws NullPointerException If the argument is {@code null}.
 	 * @throws IllegalStateException If a corresponding feature is not registered.
 	 */
-	public final <T> int getIntValue(@NotNull Stat<T> stat) throws NullPointerException {
+	public final @Override <T> int getIntValue(@NotNull Stat<T> stat) throws NullPointerException {
 		return getIntValue(stat.getType(), stat.getValue());
 	}
 
@@ -60,7 +67,7 @@ public final class McbsStats
 	 * @throws NullPointerException If an argument is {@code null}.
 	 * @throws IllegalStateException If a corresponding feature is not registered.
 	 */
-	public final <T> int getIntValue(@NotNull StatType<T> type, @NotNull T subject)
+	public final @Override <T> int getIntValue(@NotNull StatType<T> type, @NotNull T subject)
 			throws NullPointerException, IllegalStateException
 	{
 		//obtain id-s from registries
@@ -137,6 +144,62 @@ public final class McbsStats
 	}
 	// ==================================================
 	/**
+	 * Adds {@link Stat} entries from another {@link IStatsProvider} into this one.
+	 * <p>
+	 * If the other {@link IStatsProvider} is an {@link McbsStats} instance,
+	 * all its entries will be directly copied here. Otherwise, this method will
+	 * iterate the game's registries to query all possible {@link Stat} values
+	 * and copy non-zero values here.
+	 * <p>
+	 * This differs from {@link #setAll(IStatsProvider)} in that {@code 0} values from
+	 * the other {@link IStatsProvider} will not overwrite existing values here.
+	 * @param statsProvider The other {@link IStatsProvider}.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	@SuppressWarnings("unchecked")
+	public final void addAll(@NotNull IStatsProvider statsProvider)
+	{
+		//argument not null check
+		requireNonNull(statsProvider);
+		//handle mcbs stats providers by adding all their values here
+		if(statsProvider instanceof McbsStats other) {
+			other.forEach((statTypeId, statSubjectId, otherValue) -> {
+				final int thisValue = getIntValue(statTypeId, statSubjectId);
+				setIntValue(statTypeId, statSubjectId, thisValue + otherValue);
+			});
+			return;
+		}
+		//handle all other stat provider types by iterating game's registries
+		//and querying values manually
+		for(final var statType : (Registry<StatType<Object>>)(Object) BuiltInRegistries.STAT_TYPE) {
+			for(final var statSubject : statType.getRegistry()) {
+				//get value and add it to this mcbs stats provider
+				final int otherValue = statsProvider.getIntValue(statType, statSubject);
+				if(otherValue == 0) continue;
+				final int thisValue = getIntValue(statType, statSubject);
+				setIntValue(statType, statSubject, thisValue + otherValue);
+			}
+		}
+	}
+
+	/**
+	 * Clears all existing {@link Stat} entries and adds all entries from
+	 * another {@link IStatsProvider}.
+	 * @param statsProvider The other {@link IStatsProvider}.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final void setAll(@NotNull IStatsProvider statsProvider) throws NullPointerException {
+		requireNonNull(statsProvider);
+		clear();
+		addAll(statsProvider);
+	}
+	// ==================================================
+	/**
+	 * Clears all statistics data.
+	 */
+	public final void clear() { this.intStats.clear(); }
+
+	/**
 	 * Cleans up the statistics model by removing all entries with a value of zero.
 	 */
 	public final void cleanUp()
@@ -147,5 +210,44 @@ public final class McbsStats
 		//remove empty stat-type maps
 		this.intStats.entrySet().removeIf(e -> e.getValue().isEmpty());
 	}
-	// ==================================================
+	// --------------------------------------------------
+	/**
+	 * Iterates all integer values stored in this {@link McbsStats} instance.
+	 * Note that this does not offer value manipulation capabilities.
+	 * @param consumer The consumer that will consume each value.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final void forEach(@NotNull McbsStats.IntValueConsumer consumer) throws NullPointerException
+	{
+		requireNonNull(consumer);
+		cleanUp();
+		for(final var statTypeEntry : this.intStats.entrySet()) {
+			final var statTypeId = statTypeEntry.getKey();
+			for(final var statSubjectEntry : statTypeEntry.getValue().entrySet()) {
+				final var statSubjectId = statSubjectEntry.getKey();
+				final int value = statSubjectEntry.getValue();
+				consumer.accept(statTypeId, statSubjectId, value);
+			}
+		}
+	}
+	// ================================================== ==================================================
+	//                                   IntEntryConsumer IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * {@link FunctionalInterface} for consuming integer values stored in an
+	 * {@link McbsStats} instance.
+	 * @see #forEach(IntValueConsumer)
+	 */
+	public static @FunctionalInterface interface IntValueConsumer
+	{
+		/**
+		 * Consumes a single {@link Stat} entry.
+		 * @param statType The {@link StatType}'s unique identifier.
+		 * @param statSubject The {@link Stat} subject's unique identifier.
+		 * @param value The {@link Stat}'s value.
+		 * @throws NullPointerException If an argument is {@code null}.
+		 */
+		void accept(@NotNull Identifier statType, @NotNull Identifier statSubject, int value);
+	}
+	// ================================================== ==================================================
 }

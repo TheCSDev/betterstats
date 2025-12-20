@@ -1,15 +1,18 @@
-package com.thecsdev.betterstats.api.mcbs.view.menubar;
+package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsConfigScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
+import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.resources.TCDCSprites;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -17,14 +20,15 @@ import java.util.Optional;
 import static com.thecsdev.commonmc.resources.TComponent.air;
 import static com.thecsdev.commonmc.resources.TComponent.gui;
 
-/*
- * [File] [View] [About]
- *   ^
+/**
+ * {@link MenubarItem} implementation for "File".
  */
-final class MiFile extends MenubarItem
+@ApiStatus.Internal
+@Environment(EnvType.CLIENT)
+public final class BMenubarItemFile extends MenubarItem
 {
 	// ==================================================
-	public static final MiFile INSTANCE = new MiFile();
+	public static final BMenubarItemFile INSTANCE = new BMenubarItemFile();
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_file(); }
 	// --------------------------------------------------
@@ -34,10 +38,10 @@ final class MiFile extends MenubarItem
 		return new TContextMenu.Builder(client)
 				.addButton(
 						gui(TCDCSprites.gui_icon_fsFolder()).append(" ").append(BSSLang.gui_menubar_file_open()),
-						__ -> { throw new NotImplementedException("I forgot to implement this"); })
+						__ -> { throw new Error("I forgot to implement this"); })
 				.addButton(
 						air().append(" ").append(BSSLang.gui_menubar_file_saveAs()),
-						__ -> { throw new NotImplementedException("I forgot to implement this"); })
+						__ -> { throw new Error("I forgot to implement this"); })
 				.addSeparator()
 				.addButton(
 						gui(BSSSprites.gui_icon_settings()).append(" ").append(BSSLang.gui_menubar_file_settings()),

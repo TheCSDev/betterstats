@@ -1,10 +1,14 @@
 package com.thecsdev.betterstats.api.mcbs.controller;
 
-import com.thecsdev.common.properties.ObjectProperty;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
+
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * This {@link Class} functions as the central controller in the MVC architecture,
@@ -15,13 +19,100 @@ import java.util.Set;
 public final class McbsEditor
 {
 	// ==================================================
-	private final Set<McbsEditorTab>            tabs       = new LinkedHashSet<>();
-	private final ObjectProperty<McbsEditorTab> currentTab = new ObjectProperty<>();
+	private final @NotNull  Set<McbsEditorTab> _tabs          = new LinkedHashSet<>();
+	private final @NotNull  Set<McbsEditorTab> _tabsImmutable = unmodifiableSet(this._tabs);
+	private       @Nullable McbsEditorTab      _currentTab    = null;
+	// --------------------------------------------------
+	private long _editCount = Long.MIN_VALUE; //value increases whenever something changes
+	// ==================================================
+	public final @Override int hashCode() { return super.hashCode(); }
+	public final @Override boolean equals(Object obj) { return super.equals(obj); }
 	// ==================================================
 	/**
-	 * Returns the current {@link McbsEditorTab} being edited by this
-	 * {@link McbsEditor}.
+	 * Returns the total number of edits made to this {@link McbsEditor}.
+	 * This value increments each time a change occurs within this editor,
+	 * such as adding/removing tabs or modifying tab content.
+	 * <p>
+	 * This can be used to track changes and determine if this editor's state
+	 * has been modified since it was last checked.
 	 */
-	public final @Nullable McbsEditorTab getCurrentTab() { return this.currentTab.get(); }
+	public final long getEditCount() { return this._editCount; }
+
+	/**
+	 * Marks this {@link McbsEditor} as "dirty" by incrementing the edit count.
+	 * <p>
+	 * This method is automatically invoked whenever a modification occurs within
+	 * this editor. It is generally not necessary to call this method manually
+	 * unless you have made a direct change that was not performed through this
+	 * {@link McbsEditor} interface.
+	 * @see #getEditCount()
+	 */
+	public final void markAsDirty() { this._editCount++; }
+	// ==================================================
+	/**
+	 * Returns an unmodifiable {@link Set} containing all the {@link McbsEditorTab}
+	 * instances that are currently open within this editor.
+	 * <p>
+	 * To add or remove {@link McbsEditorTab}s, please refer to "See Also".
+	 * @see Collections#unmodifiableSet(Set)
+	 * @see #addTab(McbsEditorTab)
+	 * @see #removeTab(McbsEditorTab)
+	 */
+	public final Set<McbsEditorTab> getTabsReadOnly() { return this._tabsImmutable; }
+
+	/**
+	 * Attempts to add the specified {@link McbsEditorTab} within this editor.
+	 * @param tab The {@link McbsEditorTab} to be opened.
+	 * @return {@code true} if the tab was successfully opened; {@code false} if
+	 *         the tab could not be added.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final boolean addTab(@NotNull McbsEditorTab tab) throws NullPointerException
+	{
+		Objects.requireNonNull(tab);
+		//attempt to add, return false if adding fails
+		if(!this._tabs.add(tab)) return false;
+		//mark as dirty and return
+		markAsDirty();
+		return true;
+	}
+
+	/**
+	 * Attempts to remove the specified {@link McbsEditorTab} from this editor.
+	 * @param tab The {@link McbsEditorTab} to be removed.
+	 * @return {@code true} if the tab was successfully removed; {@code false} if
+	 *         the tab could not be removed.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final boolean removeTab(@NotNull McbsEditorTab tab) throws NullPointerException
+	{
+		Objects.requireNonNull(tab);
+		//attempt to remove, return false if removing fails
+		if(!this._tabs.remove(tab)) return false;
+		//if the removed tab was the current tab, clear the current tab
+		if(tab == this._currentTab) this._currentTab = null;
+		//mark as dirty and return
+		markAsDirty();
+		return true;
+	}
+	// ==================================================
+	/**
+	 * Returns the current {@link McbsEditorTab} being edited by this {@link McbsEditor}.
+	 */
+	public final @Nullable McbsEditorTab getCurrentTab() { return this._currentTab; }
+
+	/**
+	 * Sets the current {@link McbsEditorTab} being edited by this {@link McbsEditor}.
+	 * @param tab The {@link McbsEditorTab} to set as the current tab. Must be
+	 *            contained by {@link #getTabsReadOnly()}.
+	 */
+	public final void setCurrentTab(@Nullable McbsEditorTab tab)
+	{
+		//cannot set if already set
+		if(tab == this._currentTab) return;
+		//set the tab and mark as dirty
+		this._currentTab = this._tabs.contains(tab) ? tab : null;
+		markAsDirty();
+	}
 	// ==================================================
 }

@@ -1,10 +1,16 @@
 package com.thecsdev.betterstats.api.client.gui.screen;
 
-import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
+import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
+import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreenPlus;
+import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
+import com.thecsdev.commonmc.api.stats.IStatsProvider;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -16,19 +22,31 @@ import java.util.Objects;
  * The "Better Statistics Screen" itself.
  * The improved and more useful "Statistics" screen.
  */
+@Environment(EnvType.CLIENT)
 public final class BetterStatsScreen extends TScreenPlus implements ILastScreenProvider
 {
 	// ==================================================
 	private final @Nullable Screen     lastScreen;
 	private final @NotNull  McbsEditor mcbsEditor;
 	// ==================================================
-	public BetterStatsScreen(@Nullable Screen lastScreen) {
-		this(lastScreen, new McbsEditor());
-	}
 	public BetterStatsScreen(@Nullable Screen lastScreen, @NotNull McbsEditor mcbsEditor) throws NullPointerException {
 		super(Component.translatable("gui.stats"));
 		this.lastScreen = lastScreen;
 		this.mcbsEditor = Objects.requireNonNull(mcbsEditor);
+	}
+	public BetterStatsScreen(@Nullable Screen lastScreen, @NotNull IStatsProvider statsProvider) {
+		//initialize this object
+		this(lastScreen, new McbsEditor());
+		//create a fresh new mcbbs file instance
+		final var mcbsFile = new McbsFile();
+		mcbsFile.getStats().setAll(Objects.requireNonNull(statsProvider));
+		//create a new editor tab for the new mcbs file, add it, and set it as current
+		final var editorTab = new McbsEditorTab(mcbsFile);
+		this.mcbsEditor.addTab(editorTab);
+		this.mcbsEditor.setCurrentTab(editorTab);
+	}
+	public BetterStatsScreen(@Nullable Screen lastScreen) {
+		this(lastScreen, LocalPlayerStatsProvider.ofCurrentLocalPlayer());
 	}
 	// ==================================================
 	/**

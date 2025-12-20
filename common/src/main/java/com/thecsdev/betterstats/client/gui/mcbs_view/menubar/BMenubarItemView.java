@@ -1,30 +1,35 @@
-package com.thecsdev.betterstats.api.mcbs.view.menubar;
+package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
+import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.achievement.StatsScreen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resources.TComponent.gui;
 
-/*
- * [File] [View] [About]
- *          ^
+/**
+ * {@link MenubarItem} implementation for "View".
  */
-final class MiView extends MenubarItem
+@ApiStatus.Internal
+@Environment(EnvType.CLIENT)
+public final class BMenubarItemView extends MenubarItem
 {
 	// ==================================================
-	public static final MiView INSTANCE = new MiView();
+	public static final BMenubarItemView INSTANCE = new BMenubarItemView();
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_view(); }
 	// --------------------------------------------------
@@ -52,19 +57,29 @@ final class MiView extends MenubarItem
 	 * {@link StatsView}s.
 	 * @param client The {@link Minecraft} instance the GUI belongs to.
 	 * @param mcbsEditor The {@link McbsEditorGUI}'s {@link McbsEditor} instance.
+	 * @throws NullPointerException If an argument is {@code null}.
 	 */
 	private static final @ApiStatus.Internal TContextMenu menu_view_tab(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
+			throws NullPointerException
 	{
+		//make sure arguments aren't null for some reason
+		Objects.requireNonNull(client);
+		Objects.requireNonNull(mcbsEditor);
+
 		//create the builder
 		final var builder = new TContextMenu.Builder(Objects.requireNonNull(client));
 		//iterate all registered stats tabs and add a button for each
-		for(final var mapEntry : BClientRegistries.STATS_VIEW.entrySet()) {
-			final var tab = mapEntry.getValue();
-			builder.addButton(tab.getDisplayName(), __ -> {
-				throw new NotImplementedException("I forgot to implement this.");
+		for(final var statsViewEntry : BClientRegistries.STATS_VIEW.entrySet()) {
+			final var statsView = statsViewEntry.getValue();
+			builder.addButton(statsView.getDisplayName(), __ -> {
+				//change the editor current tab's stats view
+				final @Nullable var editorTab = mcbsEditor.getCurrentTab();
+				if(editorTab == null) return;
+				editorTab.setCurrentView(statsView);
 			});
 		}
+
 		//build and return the built context menu
 		return builder.build();
 	}

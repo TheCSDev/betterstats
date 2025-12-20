@@ -3,13 +3,15 @@ package com.thecsdev.betterstats.api.mcbs.view.menubar;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
+import com.thecsdev.betterstats.client.gui.mcbs_view.menubar.BMenubarItemAbout;
+import com.thecsdev.betterstats.client.gui.mcbs_view.menubar.BMenubarItemFile;
+import com.thecsdev.betterstats.client.gui.mcbs_view.menubar.BMenubarItemView;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,9 +44,9 @@ public abstract class MenubarItem implements TDropdownWidget.Entry
 	 * Registers internal {@link MenubarItem} instances.
 	 */
 	public static final @ApiStatus.Internal void bootstrap() {
-		BClientRegistries.MENUBAR_ITEM.put(fromNamespaceAndPath(MOD_ID, "file"), MiFile.INSTANCE);
-		BClientRegistries.MENUBAR_ITEM.put(fromNamespaceAndPath(MOD_ID, "view"), MiView.INSTANCE);
-		BClientRegistries.MENUBAR_ITEM.put(fromNamespaceAndPath(MOD_ID, "about"), MiAbout.INSTANCE);
+		BClientRegistries.MENUBAR_ITEM.put(fromNamespaceAndPath(MOD_ID, "file"), BMenubarItemFile.INSTANCE);
+		BClientRegistries.MENUBAR_ITEM.put(fromNamespaceAndPath(MOD_ID, "view"), BMenubarItemView.INSTANCE);
+		BClientRegistries.MENUBAR_ITEM.put(fromNamespaceAndPath(MOD_ID, "about"), BMenubarItemAbout.INSTANCE);
 	}
 	// ==================================================
 }

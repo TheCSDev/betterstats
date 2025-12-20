@@ -1,15 +1,19 @@
-package com.thecsdev.betterstats.api.mcbs.view.menubar;
+package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
+import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -18,14 +22,15 @@ import static com.thecsdev.commonmc.resources.TComponent.*;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
-/*
- * [File] [View] [About]
- *                  ^
+/**
+ * {@link MenubarItem} implementation for "About".
  */
-final class MiAbout extends MenubarItem
+@ApiStatus.Internal
+@Environment(EnvType.CLIENT)
+public final class BMenubarItemAbout extends MenubarItem
 {
 	// ==================================================
-	public static final MiAbout INSTANCE = new MiAbout();
+	public static final BMenubarItemAbout INSTANCE = new BMenubarItemAbout();
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_about(); }
 	// --------------------------------------------------
@@ -54,20 +59,24 @@ final class MiAbout extends MenubarItem
 				.build();
 	}
 	// ==================================================
-	/*
+	/**
 	 * Opens a {@link ConfirmLinkScreen} that asks the user whether
 	 * they want to open the specified URI.
 	 * @param uri The URI to show.
 	 * @param isTrusted Whether the URI is trusted.
+	 * @throws NullPointerException If the argument is {@code null}.
 	 */
 	@SuppressWarnings("SameParameterValue")
 	private static final void showUrlScreen(@NotNull String uri, boolean isTrusted)
+			throws NullPointerException
 	{
 		//argument validity assertion
 		Objects.requireNonNull(uri);
+
 		//obtain client variables stuff
 		final var client     = Objects.requireNonNull(Minecraft.getInstance());
 		final var lastScreen = client.screen;
+
 		//create and set the confirmation screen
 		final var screen     = new ConfirmLinkScreen(accepted -> {
 			if(accepted) Util.getPlatform().openUri(uri);
