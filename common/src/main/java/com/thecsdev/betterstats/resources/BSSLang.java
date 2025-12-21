@@ -39,19 +39,19 @@ public final class BSSLang
 	public static final MutableComponent gui_menubar_about_sourceCode() { return translatable("betterstats.gui.menubar.about.source_code"); }
 	public static final MutableComponent gui_menubar_about_supportMe() { return translatable("betterstats.gui.menubar.about.support_me"); }
 	// --------------------------------------------------
-	public static final MutableComponent gui_statstab_filters() { return translatable("betterstats.gui.statstab.filters"); }
-	public static final MutableComponent gui_statstab_filter_selectedTab() { return translatable("betterstats.gui.statstab.filter.selected_tab"); }
-	public static final MutableComponent gui_statstab_filter_search() { return translatable("betterstats.gui.statstab.filter.search"); }
-	public static final MutableComponent gui_statstab_filter_showAllStats() { return translatable("betterstats.gui.statstab.filter.show_all_stats"); }
-	public static final MutableComponent gui_statstab_filter_sortBy() { return translatable("betterstats.gui.statstab.filter.sort_by"); }
-	public static final MutableComponent gui_statstab_filter_groupBy() { return translatable("betterstats.gui.statstab.filter.group_by"); }
-	public static final MutableComponent gui_statstab_filter_groupBy_all() { return translatable("betterstats.gui.statstab.filter.group_by.all"); }
-	public static final MutableComponent gui_statstab_filter_groupBy_mod() { return translatable("betterstats.gui.statstab.filter.group_by.mod"); }
-	public static final MutableComponent gui_statstab_filter_groupBy_mobCategory() { return translatable("betterstats.gui.statstab.filter.group_by.mob_category"); }
-	public static final MutableComponent gui_statstab_filter_groupBy_createiveModeTab() { return translatable("betterstats.gui.statstab.filter.group_by.creative_mode_tab"); }
-	public static final MutableComponent gui_statstab_filter_distanceUnit() { return translatable("betterstats.gui.statstab.filter.distance_unit"); }
-	public static final MutableComponent gui_statstab_filter_timeUnit() { return translatable("betterstats.gui.statstab.filter.time_unit"); }
-	public static final MutableComponent gui_statstab_stats_noStats() { return translatable("betterstats.gui.statstab.stats.no_stats"); }
-	public static final MutableComponent gui_statstab_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statstab.stats.ctxmenu.view_on_wiki"); }
+	public static final MutableComponent gui_statsview_filters() { return translatable("betterstats.gui.statsview.filters"); }
+	public static final MutableComponent gui_statsview_filter_selectedTab() { return translatable("betterstats.gui.statsview.filter.selected_tab"); }
+	public static final MutableComponent gui_statsview_filter_search() { return translatable("betterstats.gui.statsview.filter.search"); }
+	public static final MutableComponent gui_statsview_filter_showAllStats() { return translatable("betterstats.gui.statsview.filter.show_all_stats"); }
+	public static final MutableComponent gui_statsview_filter_sortBy() { return translatable("betterstats.gui.statsview.filter.sort_by"); }
+	public static final MutableComponent gui_statsview_filter_groupBy() { return translatable("betterstats.gui.statsview.filter.group_by"); }
+	public static final MutableComponent gui_statsview_filter_groupBy_all() { return translatable("betterstats.gui.statsview.filter.group_by.all"); }
+	public static final MutableComponent gui_statsview_filter_groupBy_mod() { return translatable("betterstats.gui.statsview.filter.group_by.mod"); }
+	public static final MutableComponent gui_statsview_filter_groupBy_mobCategory() { return translatable("betterstats.gui.statsview.filter.group_by.mob_category"); }
+	public static final MutableComponent gui_statsview_filter_groupBy_createiveModeTab() { return translatable("betterstats.gui.statsview.filter.group_by.creative_mode_tab"); }
+	public static final MutableComponent gui_statsview_filter_distanceUnit() { return translatable("betterstats.gui.statsview.filter.distance_unit"); }
+	public static final MutableComponent gui_statsview_filter_timeUnit() { return translatable("betterstats.gui.statsview.filter.time_unit"); }
+	public static final MutableComponent gui_statsview_stats_noStats() { return translatable("betterstats.gui.statsview.stats.no_stats"); }
+	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
 	// ==================================================
 }

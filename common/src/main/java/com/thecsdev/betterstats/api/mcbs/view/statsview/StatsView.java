@@ -14,11 +14,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
+import java.util.Objects;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.betterstats.api.client.registry.BClientRegistries.STATS_VIEW;
+import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.*;
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 /**
@@ -55,6 +58,8 @@ public abstract class StatsView implements TDropdownWidget.Entry
 	 */
 	public @Virtual void initFilters(@NotNull FiltersInitContext context) {
 		StatsViewUtils.initDefaultFilters(context);
+		initSearchFilter(context);
+		initShowAllStatsFilter(context);
 	}
 
 	/**
@@ -94,7 +99,7 @@ public abstract class StatsView implements TDropdownWidget.Entry
 	 * GUI is initializing. Use this to create your own stat filters GUI for
 	 * this {@link StatsView}.
 	 */
-	public static interface FiltersInitContext
+	public static @ApiStatus.NonExtendable interface FiltersInitContext
 	{
 		// ==================================================
 		/**
@@ -108,6 +113,23 @@ public abstract class StatsView implements TDropdownWidget.Entry
 		 */
 		public @NotNull StatsView.Filters getFilters();
 		// ==================================================
+		/**
+		 * Utility method for getting the value of the {@link StatsViewUtils#FID_STATSVIEW} filter.
+		 * @see #getFilters()
+		 */
+		default @ApiStatus.NonExtendable @NotNull StatsView getStatsView() {
+			return getFilters().getProperty(StatsView.class, FID_STATSVIEW, StatsView.getDefault());
+		}
+
+		/**
+		 * Utility method for setting the value of the {@link StatsViewUtils#FID_STATSVIEW} filter.
+		 * @param statsView The {@link StatsView} value to set.
+		 * @see #getFilters()
+		 */
+		default @ApiStatus.NonExtendable void setStatsView(@Nullable StatsView statsView) {
+			getFilters().setProperty(StatsView.class, FID_STATSVIEW, statsView);
+		}
+		// ==================================================
 	}
 	// ================================================== ==================================================
 	//                                   StatsInitContext IMPLEMENTATION
@@ -116,7 +138,7 @@ public abstract class StatsView implements TDropdownWidget.Entry
 	 * The initialization context for when a {@link StatsView}'s "statistics"
 	 * GUI is initializing. Use this to create your own statistics GUI.
 	 */
-	public static interface StatsInitContext
+	public static @ApiStatus.NonExtendable interface StatsInitContext
 	{
 		// ==================================================
 		/**

@@ -25,10 +25,10 @@ import static com.thecsdev.commonmc.resources.TComponent.gui;
  */
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class BMenubarItemFile extends MenubarItem
+public final class MenubarItemFile extends MenubarItem
 {
 	// ==================================================
-	public static final BMenubarItemFile INSTANCE = new BMenubarItemFile();
+	public static final MenubarItemFile INSTANCE = new MenubarItemFile();
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_file(); }
 	// --------------------------------------------------

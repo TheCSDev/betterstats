@@ -12,7 +12,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.achievement.StatsScreen;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,10 +25,10 @@ import static com.thecsdev.commonmc.resources.TComponent.gui;
  */
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class BMenubarItemView extends MenubarItem
+public final class MenubarItemView extends MenubarItem
 {
 	// ==================================================
-	public static final BMenubarItemView INSTANCE = new BMenubarItemView();
+	public static final MenubarItemView INSTANCE = new MenubarItemView();
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_view(); }
 	// --------------------------------------------------

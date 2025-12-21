@@ -27,10 +27,10 @@ import static net.minecraft.network.chat.Component.translatable;
  */
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class BMenubarItemAbout extends MenubarItem
+public final class MenubarItemAbout extends MenubarItem
 {
 	// ==================================================
-	public static final BMenubarItemAbout INSTANCE = new BMenubarItemAbout();
+	public static final MenubarItemAbout INSTANCE = new MenubarItemAbout();
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_about(); }
 	// --------------------------------------------------

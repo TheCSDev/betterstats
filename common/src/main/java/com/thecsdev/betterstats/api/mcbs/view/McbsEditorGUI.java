@@ -6,6 +6,7 @@ import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.betterstats.resources.BSSTex;
@@ -75,7 +76,7 @@ public final class McbsEditorGUI extends TElement
 		addRel(editorTab);
 	}
 	// ================================================== ==================================================
-	//                                     StatsEditorGUI IMPLEMENTATION
+	//                                       MenubarPanel IMPLEMENTATION
 	// ================================================== ==================================================
 	/**
 	 * {@link McbsEditorGUI}'s menubar interface that appears at the top of the interface,
@@ -249,10 +250,14 @@ public final class McbsEditorGUI extends TElement
 				scroll.setBounds(new UDim2(1, -8, 0, 0), new UDim2(0, 8, 1, 0));
 
 				//initialize the filters
-				view.initFilters(new StatsView.FiltersInitContext() {
+				final var ctx = new StatsView.FiltersInitContext() {
 					public final @Override @NotNull TPanelElement getPanel() { return panel; }
 					public final @Override @NotNull StatsView.Filters getFilters() { return tab.getStatFilters(); }
-				});
+				};
+				view.initFilters(ctx);
+
+				//if no filters got initialized, initialize default filters
+				if(panel.isEmpty()) StatsViewUtils.initDefaultFilters(ctx);
 			}
 			// ==================================================
 		}
@@ -308,7 +313,7 @@ public final class McbsEditorGUI extends TElement
 				tex_silhouette.colorProperty().set(0xFFFFFFFF, StatsPanel.class);
 
 				//create and add a label, indicating no stats can be shown
-				final var lbl = new TLabelElement(BSSLang.gui_statstab_stats_noStats());
+				final var lbl = new TLabelElement(BSSLang.gui_statsview_stats_noStats());
 				lbl.setBounds(bb.x, bb.y + (bb.height / 2) - 7, bb.width, 14);
 				lbl.textAlignmentProperty().set(CompassDirection.CENTER, StatsPanel.class);
 				lbl.textColorProperty().set(0xFFFFFFFF, StatsPanel.class);
@@ -343,6 +348,9 @@ public final class McbsEditorGUI extends TElement
 					public final @Override @NotNull StatsView.Filters getFilters() { return tab.getStatFilters(); }
 					public final @Override @NotNull McbsStats getStatsReadOnly() { return tab.getStatsReadOnly(); }
 				});
+
+				//if no statistics got initialized, init "no stats" gui
+				if(panel.isEmpty()) initNoStats();
 			}
 			// ==================================================
 		}
