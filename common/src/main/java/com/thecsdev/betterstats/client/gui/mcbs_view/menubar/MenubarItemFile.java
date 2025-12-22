@@ -2,6 +2,8 @@ package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsConfigScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
+import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
@@ -36,6 +38,13 @@ public final class MenubarItemFile extends MenubarItem
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 	{
 		return new TContextMenu.Builder(client)
+				.addButton(
+						air().append(" ").append(BSSLang.gui_menubar_file_new()),
+						__ -> {
+							final var tab = new McbsEditorTab(new McbsFile());
+							mcbsEditor.addTab(tab);
+							mcbsEditor.setCurrentTab(tab);
+						})
 				.addButton(
 						gui(TCDCSprites.gui_icon_fsFolder()).append(" ").append(BSSLang.gui_menubar_file_open()),
 						__ -> { throw new Error("I forgot to implement this"); })

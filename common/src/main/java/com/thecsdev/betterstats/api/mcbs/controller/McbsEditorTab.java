@@ -3,6 +3,7 @@ package com.thecsdev.betterstats.api.mcbs.controller;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,13 @@ public final class McbsEditorTab
 	}
 	// ==================================================
 	/**
+	 * Returns the user-frieldly GUI display name for this {@link McbsEditorTab}.
+	 */
+	public final @NotNull Component getDisplayName() {
+		return Component.literal(getClass().getSimpleName() + "@" + hashCode());
+	}
+	// ==================================================
+	/**
 	 * Returns the total number of edits made to this {@link McbsEditorTab}.
 	 * This value increments each time a change occurs within this tab.
 	 * <p>
@@ -70,7 +78,7 @@ public final class McbsEditorTab
 	 */
 	//FIXME - Make it return an immutable view. This one is currently mutable.
 	public final @NotNull McbsStats getStatsReadOnly() { return this.mcbsFile.getStats(); }
-	// ==================================================
+	// --------------------------------------------------
 	/**
 	 * Returns the {@link StatsView} instance that is currently selected for
 	 * this {@link McbsEditorTab}.

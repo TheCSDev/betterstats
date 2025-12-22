@@ -21,6 +21,7 @@
 	"commands.statistics.query.output": "%s's stat value for %s is %d.",
 
 	"betterstats.gui.menubar.file": "File",
+	"betterstats.gui.menubar.file.new": "New",
 	"betterstats.gui.menubar.file.open": "Open",
 	"betterstats.gui.menubar.file.save_as": "Save as",
 	"betterstats.gui.menubar.file.settings": "Settings",

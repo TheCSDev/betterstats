@@ -28,6 +28,7 @@ public final class BSSLang
 	public static final MutableComponent cmd_stats_query_out(@NotNull Component player, @NotNull Component stat, int value) { return translatable("commands.statistics.query.output", player, stat, value); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_menubar_file() { return translatable("betterstats.gui.menubar.file"); }
+	public static final MutableComponent gui_menubar_file_new() { return translatable("betterstats.gui.menubar.file.new"); }
 	public static final MutableComponent gui_menubar_file_open() { return translatable("betterstats.gui.menubar.file.open"); }
 	public static final MutableComponent gui_menubar_file_saveAs() { return translatable("betterstats.gui.menubar.file.save_as"); }
 	public static final MutableComponent gui_menubar_file_settings() { return translatable("betterstats.gui.menubar.file.settings"); }

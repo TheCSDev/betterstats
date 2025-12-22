@@ -95,7 +95,7 @@ public final class McbsEditor
 		markAsDirty();
 		return true;
 	}
-	// ==================================================
+	// --------------------------------------------------
 	/**
 	 * Returns the current {@link McbsEditorTab} being edited by this {@link McbsEditor}.
 	 */
