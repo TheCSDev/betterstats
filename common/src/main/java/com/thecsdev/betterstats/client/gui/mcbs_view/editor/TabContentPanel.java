@@ -1,9 +1,6 @@
 package com.thecsdev.betterstats.client.gui.mcbs_view.editor;
 
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
-import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
-import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.resources.BSSLang;
@@ -17,6 +14,7 @@ import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
+import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
@@ -36,14 +34,12 @@ public final class TabContentPanel extends TElement
 	// ================================================== ==================================================
 	//                                    TabContentPanel IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @NotNull  McbsEditor    mcbsEditor;
 	private final @Nullable McbsEditorTab tab;
 	// --------------------------------------------------
 	private long lastSeenTabEditCount; //for keeping up to date with tab controller's changes
 	// ==================================================
-	public TabContentPanel(@NotNull McbsEditor mcbsEditor) {
-		this.mcbsEditor = Objects.requireNonNull(mcbsEditor);
-		this.tab        = mcbsEditor.getCurrentTab();
+	public TabContentPanel(@Nullable McbsEditorTab editorTab) {
+		this.tab = editorTab;
 	}
 	// ==================================================
 	protected final @Override void tickCallback() {
@@ -211,7 +207,7 @@ public final class TabContentPanel extends TElement
 			view.initStats(new StatsView.StatsInitContext() {
 				public final @Override @NotNull TPanelElement getPanel() { return panel; }
 				public final @Override @NotNull StatsView.Filters getFilters() { return tab.getStatFilters(); }
-				public final @Override @NotNull McbsStats getStatsReadOnly() { return tab.getStatsReadOnly(); }
+				public final @Override @NotNull IStatsProvider getStats() { return tab.getStats(); }
 			});
 
 			//if no statistics got initialized, init "no stats" gui

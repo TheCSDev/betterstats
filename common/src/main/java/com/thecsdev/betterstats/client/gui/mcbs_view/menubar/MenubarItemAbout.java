@@ -38,6 +38,8 @@ public final class MenubarItemAbout extends MenubarItem
 	public final @Override @NotNull TContextMenu createContextMenu(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 	{
+		Objects.requireNonNull(client, "Missing 'client' instance");
+		Objects.requireNonNull(mcbsEditor, "Missing 'editor' instance");
 		return new TContextMenu.Builder(Objects.requireNonNull(client))
 				.addButton(
 						item("item/filled_map").append(" ").append(BSSLang.gui_menubar_about_sourceCode()),

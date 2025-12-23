@@ -39,11 +39,9 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 		this(lastScreen, new McbsEditor());
 		//create a fresh new mcbbs file instance
 		final var mcbsFile = new McbsFile();
-		mcbsFile.getStats().setAll(Objects.requireNonNull(statsProvider));
+		mcbsFile.getStats().clearAndAddAll(Objects.requireNonNull(statsProvider));
 		//create a new editor tab for the new mcbs file, add it, and set it as current
-		final var editorTab = new McbsEditorTab(mcbsFile);
-		this.mcbsEditor.addTab(editorTab);
-		this.mcbsEditor.setCurrentTab(editorTab);
+		this.mcbsEditor.addTab(new McbsEditorTab(mcbsFile), true);
 	}
 	public BetterStatsScreen(@Nullable Screen lastScreen) {
 		this(lastScreen, LocalPlayerStatsProvider.ofCurrentLocalPlayer());

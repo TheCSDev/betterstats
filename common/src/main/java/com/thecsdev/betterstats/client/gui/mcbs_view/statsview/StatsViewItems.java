@@ -69,7 +69,7 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 	{
 		//obtain stats
 		final var allStats = ItemStats.getItemStats(
-				context.getStatsReadOnly(),
+				context.getStats(),
 				getStatsPredicate(context.getFilters()),
 				getStatsSorter(context.getFilters()));
 		if(allStats.isEmpty()) return; //nothing to show

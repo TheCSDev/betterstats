@@ -3,10 +3,7 @@ package com.thecsdev.betterstats.api.mcbs.controller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Collections.unmodifiableSet;
 
@@ -39,7 +36,7 @@ public final class McbsEditor
 	public final long getEditCount() { return this._editCount; }
 
 	/**
-	 * Marks this {@link McbsEditor} as "dirty" by incrementing the edit count.
+	 * Incrementing the {@link #getEditCount()} value.
 	 * <p>
 	 * This method is automatically invoked whenever a modification occurs within
 	 * this editor. It is generally not necessary to call this method manually
@@ -47,33 +44,38 @@ public final class McbsEditor
 	 * {@link McbsEditor} interface.
 	 * @see #getEditCount()
 	 */
-	public final void markAsDirty() { this._editCount++; }
+	public final void addEditCount() { this._editCount++; }
 	// ==================================================
 	/**
-	 * Returns an unmodifiable {@link Set} containing all the {@link McbsEditorTab}
+	 * Returns an unmodifiable {@link Collection} containing all the {@link McbsEditorTab}
 	 * instances that are currently open within this editor.
 	 * <p>
 	 * To add or remove {@link McbsEditorTab}s, please refer to "See Also".
 	 * @see Collections#unmodifiableSet(Set)
-	 * @see #addTab(McbsEditorTab)
+	 * @see #addTab(McbsEditorTab, boolean)
 	 * @see #removeTab(McbsEditorTab)
 	 */
-	public final Set<McbsEditorTab> getTabsReadOnly() { return this._tabsImmutable; }
+	public final Collection<McbsEditorTab> getTabsReadOnly() { return this._tabsImmutable; }
 
 	/**
 	 * Attempts to add the specified {@link McbsEditorTab} within this editor.
+	 *
 	 * @param tab The {@link McbsEditorTab} to be opened.
+	 * @param setAsCurrent If {@code true}, the newly added tab will be set as the current tab.
 	 * @return {@code true} if the tab was successfully opened; {@code false} if
-	 *         the tab could not be added.
+	 * the tab could not be added.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	public final boolean addTab(@NotNull McbsEditorTab tab) throws NullPointerException
+	public final boolean addTab(@NotNull McbsEditorTab tab, boolean setAsCurrent)
+			throws NullPointerException
 	{
 		Objects.requireNonNull(tab);
 		//attempt to add, return false if adding fails
 		if(!this._tabs.add(tab)) return false;
+		//set as current tab if requested
+		if(setAsCurrent) setCurrentTab(tab);
 		//mark as dirty and return
-		markAsDirty();
+		addEditCount();
 		return true;
 	}
 
@@ -92,7 +94,7 @@ public final class McbsEditor
 		//if the removed tab was the current tab, clear the current tab
 		if(tab == this._currentTab) this._currentTab = null;
 		//mark as dirty and return
-		markAsDirty();
+		addEditCount();
 		return true;
 	}
 	// --------------------------------------------------
@@ -112,7 +114,7 @@ public final class McbsEditor
 		if(tab == this._currentTab) return;
 		//set the tab and mark as dirty
 		this._currentTab = this._tabs.contains(tab) ? tab : null;
-		markAsDirty();
+		addEditCount();
 	}
 	// ==================================================
 }

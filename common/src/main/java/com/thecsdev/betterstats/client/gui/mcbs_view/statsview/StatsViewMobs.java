@@ -69,7 +69,7 @@ public sealed class StatsViewMobs extends SubjectStatsView<EntityStats> permits 
 	{
 		//obtain stats
 		final var allStats = EntityStats.getEntityStats(
-				context.getStatsReadOnly(),
+				context.getStats(),
 				getStatsPredicate(context.getFilters()),
 				getStatsSorter(context.getFilters()));
 		if(allStats.isEmpty()) return; //nothing to show

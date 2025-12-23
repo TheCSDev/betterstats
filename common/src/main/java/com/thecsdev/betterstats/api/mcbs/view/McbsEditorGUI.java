@@ -55,7 +55,7 @@ public final class McbsEditorGUI extends TElement
 		addRel(tablist);
 
 		//create and add the editor-tab panel
-		final var editorTab = new TabContentPanel(this.mcbsEditor);
+		final var editorTab = new TabContentPanel(this.mcbsEditor.getCurrentTab());
 		editorTab.setBounds(0, 36, getBounds().width, getBounds().height - 36);
 		addRel(editorTab);
 	}

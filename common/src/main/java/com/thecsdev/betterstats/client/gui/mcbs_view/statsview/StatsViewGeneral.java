@@ -64,7 +64,7 @@ public final class StatsViewGeneral extends SubjectStatsView<CustomStat>
 	{
 		//obtain stats
 		final var allStats = CustomStat.getCustomStats(
-				context.getStatsReadOnly(),
+				context.getStats(),
 				getStatsPredicate(context.getFilters()),
 				getStatsSorter(context.getFilters()));
 		if(allStats.isEmpty()) return; //nothing to show

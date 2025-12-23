@@ -8,6 +8,7 @@ import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.common.util.collections.GenericProperties;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
+import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
-import java.util.Objects;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.betterstats.api.client.registry.BClientRegistries.STATS_VIEW;
@@ -160,7 +160,7 @@ public abstract class StatsView implements TDropdownWidget.Entry
 		 * Intended to be <b>read-only</b>! Attempts to set stat values may and likely
 		 * will {@code throw}!
 		 */
-		public @NotNull McbsStats getStatsReadOnly();
+		public @NotNull IStatsProvider getStats();
 		// ==================================================
 	}
 	// ================================================== ==================================================

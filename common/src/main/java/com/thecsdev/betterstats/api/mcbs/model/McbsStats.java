@@ -6,14 +6,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Container for holding statistics values, used by {@link McbsFile}.
@@ -26,7 +25,19 @@ public final class McbsStats implements IStatsProvider
 	private final ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> intStats = new ConcurrentHashMap<>();
 	// ==================================================
 	public McbsStats() {}
-	public McbsStats(@NotNull IStatsProvider copyFrom) { setAll(Objects.requireNonNull(copyFrom)); }
+	public McbsStats(@NotNull IStatsProvider copyFrom) { clearAndAddAll(Objects.requireNonNull(copyFrom)); }
+	// ==================================================
+	/**
+	 * Clears redundant statistic data like zero-value entries and empty maps.
+	 */
+	private final @ApiStatus.Internal void cleanUp()
+	{
+		//remove zero-value statistic entries
+		for(final var statTypeEntry : this.intStats.entrySet())
+			statTypeEntry.getValue().entrySet().removeIf(e -> e.getValue() == 0);
+		//remove empty stat-type maps
+		this.intStats.entrySet().removeIf(e -> e.getValue().isEmpty());
+	}
 	// ==================================================
 	/**
 	 * Returns raw direct access to the main {@link Map} that holds all
@@ -44,7 +55,8 @@ public final class McbsStats implements IStatsProvider
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
 	public final @NotNull ConcurrentHashMap<Identifier, Integer> getIntValues(
-			@NotNull Identifier type) throws NullPointerException {
+			@NotNull Identifier type) throws NullPointerException
+	{
 		Objects.requireNonNull(type);
 		cleanUp();
 		return this.intStats.computeIfAbsent(type, __ -> new ConcurrentHashMap<>());
@@ -71,8 +83,8 @@ public final class McbsStats implements IStatsProvider
 			throws NullPointerException, IllegalStateException
 	{
 		//obtain id-s from registries
-		final @Nullable var statTypeId    = BuiltInRegistries.STAT_TYPE.getKey(requireNonNull(type));
-		final @Nullable var statSubjectId = type.getRegistry().getKey(requireNonNull(subject));
+		final @Nullable var statTypeId    = BuiltInRegistries.STAT_TYPE.getKey(Objects.requireNonNull(type));
+		final @Nullable var statSubjectId = type.getRegistry().getKey(Objects.requireNonNull(subject));
 		//ensure the id-s are not null
 		if(statTypeId == null)
 			throw new IllegalStateException("StatType not registered: " + type);
@@ -90,7 +102,7 @@ public final class McbsStats implements IStatsProvider
 	 */
 	public final int getIntValue(@NotNull Identifier type, @NotNull Identifier subject)
 			throws NullPointerException {
-		return getIntValues(requireNonNull(type)).getOrDefault(requireNonNull(subject), 0);
+		return getIntValues(Objects.requireNonNull(type)).getOrDefault(Objects.requireNonNull(subject), 0);
 	}
 	// ==================================================
 	/**
@@ -111,12 +123,13 @@ public final class McbsStats implements IStatsProvider
 	 * @throws NullPointerException If an argument is {@code null}.
 	 * @throws IllegalStateException If a corresponding feature is not registered.
 	 */
-	public final <T> void setIntValue(@NotNull StatType<T> type, @NotNull T subject, int value)
+	public final <T> void setIntValue(
+			@NotNull StatType<T> type, @NotNull T subject, int value)
 			throws NullPointerException, IllegalStateException
 	{
 		//obtain id-s from registries
-		final @Nullable var statTypeId    = BuiltInRegistries.STAT_TYPE.getKey(requireNonNull(type));
-		final @Nullable var statSubjectId = type.getRegistry().getKey(requireNonNull(subject));
+		final @Nullable var statTypeId    = BuiltInRegistries.STAT_TYPE.getKey(Objects.requireNonNull(type));
+		final @Nullable var statSubjectId = type.getRegistry().getKey(Objects.requireNonNull(subject));
 		//ensure the id-s are not null
 		if(statTypeId == null)
 			throw new IllegalStateException("StatType not registered: " + type);
@@ -133,26 +146,22 @@ public final class McbsStats implements IStatsProvider
 	 * @param value The value to set.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 */
-	public final void setIntValue(@NotNull Identifier type, @NotNull Identifier subject, int value)
-			throws NullPointerException {
+	public final void setIntValue(
+			@NotNull Identifier type, @NotNull Identifier subject, int value)
+			throws NullPointerException
+	{
 		if(value == 0) {
-			final var map = getIntValues(requireNonNull(type));
-			map.remove(requireNonNull(subject));
+			final var map = getIntValues(Objects.requireNonNull(type));
+			map.remove(Objects.requireNonNull(subject));
 			if(map.isEmpty()) this.intStats.remove(type);
 		}
-		else getIntValues(requireNonNull(type)).put(requireNonNull(subject), value);
+		else getIntValues(Objects.requireNonNull(type)).put(Objects.requireNonNull(subject), value);
 	}
 	// ==================================================
 	/**
-	 * Adds {@link Stat} entries from another {@link IStatsProvider} into this one.
-	 * <p>
-	 * If the other {@link IStatsProvider} is an {@link McbsStats} instance,
-	 * all its entries will be directly copied here. Otherwise, this method will
-	 * iterate the game's registries to query all possible {@link Stat} values
-	 * and copy non-zero values here.
-	 * <p>
-	 * This differs from {@link #setAll(IStatsProvider)} in that {@code 0} values from
-	 * the other {@link IStatsProvider} will not overwrite existing values here.
+	 * Adds {@link Stat} entries from another {@link IStatsProvider} into this one,
+	 * summing up values where applicable. Supports {@link McbsStats} instances as
+	 * argument.
 	 * @param statsProvider The other {@link IStatsProvider}.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
@@ -160,7 +169,7 @@ public final class McbsStats implements IStatsProvider
 	public final void addAll(@NotNull IStatsProvider statsProvider)
 	{
 		//argument not null check
-		requireNonNull(statsProvider);
+		Objects.requireNonNull(statsProvider);
 		//handle mcbs stats providers by adding all their values here
 		if(statsProvider instanceof McbsStats other) {
 			other.forEach((statTypeId, statSubjectId, otherValue) -> {
@@ -188,8 +197,8 @@ public final class McbsStats implements IStatsProvider
 	 * @param statsProvider The other {@link IStatsProvider}.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	public final void setAll(@NotNull IStatsProvider statsProvider) throws NullPointerException {
-		requireNonNull(statsProvider);
+	public final void clearAndAddAll(@NotNull IStatsProvider statsProvider) throws NullPointerException {
+		Objects.requireNonNull(statsProvider);
 		clear();
 		addAll(statsProvider);
 	}
@@ -198,18 +207,6 @@ public final class McbsStats implements IStatsProvider
 	 * Clears all statistics data.
 	 */
 	public final void clear() { this.intStats.clear(); }
-
-	/**
-	 * Cleans up the statistics model by removing all entries with a value of zero.
-	 */
-	public final void cleanUp()
-	{
-		//remove zero-value statistic entries
-		for(final var statTypeEntry : this.intStats.entrySet())
-			statTypeEntry.getValue().entrySet().removeIf(e -> e.getValue() == 0);
-		//remove empty stat-type maps
-		this.intStats.entrySet().removeIf(e -> e.getValue().isEmpty());
-	}
 	// --------------------------------------------------
 	/**
 	 * Iterates all integer values stored in this {@link McbsStats} instance.
@@ -219,7 +216,7 @@ public final class McbsStats implements IStatsProvider
 	 */
 	public final void forEach(@NotNull McbsStats.IntValueConsumer consumer) throws NullPointerException
 	{
-		requireNonNull(consumer);
+		Objects.requireNonNull(consumer);
 		cleanUp();
 		for(final var statTypeEntry : this.intStats.entrySet()) {
 			final var statTypeId = statTypeEntry.getKey();
