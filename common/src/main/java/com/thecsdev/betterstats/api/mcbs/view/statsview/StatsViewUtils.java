@@ -122,7 +122,7 @@ public final class StatsViewUtils
 		final var panel = context.getPanel();
 		final var widget = new TDropdownWidget<StatsView>();
 		widget.setBounds(panel.computeNextYBounds(20, GAP));
-		widget.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_selectedTab()), StatsViewUtils.class);
+		widget.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_selectedView()), StatsViewUtils.class);
 		panel.add(widget);
 
 		//add entries to the widget

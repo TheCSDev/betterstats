@@ -70,10 +70,11 @@ public final class TabStripPanel extends TElement
 
 		//create and add an entry element
 		final var entry = new EntryElement(tab);
-		final var font  = entry.getLabel().fontProperty().get();
-		final var text  = entry.getLabel().getText();
 		final var pcbb  = panel.getContentBounds();
-		entry.setBounds(pcbb.endX, pcbb.y, font.width(text) + 3, panel.getBounds().height);
+		entry.setBounds(
+				pcbb.endX, pcbb.y,
+				entry.getLabel().getTextWidth() + panel.getBounds().height + 5,
+				panel.getBounds().height);
 		panel.add(entry);
 	}
 	// ================================================== ==================================================

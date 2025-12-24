@@ -35,13 +35,14 @@ public final class BSSLang
 	public static final MutableComponent gui_menubar_file_close() { return translatable("betterstats.gui.menubar.file.close"); }
 	public static final MutableComponent gui_menubar_view() { return translatable("betterstats.gui.menubar.view"); }
 	public static final MutableComponent gui_menubar_view_vanillaScreen() { return translatable("betterstats.gui.menubar.view.vanilla_screen"); }
-	public static final MutableComponent gui_menubar_view_statsTab() { return translatable("betterstats.gui.menubar.view.stats_tab"); }
+	public static final MutableComponent gui_menubar_view_localPlayerStats() { return translatable("betterstats.gui.menubar.view.local_player_stats"); }
+	public static final MutableComponent gui_menubar_view_statsView() { return translatable("betterstats.gui.menubar.view.stats_view"); }
 	public static final MutableComponent gui_menubar_about() { return translatable("betterstats.gui.menubar.about"); }
 	public static final MutableComponent gui_menubar_about_sourceCode() { return translatable("betterstats.gui.menubar.about.source_code"); }
 	public static final MutableComponent gui_menubar_about_supportMe() { return translatable("betterstats.gui.menubar.about.support_me"); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_statsview_filters() { return translatable("betterstats.gui.statsview.filters"); }
-	public static final MutableComponent gui_statsview_filter_selectedTab() { return translatable("betterstats.gui.statsview.filter.selected_tab"); }
+	public static final MutableComponent gui_statsview_filter_selectedView() { return translatable("betterstats.gui.statsview.filter.selected_view"); }
 	public static final MutableComponent gui_statsview_filter_search() { return translatable("betterstats.gui.statsview.filter.search"); }
 	public static final MutableComponent gui_statsview_filter_showAllStats() { return translatable("betterstats.gui.statsview.filter.show_all_stats"); }
 	public static final MutableComponent gui_statsview_filter_sortBy() { return translatable("betterstats.gui.statsview.filter.sort_by"); }

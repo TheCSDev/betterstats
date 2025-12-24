@@ -6,6 +6,7 @@ import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsIO;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import net.minecraft.network.chat.Component;
@@ -45,11 +46,18 @@ public final class McbsEditorTab
 	@ApiStatus.Internal
 	public static final McbsEditorTab LOCALPLAYER = new McbsEditorTab(new McbsFile());
 	// ==================================================
-	private final @NotNull McbsFile          mcbsFile;
+	private final @NotNull  McbsFile          mcbsFile;
 	// --------------------------------------------------
-	private final @NotNull StatsView.Filters _statFilters = new Filters();
+	private final @NotNull  StatsView.Filters _statFilters = new Filters();
+	private       @Nullable File              _lastSaveFile;
 	// --------------------------------------------------
-	private long _editCount = Long.MIN_VALUE; //value increases whenever something changes
+	/**
+	 * This value increments each time a change is through this {@link McbsEditorTab},
+	 * allowing user-intervaces (aka 'views') to known when they need to refresh.
+	 * @see #getEditCount()
+	 * @see #addEditCount()
+	 */
+	private long _editCount = Long.MIN_VALUE;
 	// ==================================================
 	public McbsEditorTab(@NotNull McbsFile mcbsFile) throws NullPointerException {
 		this.mcbsFile = Objects.requireNonNull(mcbsFile);
@@ -70,8 +78,14 @@ public final class McbsEditorTab
 	/**
 	 * Returns the user-frieldly GUI display name for this {@link McbsEditorTab}.
 	 */
-	public final @NotNull Component getDisplayName() {
-		return Component.literal(getClass().getSimpleName() + "@" + hashCode());
+	public final @NotNull Component getDisplayName()
+	{
+		if(this == LOCALPLAYER)
+			return BSSLang.gui_menubar_view_localPlayerStats();
+		else if(this._lastSaveFile != null)
+			return Component.literal(this._lastSaveFile.getName());
+		else
+			return Component.literal(getClass().getSimpleName() + "@" + hashCode());
 	}
 
 	/**
@@ -89,7 +103,7 @@ public final class McbsEditorTab
 	}
 	// ==================================================
 	/**
-	 * Returns the total number of edits made to this {@link McbsEditorTab}.
+	 * Returns the total number of edits made via {@link McbsEditorTab}.
 	 * This value increments each time a change occurs within this tab.
 	 * <p>
 	 * This can be used to track changes and determine if this tab's state
@@ -124,7 +138,8 @@ public final class McbsEditorTab
 	 */
 	public final void setCurrentView(@NotNull StatsView view) throws NullPointerException {
 		Objects.requireNonNull(view);
-		this._statFilters.setProperty(StatsView.class, FID_STATSVIEW, StatsView.getDefault());
+		this._statFilters.setProperty(StatsView.class, FID_STATSVIEW, view);
+		addEditCount();
 	}
 	// --------------------------------------------------
 	/**
@@ -141,23 +156,36 @@ public final class McbsEditorTab
 	 * @throws IOException If an I/O error occurs during file writing.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 */
-	public final void saveAs(@NotNull File file) throws IOException {
+	public final void saveAs(@NotNull File file) throws IOException
+	{
+		//not null requirements
+		Objects.requireNonNull(file);
+		//save to file
 		final var json = McbsIO.saveToJson(this.mcbsFile);
 		FileUtils.writeStringToFile(file, new Gson().toJson(json), StandardCharsets.UTF_8);
+		//if successful (no io-exceptions), set the last saved file
+		this._lastSaveFile = file;
 	}
 
 	/**
 	 * Loads the {@link McbsFile} data from the specified file into this
 	 * {@link McbsEditorTab}'s {@link McbsFile} instance.
+	 * <p>
+	 * <b>This overrides {@link McbsFile} data!</b>
 	 * @param file The file to load the data from.
 	 * @throws IOException If an I/O error occurs during file reading.
 	 * @throws NullPointerException If an argument is {@code null}.
-	 * @apiNote This overrides existing data!
 	 */
-	public final void loadFrom(@NotNull File file) throws IOException {
+	public final void loadFrom(@NotNull File file) throws IOException
+	{
+		//not null requirements
+		Objects.requireNonNull(file);
+		//load from file
 		final var json = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 		McbsIO.loadFromJson(new Gson().fromJson(json, JsonObject.class), this.mcbsFile);
+		//if successful (no io-exceptions), add edit count and set the last saved file
 		addEditCount();
+		this._lastSaveFile = file;
 	}
 
 	/**
@@ -165,11 +193,13 @@ public final class McbsEditorTab
 	 * into this {@link McbsEditorTab}'s {@link McbsFile} instance.
 	 * <p>
 	 * Specifically, calls {@link McbsStats#clearAndAddAll(IStatsProvider)}.
+	 * <p>
+	 * <b>This overrides existing {@link McbsStats} data!</b>
 	 * @param statsProvider The {@link IStatsProvider} to load the data from.
 	 * @throws NullPointerException If an argument is {@code null}.
-	 * @apiNote This overrides existing data!
 	 */
 	public final void loadStatsFrom(@NotNull IStatsProvider statsProvider) throws NullPointerException {
+		Objects.requireNonNull(statsProvider);
 		this.mcbsFile.getStats().clearAndAddAll(statsProvider);
 		addEditCount();
 	}

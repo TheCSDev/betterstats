@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
+import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static com.thecsdev.commonmc.resources.TComponent.gui;
+import static com.thecsdev.commonmc.resources.TComponent.*;
 
 /**
  * {@link MenubarItem} implementation for "View".
@@ -36,21 +37,44 @@ public final class MenubarItemView extends MenubarItem
 	public final @Override @NotNull TContextMenu createContextMenu(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 	{
+		//not null requirements
 		Objects.requireNonNull(client, "Missing 'client' instance");
 		Objects.requireNonNull(mcbsEditor, "Missing 'editor' instance");
-		return new TContextMenu.Builder(Objects.requireNonNull(client))
-				//the vanilla screen button opens the vanilla stats screen
-				.addButton(gui("statistics/item_picked_up").append(" ").append(BSSLang.gui_menubar_view_vanillaScreen()), __ -> {
+
+		//local-player head icon
+		final @Nullable var localPlayer = client.player;
+		final var localPlayerComponent = (localPlayer != null) ?
+				head(localPlayer.nameAndId().id()) : air();
+
+		//create new builder
+		final var builder = new TContextMenu.Builder(client);
+
+		//the vanilla screen button opens the vanilla stats screen
+		builder.addButton(
+				gui("statistics/item_picked_up").append(" ").append(BSSLang.gui_menubar_view_vanillaScreen()),
+				__ -> {
 					final var player = Objects.requireNonNull(client.player, "Missing 'local player' instance");
 					final var screen = new StatsScreen(client.screen, player.getStats());
 					client.setScreen(screen);
-				})
-				.addSeparator()
-				//the stats tab submenu allows switching between stats tabs
-				.addContextMenu(
-						gui("statistics/item_used").append(" ").append(BSSLang.gui_menubar_view_statsTab()),
-						menu_view_tab(client, mcbsEditor))
-				.build();
+				});
+
+		//local-player statistics tab
+		if(mcbsEditor.getCurrentTab() != McbsEditorTab.LOCALPLAYER)
+			builder.addButton(
+					localPlayerComponent.append(" ").append(BSSLang.gui_menubar_view_localPlayerStats()),
+					__ -> mcbsEditor.addTab(McbsEditorTab.LOCALPLAYER, true)
+			);
+
+		//the stats tab submenu allows switching between stats tabs
+		if(mcbsEditor.getCurrentTab() != null) {
+			builder.addSeparator();
+			builder.addContextMenu(
+					gui("statistics/item_used").append(" ").append(BSSLang.gui_menubar_view_statsView()),
+					view_statsView(client, mcbsEditor));
+		}
+
+		//build and return the context menu
+		return builder.build();
 	}
 	// ==================================================
 	/**
@@ -60,7 +84,7 @@ public final class MenubarItemView extends MenubarItem
 	 * @param mcbsEditor The {@link McbsEditorGUI}'s {@link McbsEditor} instance.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 */
-	private static final @ApiStatus.Internal TContextMenu menu_view_tab(
+	private static final @ApiStatus.Internal TContextMenu view_statsView(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 			throws NullPointerException
 	{

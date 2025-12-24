@@ -26,13 +26,19 @@ public final class McbsEditor
 	private final @NotNull  Set<McbsEditorTab> _tabsImmutable = unmodifiableSet(this._tabs);
 	private       @Nullable McbsEditorTab      _currentTab    = null;
 	// --------------------------------------------------
-	private long _editCount = Long.MIN_VALUE; //value increases whenever something changes
+	/**
+	 * This value increments each time a change is through this {@link McbsEditor},
+	 * allowing user-intervaces (aka 'views') to known when they need to refresh.
+	 * @see #getEditCount()
+	 * @see #addEditCount()
+	 */
+	private long _editCount = Long.MIN_VALUE;
 	// ==================================================
 	public final @Override int hashCode() { return super.hashCode(); }
 	public final @Override boolean equals(Object obj) { return super.equals(obj); }
 	// ==================================================
 	/**
-	 * Returns the total number of edits made to this {@link McbsEditor}.
+	 * Returns the total number of edits made via {@link McbsEditor}.
 	 * This value increments each time a change occurs within this editor,
 	 * such as adding/removing tabs or modifying tab content.
 	 * <p>
