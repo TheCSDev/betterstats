@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats.api.mcbs.controller;
 
+import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,11 @@ import static java.util.Collections.unmodifiableSet;
  */
 public final class McbsEditor
 {
+	// ==================================================
+	/**
+	 * Main {@link McbsEditor} instance used by {@link BetterStatsScreen}.
+	 */
+	public static final McbsEditor INSTANCE = new McbsEditor();
 	// ==================================================
 	private final @NotNull  Set<McbsEditorTab> _tabs          = new LinkedHashSet<>();
 	private final @NotNull  Set<McbsEditorTab> _tabsImmutable = unmodifiableSet(this._tabs);
@@ -70,13 +76,13 @@ public final class McbsEditor
 			throws NullPointerException
 	{
 		Objects.requireNonNull(tab);
-		//attempt to add, return false if adding fails
-		if(!this._tabs.add(tab)) return false;
-		//set as current tab if requested
+		//add the tab, and increment edit count only if added
+		final var result = this._tabs.add(tab);
+		if(result) addEditCount();
+		//set current tab if needed. this can also increment edit count on its own
 		if(setAsCurrent) setCurrentTab(tab);
-		//mark as dirty and return
-		addEditCount();
-		return true;
+		//return the result
+		return result;
 	}
 
 	/**

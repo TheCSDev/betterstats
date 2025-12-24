@@ -6,6 +6,7 @@ import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsIO;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -34,8 +35,18 @@ public final class McbsEditorTab
 	// ================================================== ==================================================
 	//                                      McbsEditorTab IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @NotNull McbsFile          mcbsFile;
+	/**
+	 * "Special" {@link McbsEditorTab} instance, specifically for interfacing with
+	 * {@link LocalPlayerStatsProvider} data.
+	 * <p>
+	 * TODO - This is maked as {@link ApiStatus.Internal} because I plan to come up
+	 *        with some other mechanism for identifying and treating "special" tabs.
+	 */
+	@ApiStatus.Internal
+	public static final McbsEditorTab LOCALPLAYER = new McbsEditorTab(new McbsFile());
 	// ==================================================
+	private final @NotNull McbsFile          mcbsFile;
+	// --------------------------------------------------
 	private final @NotNull StatsView.Filters _statFilters = new Filters();
 	// --------------------------------------------------
 	private long _editCount = Long.MIN_VALUE; //value increases whenever something changes
