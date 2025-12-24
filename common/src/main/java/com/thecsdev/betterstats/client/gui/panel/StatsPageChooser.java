@@ -1,8 +1,8 @@
 package com.thecsdev.betterstats.client.gui.panel;
 
 import com.thecsdev.betterstats.BetterStats;
-import com.thecsdev.betterstats.api.client.gui.statstab.StatsTab;
-import com.thecsdev.betterstats.api.client.gui.statstab.StatsTabUtils;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.common.util.TUtils;
 import com.thecsdev.common.util.annotations.CallerSensitive;
 import com.thecsdev.common.util.enumerations.CompassDirection;
@@ -29,15 +29,15 @@ import static net.minecraft.network.chat.Component.literal;
 
 /**
  * A simple page chooser element for paginating statistics that are displayed on
- * {@link StatsTab}s.
+ * {@link StatsView}s.
  */
 @ApiStatus.Internal
 public final class StatsPageChooser extends TFillColorElement.Flat
 {
 	// ==================================================
-	private final          int              pageCount;
-	private final @NotNull StatsTab.Filters filters;
-	private final @NotNull Identifier       filterId;
+	private final          int               pageCount;
+	private final @NotNull StatsView.Filters filters;
+	private final @NotNull Identifier        filterId;
 	// --------------------------------------------------
 	private final @NotNull TLabelElement label     = new TLabelElement();
 	private final @NotNull TButtonWidget btn_left  = new TButtonWidget();
@@ -47,18 +47,19 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	 * An event that is fired whenever the page is changed.
 	 * The {@link Consumer} parameter provides the new page value (zero-indexed).
 	 */
+	@Deprecated
 	public final Event<Consumer<Integer>> ePageChanged = EventFactory.createLoop();
 	// ==================================================
 	/**
 	 * @param pageCount The total number of pages available.
-	 * @param filters   The {@link StatsTab.Filters} where the "current page" value is stored.
+	 * @param filters   The {@link StatsView.Filters} where the "current page" value is stored.
 	 * @param filterId  The unique ID of the "current page" filter.
 	 * @throws NullPointerException     If a {@link NotNull} argument is {@code null}.
 	 * @throws IllegalArgumentException If "page count" is less than {@code 1}.
 	 */
 	public StatsPageChooser(
 			int pageCount,
-			@NotNull StatsTab.Filters filters,
+			@NotNull StatsView.Filters filters,
 			@NotNull Identifier filterId) throws NullPointerException, IllegalArgumentException
 	{
 		//initialize super
@@ -73,7 +74,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 		this.filterId  = Objects.requireNonNull(filterId);
 
 		//pre-configure elements
-		this.label.textAlignmentProperty().set(CompassDirection.CENTER, StatsTabUtils.class);
+		this.label.textAlignmentProperty().set(CompassDirection.CENTER, StatsViewUtils.class);
 		this.btn_left.getLabel().setText(literal("<"));
 		this.btn_right.getLabel().setText(literal(">"));
 		refreshElements();
@@ -100,8 +101,8 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	private final void refreshElements() {
 		final int pageValue = getPageValue();
 		this.label.setText(literal((pageValue + 1) + " / " + this.pageCount));
-		this.btn_left.enabledProperty().set(pageValue > 0, StatsTabUtils.class);
-		this.btn_right.enabledProperty().set(pageValue < this.pageCount - 1, StatsTabUtils.class);
+		this.btn_left.enabledProperty().set(pageValue > 0, StatsViewUtils.class);
+		this.btn_right.enabledProperty().set(pageValue < this.pageCount - 1, StatsViewUtils.class);
 	}
 	// ==================================================
 	/**
@@ -128,13 +129,13 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	}
 	// ==================================================
 	/**
-	 * Returns the page chooser "filter id" that should be used for a given {@link StatsTab},
-	 * assuming the provided caller {@link Class} is a {@link StatsTab} that seeks to paginate
+	 * Returns the page chooser "filter id" that should be used for a given {@link StatsView},
+	 * assuming the provided caller {@link Class} is a {@link StatsView} that seeks to paginate
 	 * its statistics.
-	 * @param caller The {@link StatsTab} seeking to use this filter.
+	 * @param caller The {@link StatsView} seeking to use this filter.
 	 */
 	@ApiStatus.Internal
-	private static final Identifier getFID(@NotNull Class<?> caller) {
+	private static final Identifier getFilterID(@NotNull Class<?> caller) {
 		Objects.requireNonNull(caller);
 		return Identifier.fromNamespaceAndPath(
 				BetterStats.MOD_ID,
@@ -145,7 +146,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	/**
 	 * Initializes a {@link StatsPageChooser} on the provided target {@link TPanelElement}.
 	 * @param target The target {@link TPanelElement} where the {@link StatsPageChooser} is to initialize.
-	 * @param filters The {@link StatsTab.Filters} where the "current page" value is stored.
+	 * @param filters The {@link StatsView.Filters} where the "current page" value is stored.
 	 * @param itemsPerPage The number of items to show per page.
 	 * @param itemsTotal The total number of items to paginate.
 	 * @return The initialized {@link StatsPageChooser}, or {@code null} if there are no items to paginate.
@@ -154,7 +155,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	 */
 	public static final @Nullable StatsPageChooser initPanel(
 			@NotNull TPanelElement target,
-			@NotNull StatsTab.Filters filters,
+			@NotNull StatsView.Filters filters,
 			int itemsPerPage, int itemsTotal) throws NullPointerException, IllegalArgumentException
 	{
 		//do not initialize if there are no items to paginate
@@ -164,8 +165,8 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 		final var el = new StatsPageChooser(
 				(int) max(Math.ceil((double) itemsTotal / (double) itemsPerPage), 1),
 				filters,
-				getFID(TUtils.getStackWalkerRCR().getCallerClass()));
-		el.setBounds(StatsTabUtils.nextYBounds(target, 20));
+				getFilterID(TUtils.getStackWalkerRCR().getCallerClass()));
+		el.setBounds(target.computeNextYBounds(20, StatsViewUtils.GAP));
 		target.add(el);
 		return el;
 	}
@@ -173,7 +174,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	/**
 	 * Applies pagination to a {@link Collection} of {@link SubjectStats}.
 	 * @param stats The full {@link Collection} of all {@link SubjectStats} to paginate.
-	 * @param filters The {@link StatsTab.Filters} that holds the current page value.
+	 * @param filters The {@link StatsView.Filters} that holds the current page value.
 	 * @param itemsPerPage The number of items to show per page.
 	 * @param <SS> The type of {@link SubjectStats} contained in the {@link Collection}.
 	 * @return A paginated {@link Collection} of {@link SubjectStats}.
@@ -183,7 +184,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	@CallerSensitive
 	public static final <SS extends SubjectStats<?>> Collection<SS> applyFilter(
 			@NotNull Collection<SS> stats,
-			@NotNull StatsTab.Filters filters,
+			@NotNull StatsView.Filters filters,
 			int itemsPerPage) throws NullPointerException, IllegalArgumentException
 	{
 		//argument validity checks
@@ -192,7 +193,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 		if(itemsPerPage < 1) throw new IllegalArgumentException("Items per page must be at least 1");
 
 		//noinspection deprecation - get and clamp the page value
-		final var fid        = getFID(TUtils.getStackWalkerRCR().getCallerClass());
+		final var fid        = getFilterID(TUtils.getStackWalkerRCR().getCallerClass());
 		final int pagesTotal = (int) max(Math.ceil((double) stats.size() / (double) itemsPerPage), 1);
 		int       page       = clamp(filters.getProperty(Integer.class, fid, 0), 0, pagesTotal - 1);
 

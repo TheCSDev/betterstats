@@ -105,7 +105,8 @@ public class BetterStats
 	 * @throws IllegalStateException If this mod is not yet initialized.
 	 */
 	//TODO - Remove this. It is unsafe to use literal strings for static properties.
-	protected static final String getProperty(@NotNull String key) throws IllegalStateException {
+	@Deprecated(forRemoval = true)
+	public static final String getProperty(@NotNull String key) throws IllegalStateException {
 		if(INSTANCE == null) throw new IllegalStateException(MOD_ID + " is not initialized yet.");
 		return Objects.requireNonNull(
 				PROPERTIES.getProperty(key),

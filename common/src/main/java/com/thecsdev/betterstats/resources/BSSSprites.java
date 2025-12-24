@@ -26,8 +26,10 @@ public final class BSSSprites
 	public static final Identifier gui_panel_fgStats() { return fromNamespaceAndPath(MOD_ID, "panel/fg_stats"); }
 	public static final Identifier gui_panel_bgMenubar() { return fromNamespaceAndPath(MOD_ID, "panel/bg_menubar"); }
 	public static final Identifier gui_panel_fgMenubar() { return fromNamespaceAndPath(MOD_ID, "panel/fg_menubar"); }
-	public static final Identifier gui_panel_bgNav() { return fromNamespaceAndPath(MOD_ID, "panel/bg_nav"); }
-	public static final Identifier gui_panel_fgNav() { return fromNamespaceAndPath(MOD_ID, "panel/fg_nav"); }
+	public static final Identifier gui_panel_bgTabstrip() { return fromNamespaceAndPath(MOD_ID, "panel/bg_tabstrip"); }
+	public static final Identifier gui_panel_fgTabstrip() { return fromNamespaceAndPath(MOD_ID, "panel/fg_tabstrip"); }
+	public static final Identifier gui_panel_tabentry() { return fromNamespaceAndPath(MOD_ID, "panel/tabentry"); }
+	public static final Identifier gui_panel_tabentrySelected() { return fromNamespaceAndPath(MOD_ID, "panel/tabentry_selected"); }
 	// --------------------------------------------------
 	public static final Identifier gui_icon_close() { return fromNamespaceAndPath(MOD_ID, "icon/close"); }
 	public static final Identifier gui_icon_settings() { return fromNamespaceAndPath(MOD_ID, "icon/settings"); }

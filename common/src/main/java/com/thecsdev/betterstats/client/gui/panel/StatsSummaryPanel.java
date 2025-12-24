@@ -1,7 +1,6 @@
 package com.thecsdev.betterstats.client.gui.panel;
 
-import com.thecsdev.betterstats.api.client.gui.statstab.StatsTab;
-import com.thecsdev.betterstats.api.client.gui.statstab.StatsTabUtils;
+import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TTextualStatWidget;
 import com.thecsdev.commonmc.api.stats.util.EntityStats;
@@ -16,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.thecsdev.commonmc.api.stats.StatsProvider.getStatTypeName;
+import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.GAP;
+import static com.thecsdev.commonmc.api.stats.IStatsProvider.getStatTypeName;
 import static net.minecraft.network.chat.Component.literal;
 
 /**
  * {@link TPanelElement} that displays {@link TTextualStatWidget} elements
- * that aim to summarize the statistics on a given {@link StatsTab}.
+ * that aim to summarize the statistics on a given {@link StatsView}.
  */
 @ApiStatus.Internal
 public final class StatsSummaryPanel extends TPanelElement.Paintable
@@ -78,23 +78,23 @@ public final class StatsSummaryPanel extends TPanelElement.Paintable
 		//if this panel is too small, put all entries in one column
 		if(bb.width < 400) {
 			for(final var entry : getEntries()) {
-				entry.setBounds(StatsTabUtils.nextYBounds(this, ENTRY_HEIGHT));
+				entry.setBounds(computeNextYBounds(ENTRY_HEIGHT, GAP));
 				add(entry);
 			}
 		//else put entries in two columns
 		} else {
 			final int padding   = scrollPaddingProperty().getI();
-			final int halfWidth = (bb.width - StatsTabUtils.GAP - padding * 2) / 2;
+			final int halfWidth = (bb.width - GAP - padding * 2) / 2;
 			int       leftY     = bb.y + padding;
 			int       rightY    = bb.y + padding;
 			boolean   leftSide  = true;
 			for(final var entry : getEntries()) {
 				if(leftSide) {
 					entry.setBounds(bb.x + padding, leftY, halfWidth, ENTRY_HEIGHT);
-					leftY += ENTRY_HEIGHT + StatsTabUtils.GAP;
+					leftY += ENTRY_HEIGHT + GAP;
 				} else {
-					entry.setBounds(bb.x + padding + halfWidth + StatsTabUtils.GAP, rightY, halfWidth, ENTRY_HEIGHT);
-					rightY += ENTRY_HEIGHT + StatsTabUtils.GAP;
+					entry.setBounds(bb.x + padding + halfWidth + GAP, rightY, halfWidth, ENTRY_HEIGHT);
+					rightY += ENTRY_HEIGHT + GAP;
 				}
 				leftSide = !leftSide;
 				add(entry);
@@ -173,7 +173,7 @@ public final class StatsSummaryPanel extends TPanelElement.Paintable
 		final var panel = new StatsSummaryPanel(stats);
 
 		//"mock"-initialize the panel to calculate its needed space
-		panel.setBounds(StatsTabUtils.nextYBounds(target, 20));
+		panel.setBounds(target.computeNextYBounds(20, GAP));
 		panel.clearAndInit();
 		final var pbb = panel.getBounds(); final var cbb = panel.getContentBounds();
 		panel.setBounds(pbb.x, pbb.y, pbb.width, cbb.height + panel.scrollPaddingProperty().getI() * 2);
