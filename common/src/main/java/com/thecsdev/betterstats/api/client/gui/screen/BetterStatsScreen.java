@@ -41,7 +41,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 	}
 	public BetterStatsScreen(@Nullable Screen lastScreen) {
 		this(lastScreen, McbsEditor.INSTANCE);
-		this.mcbsEditor.addTab(McbsEditorTab.LOCALPLAYER, true);
+		this.mcbsEditor.addTab(McbsEditorTab.LOCALPLAYER, false);
 	}
 	// ==================================================
 	/**

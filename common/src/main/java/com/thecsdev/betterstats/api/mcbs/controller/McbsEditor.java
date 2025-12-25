@@ -86,7 +86,8 @@ public final class McbsEditor
 		final var result = this._tabs.add(tab);
 		if(result) addEditCount();
 		//set current tab if needed. this can also increment edit count on its own
-		if(setAsCurrent) setCurrentTab(tab);
+		if(setAsCurrent || this._currentTab == null)
+			setCurrentTab(tab);
 		//return the result
 		return result;
 	}
