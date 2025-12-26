@@ -1,6 +1,7 @@
 package com.thecsdev.betterstats.api.mcbs.controller;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,6 +1,6 @@
 package com.thecsdev.betterstats.client.gui.mcbs_view.editor;
 
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.resources.BSSLang;
@@ -25,20 +25,21 @@ import java.util.Objects;
 
 /**
  * <b>Tabbed document interface</b> tab content element that houses the main content
- * of the currently selected {@link McbsEditorTab}.
+ * of the currently selected {@link McbsEditorFileTab}.
  */
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
+@Deprecated(forRemoval = true)
 public final class TabContentPanel extends TElement
 {
 	// ================================================== ==================================================
 	//                                    TabContentPanel IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @Nullable McbsEditorTab tab;
+	private final @Nullable McbsEditorFileTab tab;
 	// --------------------------------------------------
 	private long lastSeenTabEditCount; //for keeping up to date with tab controller's changes
 	// ==================================================
-	public TabContentPanel(@Nullable McbsEditorTab editorTab) {
+	public TabContentPanel(@Nullable McbsEditorFileTab editorTab) {
 		this.tab = editorTab;
 	}
 	// ==================================================
@@ -87,7 +88,7 @@ public final class TabContentPanel extends TElement
 		}
 		// ==================================================
 		/**
-		 * GUI that is initialized when no {@link McbsEditorTab} is currently selected.
+		 * GUI that is initialized when no {@link McbsEditorFileTab} is currently selected.
 		 */
 		private final void initNoMcbsEditorTabGui() {
 			//FIXME - Implement this GUI
@@ -95,10 +96,10 @@ public final class TabContentPanel extends TElement
 
 		/**
 		 * Main GUI initialization.
-		 * @param tab The currently selected {@link McbsEditorTab}.
+		 * @param tab The currently selected {@link McbsEditorFileTab}.
 		 * @param view The currently selected {@link StatsView}.
 		 */
-		private final void initGui(@NotNull McbsEditorTab tab, @NotNull StatsView view)
+		private final void initGui(@NotNull McbsEditorFileTab tab, @NotNull StatsView view)
 		{
 			//not null argument requirements
 			Objects.requireNonNull(tab, "Missing editor 'tab' instance");
@@ -151,7 +152,7 @@ public final class TabContentPanel extends TElement
 		}
 		// ==================================================
 		/**
-		 * GUI that is initialized when no {@link McbsEditorTab} is currently selected.
+		 * GUI that is initialized when no {@link McbsEditorFileTab} is currently selected.
 		 */
 		private final void initNoMcbsEditorTabGui() { initNoStats(); }
 
@@ -183,10 +184,10 @@ public final class TabContentPanel extends TElement
 
 		/**
 		 * Main GUI initialization.
-		 * @param tab The currently selected {@link McbsEditorTab}.
+		 * @param tab The currently selected {@link McbsEditorFileTab}.
 		 * @param view The currently selected {@link StatsView}.
 		 */
-		private final void initGui(@NotNull McbsEditorTab tab, @NotNull StatsView view)
+		private final void initGui(@NotNull McbsEditorFileTab tab, @NotNull StatsView view)
 		{
 			//not null argument requirements
 			Objects.requireNonNull(tab, "Missing editor 'tab' instance");

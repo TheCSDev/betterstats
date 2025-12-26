@@ -1,7 +1,7 @@
 package com.thecsdev.betterstats.client.gui.mcbs_view.editor;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.common.util.enumerations.CompassDirection;
@@ -9,7 +9,6 @@ import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
-import com.thecsdev.commonmc.api.client.gui.widget.TClickableWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;

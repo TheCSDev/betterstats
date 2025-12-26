@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.api.mcbs.view;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.client.gui.mcbs_view.editor.MenubarPanel;
 import com.thecsdev.betterstats.client.gui.mcbs_view.editor.TabContentPanel;
 import com.thecsdev.betterstats.client.gui.mcbs_view.editor.TabStripPanel;
@@ -55,9 +56,12 @@ public final class McbsEditorGUI extends TElement
 		addRel(tablist);
 
 		//create and add the editor-tab panel
-		final var editorTab = new TabContentPanel(this.mcbsEditor.getCurrentTab());
-		editorTab.setBounds(0, 36, getBounds().width, getBounds().height - 36);
-		addRel(editorTab);
+		//FIXME - Now, implement GUI support for different types of McbsEditorTab-s
+		if(this.mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab meft) {
+			final var editorTab = new TabContentPanel(meft);
+			editorTab.setBounds(0, 36, getBounds().width, getBounds().height - 36);
+			addRel(editorTab);
+		}
 	}
 	// ==================================================
 }

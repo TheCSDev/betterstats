@@ -1,7 +1,7 @@
 package com.thecsdev.betterstats.api.client.gui.screen;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;
@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import static net.minecraft.network.protocol.game.ServerboundClientCommandPacket.Action.REQUEST_STATS;
 
@@ -41,7 +40,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 	}
 	public BetterStatsScreen(@Nullable Screen lastScreen) {
 		this(lastScreen, McbsEditor.INSTANCE);
-		this.mcbsEditor.addTab(McbsEditorTab.LOCALPLAYER, false);
+		this.mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, false);
 	}
 	// ==================================================
 	/**
@@ -74,7 +73,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 		this.receivedLocalPlayerStatsFlag = true;
 
 		//update the local player statistics tab's stats data
-		McbsEditorTab.LOCALPLAYER.loadStatsFrom(LocalPlayerStatsProvider.ofCurrentLocalPlayer());
+		McbsEditorFileTab.LOCALPLAYER.loadStatsFrom(LocalPlayerStatsProvider.ofCurrentLocalPlayer());
 	}
 	// --------------------------------------------------
 	protected final @Override void initCallback() {
