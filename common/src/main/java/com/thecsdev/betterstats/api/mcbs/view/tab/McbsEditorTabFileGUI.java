@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.client.gui.mcbs_view.editor;
+package com.thecsdev.betterstats.api.mcbs.view.tab;
 
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
@@ -19,7 +19,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -27,33 +26,18 @@ import java.util.Objects;
  * <b>Tabbed document interface</b> tab content element that houses the main content
  * of the currently selected {@link McbsEditorFileTab}.
  */
-@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-@Deprecated(forRemoval = true)
-public final class TabContentPanel extends TElement
+public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileTab>
 {
 	// ================================================== ==================================================
-	//                                    TabContentPanel IMPLEMENTATION
+	//                               McbsEditorTabFileGUI IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @Nullable McbsEditorFileTab tab;
-	// --------------------------------------------------
-	private long lastSeenTabEditCount; //for keeping up to date with tab controller's changes
-	// ==================================================
-	public TabContentPanel(@Nullable McbsEditorFileTab editorTab) {
-		this.tab = editorTab;
+	public McbsEditorTabFileGUI(@NotNull McbsEditorFileTab editorTab) throws NullPointerException {
+		super(editorTab);
 	}
 	// ==================================================
-	protected final @Override void tickCallback() {
-		//if last seen tab edit count is out of date, we need to reinitialize
-		if(this.tab != null && this.lastSeenTabEditCount != tab.getEditCount())
-			clearAndInit();
-	}
-
-	protected final @Override void initCallback()
+	protected final @Override void initTabGuiCallback()
 	{
-		//when reinitializing, we're up-to-date, so clear any "dirtiness" flags
-		if(this.tab != null) this.lastSeenTabEditCount = this.tab.getEditCount();
-
 		//initialize and add the stats filters panel
 		final var panel_filters = new FiltersPanel();
 		add(panel_filters);
@@ -83,17 +67,10 @@ public final class TabContentPanel extends TElement
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
-			if(TabContentPanel.this.tab == null) initNoMcbsEditorTabGui();
-			else initGui(TabContentPanel.this.tab, TabContentPanel.this.tab.getCurrentView());
+			final var tab = McbsEditorTabFileGUI.this.getEditorTab();
+			initGui(tab, tab.getCurrentView());
 		}
 		// ==================================================
-		/**
-		 * GUI that is initialized when no {@link McbsEditorFileTab} is currently selected.
-		 */
-		private final void initNoMcbsEditorTabGui() {
-			//FIXME - Implement this GUI
-		}
-
 		/**
 		 * Main GUI initialization.
 		 * @param tab The currently selected {@link McbsEditorFileTab}.
@@ -147,15 +124,10 @@ public final class TabContentPanel extends TElement
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
-			if(TabContentPanel.this.tab == null) initNoMcbsEditorTabGui();
-			else initGui(TabContentPanel.this.tab, TabContentPanel.this.tab.getCurrentView());
+			final var tab = McbsEditorTabFileGUI.this.getEditorTab();
+			initGui(tab, tab.getCurrentView());
 		}
 		// ==================================================
-		/**
-		 * GUI that is initialized when no {@link McbsEditorFileTab} is currently selected.
-		 */
-		private final void initNoMcbsEditorTabGui() { initNoStats(); }
-
 		/**
 		 * GUI that is initialized when no statistics can be shown, most likely
 		 * because no GUI elements got initialized after {@link #initCallback()}
