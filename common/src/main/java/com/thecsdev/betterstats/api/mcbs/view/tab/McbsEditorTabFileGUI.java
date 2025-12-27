@@ -41,12 +41,12 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 		//initialize and add the stats filters panel
 		final var panel_filters = new FiltersPanel();
 		add(panel_filters);
-		panel_filters.setBounds(UDim2.ZERO, new UDim2(0.3, 1, 1, 0));
+		panel_filters.setBounds(UDim2.ZERO, new UDim2(0.3, 0, 1, 0));
 
 		//initialize and add the stats tab itself
 		final var panel_stats = new StatsPanel();
 		add(panel_stats);
-		panel_stats.setBounds(new UDim2(0.3, 0, 0, 0), new UDim2(0.7, -1, 1, 0));
+		panel_stats.setBounds(new UDim2(0.3, 0, 0, 0), new UDim2(0.7, 0, 1, 0));
 	}
 	// ================================================== ==================================================
 	//                                       FiltersPanel IMPLEMENTATION
@@ -59,11 +59,11 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_panel_bgFilters(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_filtersBackground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_panel_fgFilters(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_filtersForeground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
@@ -84,13 +84,13 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 
 			//initialize the panel
 			final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
-			panel.setBounds(1, 1, getBounds().width - 2 - 8, getBounds().height - 2);
+			panel.setBounds(0, 0, getBounds().width - 8, getBounds().height);
 			panel.scrollPaddingProperty().set(8, FiltersPanel.class);
 			addRel(panel);
 
 			//initialize the scroll-bar
 			final var scroll = new TScrollBarWidget.Flat(panel);
-			scroll.setBounds(getBounds().width - 9, 1, 8, getBounds().height - 2);
+			scroll.setBounds(getBounds().width - 8, 0, 8, getBounds().height);
 			addRel(scroll);
 
 			//initialize the filters
@@ -116,11 +116,11 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_panel_bgStats(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_statsBackground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_panel_fgStats(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_statsForeground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
@@ -167,13 +167,13 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 
 			//initialize the panel
 			final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
-			panel.setBounds(1, 1, getBounds().width - 2 - 8, getBounds().height - 2);
+			panel.setBounds(0, 0, getBounds().width - 8, getBounds().height);
 			panel.scrollPaddingProperty().set(8, StatsPanel.class);
 			addRel(panel);
 
 			//initialize the scroll-bar
 			final var scroll = new TScrollBarWidget.Flat(panel);
-			scroll.setBounds(getBounds().width - 9, 1, 8, getBounds().height - 2);
+			scroll.setBounds(getBounds().width - 8, 0, 8, getBounds().height);
 			addRel(scroll);
 
 			//initialize the stats

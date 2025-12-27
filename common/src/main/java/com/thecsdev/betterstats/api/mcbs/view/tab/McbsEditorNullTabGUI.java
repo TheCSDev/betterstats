@@ -5,7 +5,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 /**
- * A {@link McbsEditorTabGUI} implementation that does not display anything.
+ * {@link McbsEditorTabGUI} implementation that is used as fallback for
+ * when no tabs are selected.
+ * @see McbsEditorNullTab
  */
 @Environment(EnvType.CLIENT)
 public class McbsEditorNullTabGUI extends McbsEditorTabGUI<McbsEditorNullTab>

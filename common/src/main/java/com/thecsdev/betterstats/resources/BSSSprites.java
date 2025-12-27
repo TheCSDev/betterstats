@@ -20,16 +20,21 @@ public final class BSSSprites
 	// ==================================================
 	private BSSSprites() {}
 	// ==================================================
-	public static final Identifier gui_panel_bgFilters() { return fromNamespaceAndPath(MOD_ID, "panel/bg_filters"); }
-	public static final Identifier gui_panel_fgFilters() { return fromNamespaceAndPath(MOD_ID, "panel/fg_filters"); }
-	public static final Identifier gui_panel_bgStats() { return fromNamespaceAndPath(MOD_ID, "panel/bg_stats"); }
-	public static final Identifier gui_panel_fgStats() { return fromNamespaceAndPath(MOD_ID, "panel/fg_stats"); }
-	public static final Identifier gui_panel_bgMenubar() { return fromNamespaceAndPath(MOD_ID, "panel/bg_menubar"); }
-	public static final Identifier gui_panel_fgMenubar() { return fromNamespaceAndPath(MOD_ID, "panel/fg_menubar"); }
-	public static final Identifier gui_panel_bgTabstrip() { return fromNamespaceAndPath(MOD_ID, "panel/bg_tabstrip"); }
-	public static final Identifier gui_panel_fgTabstrip() { return fromNamespaceAndPath(MOD_ID, "panel/fg_tabstrip"); }
-	public static final Identifier gui_panel_tabentry() { return fromNamespaceAndPath(MOD_ID, "panel/tabentry"); }
-	public static final Identifier gui_panel_tabentrySelected() { return fromNamespaceAndPath(MOD_ID, "panel/tabentry_selected"); }
+	public static final Identifier gui_editor_menubar_background() { return fromNamespaceAndPath(MOD_ID, "editor/menubar/background"); }
+	public static final Identifier gui_editor_menubar_foreground() { return fromNamespaceAndPath(MOD_ID, "editor/menubar/foreground"); }
+
+	public static final Identifier gui_editor_tabStrip_background() { return fromNamespaceAndPath(MOD_ID, "editor/tab_strip/background"); }
+	public static final Identifier gui_editor_tabStrip_foreground() { return fromNamespaceAndPath(MOD_ID, "editor/tab_strip/foreground"); }
+	public static final Identifier gui_editor_tabStrip_entry() { return fromNamespaceAndPath(MOD_ID, "editor/tab_strip/entry"); }
+	public static final Identifier gui_editor_tabStrip_entrySelected() { return fromNamespaceAndPath(MOD_ID, "editor/tab_strip/entry_selected"); }
+
+	public static final Identifier gui_editor_tab_background() { return fromNamespaceAndPath(MOD_ID, "editor/tab/background"); }
+	public static final Identifier gui_editor_tab_foreground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/foreground"); }
+
+	public static final Identifier gui_editor_tab_statsFile_filtersBackground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/filters_background"); }
+	public static final Identifier gui_editor_tab_statsFile_filtersForeground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/filters_foreground"); }
+	public static final Identifier gui_editor_tab_statsFile_statsBackground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/stats_background"); }
+	public static final Identifier gui_editor_tab_statsFile_statsForeground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/stats_foreground"); }
 	// --------------------------------------------------
 	public static final Identifier gui_icon_close() { return fromNamespaceAndPath(MOD_ID, "icon/close"); }
 	public static final Identifier gui_icon_settings() { return fromNamespaceAndPath(MOD_ID, "icon/settings"); }
