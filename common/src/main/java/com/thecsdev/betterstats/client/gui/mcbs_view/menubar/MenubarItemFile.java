@@ -1,8 +1,9 @@
 package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
-import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsConfigScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorSettingsTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.resources.BSSLang;
@@ -40,29 +41,42 @@ public final class MenubarItemFile extends MenubarItem
 	public final @Override @NotNull TContextMenu createContextMenu(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 	{
+		//not null requirements
 		Objects.requireNonNull(client, "Missing 'client' instance");
 		Objects.requireNonNull(mcbsEditor, "Missing 'editor' instance");
-		return new TContextMenu.Builder(client)
-				.addButton(
-						air().append(" ").append(BSSLang.gui_menubar_file_new()),
-						__ -> mcbsEditor.addTab(new McbsEditorTab(new McbsFile()), true))
-				.addButton(
-						gui(TCDCSprites.gui_icon_fsFolder()).append(" ").append(BSSLang.gui_menubar_file_open()),
-						__ -> showOpenFileDialog(client, mcbsEditor))
-				.addButton(
-						air().append(" ").append(BSSLang.gui_menubar_file_saveAs()),
-						__ -> showSaveFileDialog(client, mcbsEditor))
-				.addSeparator()
-				.addButton(
-						gui(BSSSprites.gui_icon_settings()).append(" ").append(BSSLang.gui_menubar_file_settings()),
-						__ -> {
-							final var cs = new BetterStatsConfigScreen(client.screen);
-							client.setScreen(cs.getAsScreen());
-						})
-				.addButton(
-						gui(BSSSprites.gui_icon_close()).append(" ").append(BSSLang.gui_menubar_file_close()),
-						__ -> Optional.ofNullable(client.screen).ifPresent(Screen::onClose))
-				.build();
+
+		//create new builder
+		final var builder = new TContextMenu.Builder(client);
+
+		//"New" option - useless
+		/*builder.addButton(
+				air().append(" ").append(BSSLang.gui_menubar_file_new()),
+				__ -> mcbsEditor.addTab(new McbsEditorFileTab(new McbsFile()), true));*/
+
+		//"Open" option
+		builder.addButton(
+				gui(TCDCSprites.gui_icon_fsFolder()).append(" ").append(BSSLang.gui_menubar_file_open()),
+				__ -> showOpenFileDialog(client, mcbsEditor));
+
+		//"Save as" option
+		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab)
+			builder.addButton(air().append(" ").append(
+					BSSLang.gui_menubar_file_saveAs()),
+					__ -> showSaveFileDialog(client, mcbsEditor));
+
+		//"Settings" option
+		builder.addSeparator();
+		builder.addButton(
+				gui(BSSSprites.gui_icon_settings()).append(" ").append(BSSLang.gui_menubar_file_settings()),
+				__ -> mcbsEditor.addTab(McbsEditorSettingsTab.INSTANCE, true));
+
+		//"Close" option
+		builder.addButton(
+				gui(BSSSprites.gui_icon_close()).append(" ").append(BSSLang.gui_menubar_file_close()),
+				__ -> Optional.ofNullable(client.screen).ifPresent(Screen::onClose));
+
+		//build and return the context menu
+		return builder.build();
 	}
 	// ==================================================
 	/**
@@ -83,7 +97,7 @@ public final class MenubarItemFile extends MenubarItem
 				.build((result, file) -> TUtils.uncheckedCall(() -> {
 					if(result != TFileChooserScreen.Result.APPROVE || file == null || !file.exists())
 						return;
-					mcbsEditor.addTab(new McbsEditorTab(file), true);
+					mcbsEditor.addTab(new McbsEditorFileTab(file), true);
 				}));
 		client.setScreen(dialog.getAsScreen());
 	}
@@ -99,9 +113,9 @@ public final class MenubarItemFile extends MenubarItem
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 			throws NullPointerException
 	{
-		//an editor tab needs to be open for this feature
-		final var editorTab  = mcbsEditor.getCurrentTab();
-		if(editorTab == null) return;
+		//an editor tab for a file needs to be open, for this feature
+		final var fileTab  = (mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab meft) ? meft : null;
+		if(fileTab == null) return;
 
 		//create and show the dialog
 		final var lastScreen = client.screen;
@@ -111,7 +125,7 @@ public final class MenubarItemFile extends MenubarItem
 				.build((result, file) -> TUtils.uncheckedCall(() -> {
 					if(result != TFileChooserScreen.Result.APPROVE || file == null)
 						return;
-					editorTab.saveAs(file);
+					fileTab.saveAs(file);
 				}));
 		client.setScreen(dialog.getAsScreen());
 	}

@@ -38,11 +38,11 @@ public final class MenubarPanel extends TElement
 	// ==================================================
 	public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 		final var bb = getBounds();
-		pencil.drawGuiSprite(BSSSprites.gui_panel_bgMenubar(), bb.x, bb.y, bb.width, bb.height, -1);
+		pencil.drawGuiSprite(BSSSprites.gui_editor_menubar_background(), bb.x, bb.y, bb.width, bb.height, -1);
 	}
 	public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 		final var bb = getBounds();
-		pencil.drawGuiSprite(BSSSprites.gui_panel_fgMenubar(), bb.x, bb.y, bb.width, bb.height, -1);
+		pencil.drawGuiSprite(BSSSprites.gui_editor_menubar_foreground(), bb.x, bb.y, bb.width, bb.height, -1);
 	}
 	// --------------------------------------------------
 	protected final @Override void initCallback()

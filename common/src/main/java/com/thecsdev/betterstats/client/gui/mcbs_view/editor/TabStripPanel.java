@@ -1,7 +1,7 @@
 package com.thecsdev.betterstats.client.gui.mcbs_view.editor;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.resources.BSSSprites;
 import com.thecsdev.common.util.enumerations.CompassDirection;
@@ -9,7 +9,6 @@ import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
-import com.thecsdev.commonmc.api.client.gui.widget.TClickableWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -31,26 +30,26 @@ public final class TabStripPanel extends TElement
 	// ================================================== ==================================================
 	private final @NotNull McbsEditor mcbsEditor;
 	// ==================================================
-	public TabStripPanel(@NotNull McbsEditor mcbsEditor) {
+	public TabStripPanel(@NotNull McbsEditor mcbsEditor) throws NullPointerException {
 		this.mcbsEditor = Objects.requireNonNull(mcbsEditor);
 	}
 	// ==================================================
 	public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 		final var bb = getBounds();
-		pencil.drawGuiSprite(BSSSprites.gui_panel_bgTabstrip(), bb.x, bb.y, bb.width, bb.height, -1);
+		pencil.drawGuiSprite(BSSSprites.gui_editor_tabStrip_background(), bb.x, bb.y, bb.width, bb.height, -1);
 	}
 	public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 		final var bb = getBounds();
-		pencil.drawGuiSprite(BSSSprites.gui_panel_fgTabstrip(), bb.x, bb.y, bb.width, bb.height, -1);
+		pencil.drawGuiSprite(BSSSprites.gui_editor_tabStrip_foreground(), bb.x, bb.y, bb.width, bb.height, -1);
 	}
 	// --------------------------------------------------
 	protected final @Override void initCallback()
 	{
 		//initialize the panel
 		final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
-		panel.setBounds(1, 1, getBounds().width - 2, getBounds().height - 2);
+		panel.setBounds(getBounds());
 		panel.scrollPaddingProperty().set(0, McbsEditorGUI.class);
-		addRel(panel);
+		add(panel);
 
 		//iterate tabs and initialize them
 		for(final var tab : this.mcbsEditor.getTabsReadOnly())
@@ -110,8 +109,8 @@ public final class TabStripPanel extends TElement
 			final var bb = getBounds();
 			pencil.drawGuiSprite(
 					isSelected() ?
-							BSSSprites.gui_panel_tabentrySelected() :
-							BSSSprites.gui_panel_tabentry(),
+							BSSSprites.gui_editor_tabStrip_entrySelected() :
+							BSSSprites.gui_editor_tabStrip_entry(),
 					bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		// --------------------------------------------------

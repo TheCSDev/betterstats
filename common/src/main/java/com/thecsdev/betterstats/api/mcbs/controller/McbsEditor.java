@@ -1,6 +1,8 @@
 package com.thecsdev.betterstats.api.mcbs.controller;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorNullTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,9 +24,9 @@ public final class McbsEditor
 	 */
 	public static final McbsEditor INSTANCE = new McbsEditor();
 	// ==================================================
-	private final @NotNull  Set<McbsEditorTab> _tabs          = new LinkedHashSet<>();
-	private final @NotNull  Set<McbsEditorTab> _tabsImmutable = unmodifiableSet(this._tabs);
-	private       @Nullable McbsEditorTab      _currentTab    = null;
+	private final @NotNull Set<McbsEditorTab> _tabs          = new LinkedHashSet<>();
+	private final @NotNull Set<McbsEditorTab> _tabsImmutable = unmodifiableSet(this._tabs);
+	private       @NotNull McbsEditorTab      _currentTab    = McbsEditorNullTab.INSTANCE;
 	// --------------------------------------------------
 	/**
 	 * This value increments each time a change is through this {@link McbsEditor},
@@ -86,7 +88,8 @@ public final class McbsEditor
 		final var result = this._tabs.add(tab);
 		if(result) addEditCount();
 		//set current tab if needed. this can also increment edit count on its own
-		if(setAsCurrent) setCurrentTab(tab);
+		if(setAsCurrent || getCurrentTab() == McbsEditorNullTab.INSTANCE)
+			setCurrentTab(tab);
 		//return the result
 		return result;
 	}
@@ -104,7 +107,7 @@ public final class McbsEditor
 		//attempt to remove, return false if removing fails
 		if(!this._tabs.remove(tab)) return false;
 		//if the removed tab was the current tab, clear the current tab
-		if(tab == this._currentTab) this._currentTab = null;
+		if(tab == this._currentTab) this._currentTab = McbsEditorNullTab.INSTANCE;
 		//mark as dirty and return
 		addEditCount();
 		return true;
@@ -113,7 +116,8 @@ public final class McbsEditor
 	/**
 	 * Returns the current {@link McbsEditorTab} being edited by this {@link McbsEditor}.
 	 */
-	public final @Nullable McbsEditorTab getCurrentTab() { return this._currentTab; }
+	//FIXME - May wanna make this NotNull to avoid confusion with the null tab
+	public final @NotNull McbsEditorTab getCurrentTab() { return this._currentTab; }
 
 	/**
 	 * Sets the current {@link McbsEditorTab} being edited by this {@link McbsEditor}.
@@ -124,8 +128,11 @@ public final class McbsEditor
 	{
 		//cannot set if already set
 		if(tab == this._currentTab) return;
+		//use 'null' tab where appropriate
+		else if(tab == null || !this._tabs.contains(tab))
+			tab = McbsEditorNullTab.INSTANCE;
 		//set the tab and mark as dirty
-		this._currentTab = this._tabs.contains(tab) ? tab : null;
+		this._currentTab = tab;
 		addEditCount();
 	}
 	// ==================================================

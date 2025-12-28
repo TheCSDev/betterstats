@@ -2,8 +2,7 @@ package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
-import com.thecsdev.betterstats.api.mcbs.controller.McbsEditorTab;
-import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resources.BSSLang;
@@ -59,18 +58,18 @@ public final class MenubarItemView extends MenubarItem
 				});
 
 		//local-player statistics tab
-		if(mcbsEditor.getCurrentTab() != McbsEditorTab.LOCALPLAYER)
+		if(mcbsEditor.getCurrentTab() != McbsEditorFileTab.LOCALPLAYER)
 			builder.addButton(
 					localPlayerComponent.append(" ").append(BSSLang.gui_menubar_view_localPlayerStats()),
-					__ -> mcbsEditor.addTab(McbsEditorTab.LOCALPLAYER, true)
+					__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
 			);
 
 		//the stats tab submenu allows switching between stats tabs
-		if(mcbsEditor.getCurrentTab() != null) {
+		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab meft) {
 			builder.addSeparator();
 			builder.addContextMenu(
 					gui("statistics/item_used").append(" ").append(BSSLang.gui_menubar_view_statsView()),
-					view_statsView(client, mcbsEditor));
+					view_statsView(client, meft));
 		}
 
 		//build and return the context menu
@@ -78,31 +77,26 @@ public final class MenubarItemView extends MenubarItem
 	}
 	// ==================================================
 	/**
-	 * Creates a {@link TContextMenu} that allows switching between the available
-	 * {@link StatsView}s.
+	 * Creates a {@link TContextMenu} that allows switching between {@link StatsView}s
+	 * in a given {@link McbsEditorFileTab}.
 	 * @param client The {@link Minecraft} instance the GUI belongs to.
-	 * @param mcbsEditor The {@link McbsEditorGUI}'s {@link McbsEditor} instance.
+	 * @param fileTab The target {@link McbsEditorFileTab}.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 */
 	private static final @ApiStatus.Internal TContextMenu view_statsView(
-			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
+			@NotNull Minecraft client, @NotNull McbsEditorFileTab fileTab)
 			throws NullPointerException
 	{
 		//make sure arguments aren't null for some reason
 		Objects.requireNonNull(client);
-		Objects.requireNonNull(mcbsEditor);
+		Objects.requireNonNull(fileTab);
 
 		//create the builder
 		final var builder = new TContextMenu.Builder(Objects.requireNonNull(client));
 		//iterate all registered stats tabs and add a button for each
 		for(final var statsViewEntry : BClientRegistries.STATS_VIEW.entrySet()) {
 			final var statsView = statsViewEntry.getValue();
-			builder.addButton(statsView.getDisplayName(), __ -> {
-				//change the editor current tab's stats view
-				final @Nullable var editorTab = mcbsEditor.getCurrentTab();
-				if(editorTab == null) return;
-				editorTab.setCurrentView(statsView);
-			});
+			builder.addButton(statsView.getDisplayName(), __ -> fileTab.setCurrentView(statsView));
 		}
 
 		//build and return the built context menu
