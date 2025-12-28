@@ -1,0 +1,90 @@
+name: Bug report
+description: Report something not working as expected.
+title: '[v5.X+loader-1.X.X] Bug report name'
+labels:
+  - Bug
+assignees:
+  - TheCSDev
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for taking your time to fill out this bug report!
+  - type: markdown
+    attributes:
+      value: >-
+        ## **1. Bug report title**
+
+        Bug report titles start with the square brackets that contain the full
+        mod version. This helps project maintainers identify where the issue
+        took place.
+
+
+        **Version format:** v[mod_version]+[mod_loader]-[minecraft_version]  
+         **Version example:** v5.0+fabric-1.26  
+        **Title example:** [v5.3.1+neoforge-1.26.2] Red "Do not click" button
+        crashes the game when clicked
+  - type: textarea
+    id: description
+    attributes:
+      label: 2. What happened & steps to reproduce
+      description: >-
+        Describe the issue here in as much detail as possible. Then, describe
+        the step-by-step process to reproducing the issue.
+      placeholder: Describe the issue here in as much detail as possible.
+      value: >-
+        Clicking on the secret "Do not click" button crashes the game. Here's
+        how to reproduce the issue;
+
+
+        1. Go to ████ > ████████
+
+        2. Carefully █████ the █████████
+
+        3. A ███ appears that has the "Do not click" button
+
+        4. Click the button and observe the game crashing
+
+
+        5. Clear this placeholder text and replace it with an actual
+        step-by-step process
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 3. Debug logs / Crash report
+      description: >-
+        Please copy and paste any relevant log outputs or crash reports here.
+        Alternatively, you can publish the crash report to
+        [Crashy](https://crashy.net/) and link it here.
+      placeholder: If applicable, please fill in this field.
+      render: shell
+  - type: textarea
+    id: mods
+    attributes:
+      label: 4. Installed mods / Mod-pack
+      description: >-
+        Please list all other mods you have installed alongside this one. If the
+        issue took place in a mod-pack you downloaded, please link said
+        mod-pack. This helps project maintainers reproduce the issue, as other
+        mods often can and do cause issues.
+      placeholder: >-
+        Name a list of mods or link a mod-pack here. Please do not expect
+        project maintainers to manually download and install like 300 separate
+        mods.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 5. Code of Conduct
+      description: 'By submitting this issue, you agree to the following:'
+      options:
+        - label: I titled this issue properly
+          required: true
+        - label: If this issue is related to a crash, I provided a crash report
+          required: true
+        - label: >-
+            I will answer any follow-up questions to help diagnose and resolve
+            this issue
+          required: true
