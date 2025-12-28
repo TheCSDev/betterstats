@@ -1,8 +1,8 @@
 package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
 
-import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsConfigScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorSettingsTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
@@ -48,10 +48,10 @@ public final class MenubarItemFile extends MenubarItem
 		//create new builder
 		final var builder = new TContextMenu.Builder(client);
 
-		//"New" option
-		builder.addButton(
+		//"New" option - useless
+		/*builder.addButton(
 				air().append(" ").append(BSSLang.gui_menubar_file_new()),
-				__ -> mcbsEditor.addTab(new McbsEditorFileTab(new McbsFile()), true));
+				__ -> mcbsEditor.addTab(new McbsEditorFileTab(new McbsFile()), true));*/
 
 		//"Open" option
 		builder.addButton(
@@ -68,7 +68,7 @@ public final class MenubarItemFile extends MenubarItem
 		builder.addSeparator();
 		builder.addButton(
 				gui(BSSSprites.gui_icon_settings()).append(" ").append(BSSLang.gui_menubar_file_settings()),
-				__ -> { final var cs = new BetterStatsConfigScreen(client.screen); client.setScreen(cs.getAsScreen()); });
+				__ -> mcbsEditor.addTab(McbsEditorSettingsTab.INSTANCE, true));
 
 		//"Close" option
 		builder.addButton(

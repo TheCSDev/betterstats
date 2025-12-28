@@ -3,14 +3,9 @@ package com.thecsdev.betterstats.api.mcbs.view.tab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
-import com.thecsdev.betterstats.resources.BSSLang;
 import com.thecsdev.betterstats.resources.BSSSprites;
-import com.thecsdev.betterstats.resources.BSSTex;
 import com.thecsdev.common.math.UDim2;
-import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
-import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
-import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
@@ -27,12 +22,12 @@ import java.util.Objects;
  * of the currently selected {@link McbsEditorFileTab}.
  */
 @Environment(EnvType.CLIENT)
-public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileTab>
+public final class McbsEditorFileTabGUI extends McbsEditorTabGUI<McbsEditorFileTab>
 {
 	// ================================================== ==================================================
 	//                               McbsEditorTabFileGUI IMPLEMENTATION
 	// ================================================== ==================================================
-	public McbsEditorTabFileGUI(@NotNull McbsEditorFileTab editorTab) throws NullPointerException {
+	public McbsEditorFileTabGUI(@NotNull McbsEditorFileTab editorTab) throws NullPointerException {
 		super(editorTab);
 	}
 	// ==================================================
@@ -67,7 +62,7 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
-			final var tab = McbsEditorTabFileGUI.this.getEditorTab();
+			final var tab = McbsEditorFileTabGUI.this.getEditorTab();
 			initGui(tab, tab.getCurrentView());
 		}
 		// ==================================================
@@ -124,36 +119,10 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
-			final var tab = McbsEditorTabFileGUI.this.getEditorTab();
+			final var tab = McbsEditorFileTabGUI.this.getEditorTab();
 			initGui(tab, tab.getCurrentView());
 		}
 		// ==================================================
-		/**
-		 * GUI that is initialized when no statistics can be shown, most likely
-		 * because no GUI elements got initialized after {@link #initCallback()}
-		 * was called.
-		 */
-		private final void initNoStats()
-		{
-			//bounding boxes math nonsense
-			final var bb = getBounds();
-			final int w3 = bb.width / 3;
-
-			//create and add a texture element, for the silhouette
-			final var tex_silhouette = new TTextureElement(BSSTex.gui_images_nostatsSilhouette());
-			add(tex_silhouette);
-			tex_silhouette.setBounds(new UDim2(0.5, 0, 0.5, 0), new UDim2(0, w3, 0, w3));
-			tex_silhouette.move(-w3 / 2, -w3 / 2);
-			tex_silhouette.colorProperty().set(0xFFFFFFFF, StatsPanel.class);
-
-			//create and add a label, indicating no stats can be shown
-			final var lbl = new TLabelElement(BSSLang.gui_statsview_stats_noStats());
-			lbl.setBounds(bb.x, bb.y + (bb.height / 2) - 7, bb.width, 14);
-			lbl.textAlignmentProperty().set(CompassDirection.CENTER, StatsPanel.class);
-			lbl.textColorProperty().set(0xFFFFFFFF, StatsPanel.class);
-			add(lbl);
-		}
-
 		/**
 		 * Main GUI initialization.
 		 * @param tab The currently selected {@link McbsEditorFileTab}.
@@ -184,7 +153,7 @@ public final class McbsEditorTabFileGUI extends McbsEditorTabGUI<McbsEditorFileT
 			});
 
 			//if no statistics got initialized, init "no stats" gui
-			if(panel.isEmpty()) initNoStats();
+			if(panel.isEmpty()) McbsEditorNullTabGUI.initNoStatsGUI(this);
 		}
 		// ==================================================
 	}
