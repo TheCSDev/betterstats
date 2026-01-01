@@ -3,7 +3,7 @@ package com.thecsdev.betterstats.api.mcbs.view.statsview;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
-import com.thecsdev.betterstats.client.gui.mcbs_view.statsview.*;
+import com.thecsdev.betterstats.mcbs.view.statsview.*;
 import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.common.util.collections.GenericProperties;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
