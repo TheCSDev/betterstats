@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.client.gui.mcbs_view.menubar;
+package com.thecsdev.betterstats.mcbs.view.menubar;
 
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;

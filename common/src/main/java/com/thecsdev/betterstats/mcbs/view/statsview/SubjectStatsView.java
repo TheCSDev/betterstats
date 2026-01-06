@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.client.gui.mcbs_view.statsview;
+package com.thecsdev.betterstats.mcbs.view.statsview;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;

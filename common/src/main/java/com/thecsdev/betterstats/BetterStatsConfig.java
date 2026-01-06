@@ -12,8 +12,9 @@ import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 public final class BetterStatsConfig extends ModConfig
 {
 	// ==================================================
-	private @Expose @SerializedName("common-registerCommands")    boolean commands         = true;
-	private @Expose @SerializedName("client-guiMobsFollowCursor") boolean mobsFollowCursor = true;
+	private @Expose @SerializedName("common-registerCommands")     boolean commands         = true;
+	private @Expose @SerializedName("client-allowChatPsaMessages") boolean allowChatPsa     = true;
+	private @Expose @SerializedName("client-guiMobsFollowCursor")  boolean mobsFollowCursor = true;
 	// ==================================================
 	public BetterStatsConfig() { super(MOD_ID); }
 	// ==================================================
@@ -27,6 +28,12 @@ public final class BetterStatsConfig extends ModConfig
 	 * the cursor.
 	 */
 	public final boolean getGuiMobsFollowCursor() { return this.mobsFollowCursor; }
+
+	/**
+	 * Whether this mod is allowed to display public-service-announcement
+	 * messages in chat.
+	 */
+	public final boolean allowsChatPsaMessages() { return this.allowChatPsa; }
 	// ==================================================
 	/**
 	 * Sets whether this mod's commands are to be registered.
@@ -38,5 +45,11 @@ public final class BetterStatsConfig extends ModConfig
 	 * the cursor.
 	 */
 	public final void setGuiMobsFollowCursor(boolean value) { this.mobsFollowCursor = value; }
+
+	/**
+	 * Sets whether this mod is allowed to display public-service-announcement
+	 * messages in chat.
+	 */
+	public final void setAllowChatPsaMessages(boolean value) { this.allowChatPsa = value; }
 	// ==================================================
 }

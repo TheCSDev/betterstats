@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.client.gui.mcbs_view.statsview;
+package com.thecsdev.betterstats.mcbs.view.statsview;
 
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.common.util.annotations.Virtual;
@@ -18,7 +18,7 @@ import static com.thecsdev.commonmc.resources.TComponent.item;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**
- * {@link StatsView} that displays "Food & Drinks" statistics.
+ * {@link StatsView} that displays "Food &amp; Drinks" statistics.
  */
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)

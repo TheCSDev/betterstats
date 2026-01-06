@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
-import com.thecsdev.betterstats.api.mcbs.model.McbsIO;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resources.BSSLang;
@@ -128,7 +127,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		//not null requirements
 		Objects.requireNonNull(file);
 		//save to file
-		final var json = McbsIO.saveToJson(this.mcbsFile);
+		final var json = this.mcbsFile.toJson();
 		FileUtils.writeStringToFile(file, new Gson().toJson(json), StandardCharsets.UTF_8);
 		//if successful (no io-exceptions), set the last saved file
 		this._lastSaveFile = file;
@@ -149,7 +148,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		Objects.requireNonNull(file);
 		//load from file
 		final var json = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-		McbsIO.loadFromJson(new Gson().fromJson(json, JsonObject.class), this.mcbsFile);
+		this.mcbsFile.loadFromJson(new Gson().fromJson(json, JsonObject.class));
 		//if successful (no io-exceptions), add edit count and set the last saved file
 		addEditCount();
 		this._lastSaveFile = file;
