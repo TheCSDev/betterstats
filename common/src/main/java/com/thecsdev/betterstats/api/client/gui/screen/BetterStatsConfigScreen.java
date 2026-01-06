@@ -103,6 +103,11 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				BSSLang.config_client_guiMobsFollowCursor(),
 				TTooltip.of(BSSLang.config_client_guiMobsFollowCursor_tooltip()),
 				bss_config.getGuiMobsFollowCursor(), (p, o, n) -> bss_config.setGuiMobsFollowCursor(n));
+		initBooleanProperty(
+				panel,
+				BSSLang.config_client_allowChatPsa(),
+				TTooltip.of(BSSLang.config_client_allowChatPsa_tooltip()),
+				bss_config.allowsChatPsaMessages(), (p, o, n) -> bss_config.setAllowChatPsaMessages(n));
 
 		//[betterstats] initialize server-sided settings
 		initTableHead(panel, TCDCLang.config_server(), TCDCLang.config_propertyValue());

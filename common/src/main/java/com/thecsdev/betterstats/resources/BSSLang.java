@@ -1,10 +1,18 @@
 package com.thecsdev.betterstats.resources;
 
 import com.thecsdev.betterstats.BetterStats;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
+import java.util.Objects;
+
+import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**
@@ -13,12 +21,35 @@ import static net.minecraft.network.chat.Component.translatable;
 public final class BSSLang
 {
 	// ==================================================
+	public static final Component WATERMARK;
+	// ==================================================
 	private BSSLang() {}
+	static {
+		//define the 'betterstats' watermark
+		{
+			final var bss = Objects.requireNonNull(BetterStats.getInstance(), "Mod not initialized: 'betterstats'");
+
+			//create the hover event for the watermark
+			final var hoverText = literal(bss.getModName()).withStyle(ChatFormatting.YELLOW)
+					.append("\n")
+					.append(literal(MOD_ID).withStyle(ChatFormatting.GRAY));
+			final var hoverEvent = new HoverEvent.ShowText(hoverText);
+			@SuppressWarnings("removal")
+			final var clickEvent = new ClickEvent.OpenUrl(URI.create(BetterStats.getProperty("mod.link.homepage")));
+
+			//create the watermark text
+			final var text = literal("[≡] <" + MOD_ID + ">").withStyle(ChatFormatting.DARK_PURPLE);
+			text.setStyle(text.getStyle().withHoverEvent(hoverEvent).withClickEvent(clickEvent));
+			WATERMARK = text;
+		}
+	}
 	// ==================================================
 	public static final MutableComponent betterstats() { return translatable("betterstats"); }
 	// ==================================================
 	public static final MutableComponent config_common_registerCommands() { return translatable("betterstats.config.common.register_commands"); }
 	public static final MutableComponent config_common_registerCommands_tooltip() { return translatable("betterstats.config.common.register_commands.tooltip"); }
+	public static final MutableComponent config_client_allowChatPsa() { return translatable("betterstats.config.client.allow_chat_psa"); }
+	public static final MutableComponent config_client_allowChatPsa_tooltip() { return translatable("betterstats.config.client.allow_chat_psa.tooltip"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor_tooltip() { return translatable("betterstats.config.client.gui_mobs_follow_cursor.tooltip"); }
 	// --------------------------------------------------

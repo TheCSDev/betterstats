@@ -12,6 +12,8 @@
 
 	"betterstats.config.common.register_commands": "Register commands",
 	"betterstats.config.common.register_commands.tooltip": "Registers this mod's commands (ex. '/statistics').",
+	"betterstats.config.client.allow_chat_psa": "Allow chat PSA messages",
+	"betterstats.config.client.allow_chat_psa.tooltip": "Allows rare informational PSA messages from the developer of this mod to show up in chat. Turn this off to suppress all such notifications.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI mobs follow cursor",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Entity stats' GUI mobs visually follow the cursor location.",
 

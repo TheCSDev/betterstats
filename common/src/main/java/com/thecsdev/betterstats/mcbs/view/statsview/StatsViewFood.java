@@ -18,7 +18,7 @@ import static com.thecsdev.commonmc.resources.TComponent.item;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**
- * {@link StatsView} that displays "Food & Drinks" statistics.
+ * {@link StatsView} that displays "Food &amp; Drinks" statistics.
  */
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
