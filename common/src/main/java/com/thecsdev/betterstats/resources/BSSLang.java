@@ -48,6 +48,8 @@ public final class BSSLang
 	// ==================================================
 	public static final MutableComponent config_common_registerCommands() { return translatable("betterstats.config.common.register_commands"); }
 	public static final MutableComponent config_common_registerCommands_tooltip() { return translatable("betterstats.config.common.register_commands.tooltip"); }
+	public static final MutableComponent config_common_apiEndpoint() { return translatable("betterstats.config.common.api_endpoint"); }
+	public static final MutableComponent config_common_apiEndpoint_tooltip() { return translatable("betterstats.config.common.api_endpoint.tooltip"); }
 	public static final MutableComponent config_client_allowChatPsa() { return translatable("betterstats.config.client.allow_chat_psa"); }
 	public static final MutableComponent config_client_allowChatPsa_tooltip() { return translatable("betterstats.config.client.allow_chat_psa.tooltip"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }

@@ -22,6 +22,7 @@ import com.thecsdev.commonmc.api.client.gui.screen.TScreenPlus;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TCheckboxWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
+import com.thecsdev.commonmc.api.client.gui.widget.text.TSimpleTextFieldWidget;
 import com.thecsdev.commonmc.resources.TCDCLang;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,9 +31,11 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resources.TComponent.gui;
+import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**
@@ -94,7 +97,18 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				panel,
 				BSSLang.config_common_registerCommands(),
 				TTooltip.of(BSSLang.config_common_registerCommands_tooltip()),
-				bss_config.canRegisterCommands(), (p, o, n) -> bss_config.setRegisterCommands(n));
+				bss_config.canRegisterCommands(),
+				(p, o, n) -> bss_config.setRegisterCommands(n));
+		initStringProperty(
+				panel,
+				BSSLang.config_common_apiEndpoint(),
+				TTooltip.of(BSSLang.config_common_apiEndpoint_tooltip()),
+				bss_config.getApiEndpoint().toString(),
+				(p, o, n) -> {
+					try { bss_config.setApiEndpoint(URI.create(n).toURL());}
+					catch(Exception __) { /*ignored*/ }
+				}
+		);
 
 		//[betterstats] initialize client-sided settings
 		initTableHead(panel, TCDCLang.config_client(), TCDCLang.config_propertyValue());
@@ -102,12 +116,14 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				panel,
 				BSSLang.config_client_guiMobsFollowCursor(),
 				TTooltip.of(BSSLang.config_client_guiMobsFollowCursor_tooltip()),
-				bss_config.getGuiMobsFollowCursor(), (p, o, n) -> bss_config.setGuiMobsFollowCursor(n));
+				bss_config.getGuiMobsFollowCursor(),
+				(p, o, n) -> bss_config.setGuiMobsFollowCursor(n));
 		initBooleanProperty(
 				panel,
 				BSSLang.config_client_allowChatPsa(),
 				TTooltip.of(BSSLang.config_client_allowChatPsa_tooltip()),
-				bss_config.allowsChatPsaMessages(), (p, o, n) -> bss_config.setAllowChatPsaMessages(n));
+				bss_config.allowsChatPsaMessages(),
+				(p, o, n) -> bss_config.setAllowChatPsaMessages(n));
 
 		//[betterstats] initialize server-sided settings
 		initTableHead(panel, TCDCLang.config_server(), TCDCLang.config_propertyValue());
@@ -127,7 +143,8 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				panel,
 				TCDCLang.config_client_updateItemGroupsOnJoin(),
 				TTooltip.of(TCDCLang.config_client_updateItemGroupsOnJoin_tooltip()),
-				tcd_config.updateItemGroupsOnJoin(), (p, o, n) -> tcd_config.setUpdateItemGroupsOnJoin(n));
+				tcd_config.updateItemGroupsOnJoin(),
+				(p, o, n) -> tcd_config.setUpdateItemGroupsOnJoin(n));
 
 		//[tcdcommons] initialize server-sided settings
 		initTableHead(panel, TCDCLang.config_server(), TCDCLang.config_propertyValue());
@@ -135,9 +152,16 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 
 		// ---------- end
 		//flag element that saves the config once this gui is removed
+		final var client      = Objects.requireNonNull(panel.getClient(), "Missing 'client' instance");
 		final var el_saveFlag = new TElement();
 		el_saveFlag.setBounds(panel.computeNextYBounds(0, 0));
-		el_saveFlag.screenProperty().addChangeListener((p, o, n) -> {
+		el_saveFlag.screenProperty().addChangeListener((p, o, n) ->
+		{
+			//do nothing if the client's screen didn't change
+			if((o != null && client.screen == o.getAsScreen()) ||
+					(n != null && client.screen == n.getAsScreen()))
+				return;
+			//save the config files otherwise
 			if(n == null) TUtils.uncheckedCall(() -> {
 				bss_config.saveToFile();
 				tcd_config.saveToFile();
@@ -176,7 +200,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 
 		final var divider = new TFillColorElement.Flat(0xFF000000, 0);
 		table_head.add(divider);
-		divider.setBounds(new UDim2(0.7, 0, 0, 0), new UDim2(0, 1, 1, 0));
+		divider.setBounds(new UDim2(0.6, 0, 0, 0), new UDim2(0, 1, 1, 0));
 	}
 	// --------------------------------------------------
 	/**
@@ -231,6 +255,41 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		if(tooltip != null) ch_value.tooltipProperty().set(__ -> tooltip, BetterStatsConfigScreen.class);
 		el_bg.add(ch_value);
 		ch_value.setBounds(new UDim2(1, -30, 0, 3), new UDim2(0, 20, 0, 20));
+	}
+
+	/**
+	 * Initializes a string property setting.
+	 * @param panel The panel where the setting is to be initialized.
+	 * @param name The display name label text.
+	 * @param tooltip The tooltip text.
+	 * @param value The current value of the setting.
+	 * @param changeListener Use this to apply setting value changes.
+	 */
+	private static final void initStringProperty(
+			@NotNull TPanelElement panel,
+			@NotNull Component name, @Nullable TTooltip tooltip,
+			@NotNull String value, @NotNull IChangeListener<String> changeListener)
+	{
+		//background color element
+		final var el_bg = new TFillColorElement.Flat((panel.size() % 2 == 0) ? 0x33000000 : 0x44000000, 0);
+		el_bg.hoverableProperty().set(true, BetterStatsConfigScreen.class);
+		el_bg.setBounds(panel.computeNextYBounds(26, 0));
+		if(tooltip != null) el_bg.tooltipProperty().set(__ -> tooltip, BetterStatsConfigScreen.class);
+		panel.add(el_bg);
+
+		//name label
+		final var lbl_name = new TLabelElement();
+		lbl_name.setBounds(el_bg.getBounds().add(10, 0, -20, 0));
+		lbl_name.setText(name);
+		el_bg.add(lbl_name);
+
+		//value label
+		final var in_value = new TSimpleTextFieldWidget();
+		in_value.getTextLabel().textScaleProperty().set(0.9, BetterStatsConfigScreen.class);
+		in_value.textProperty().set(value, BetterStatsConfigScreen.class);
+		in_value.textProperty().addChangeListener(changeListener);
+		el_bg.add(in_value);
+		in_value.setBounds(new UDim2(0.6, 10, 0, 3), new UDim2(0.4, -20, 0, 20));
 	}
 	// ================================================== ==================================================
 	//                                      WindowElement IMPLEMENTATION
