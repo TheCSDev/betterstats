@@ -1,9 +1,6 @@
 package com.thecsdev.betterstats.api.mcbs.view.tab;
 
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorNullTab;
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorSettingsTab;
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.*;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import net.fabricmc.api.EnvType;
@@ -130,6 +127,7 @@ public abstract class McbsEditorTabGUI<T extends McbsEditorTab> extends TElement
 	 * Registers internal {@link McbsEditorTabGUI} factories.
 	 */
 	public static final @ApiStatus.Internal void bootstrap() {
+		registerFactory(McbsEditorHomepageTab.class, McbsEditorHomepageTabGUI::new);
 		registerFactory(McbsEditorNullTab.class,     McbsEditorNullTabGUI::new);
 		registerFactory(McbsEditorFileTab.class,     McbsEditorFileTabGUI::new);
 		registerFactory(McbsEditorSettingsTab.class, McbsEditorSettingsTabGUI::new);

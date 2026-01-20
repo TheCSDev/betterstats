@@ -32,11 +32,13 @@
 	"betterstats.gui.menubar.file.close": "Close",
 	"betterstats.gui.menubar.view": "View",
 	"betterstats.gui.menubar.view.vanilla_screen": "Vanilla screen",
+	"betterstats.gui.menubar.view.homepage": "Home",
 	"betterstats.gui.menubar.view.local_player_stats": "My statistics",
 	"betterstats.gui.menubar.view.stats_view": "Switch view",
 	"betterstats.gui.menubar.about": "About",
 	"betterstats.gui.menubar.about.source_code": "Source code",
 	"betterstats.gui.menubar.about.support_me": "Support me",
+	"betterstats.gui.menubar.about.legal_notices": "Legal notices",
 
 	"betterstats.gui.statsview.filters": "Filters",
 	"betterstats.gui.statsview.filter.selected_view": "Selected view",

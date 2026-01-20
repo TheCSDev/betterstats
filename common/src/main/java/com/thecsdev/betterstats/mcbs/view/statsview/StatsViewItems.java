@@ -219,7 +219,8 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 		{
 			//initialize the list
 			final var ist  = IStatsProvider.getItemStatTypes();
-			final var list = new ArrayList<SortBy>(2 + ist.size());
+			final var bst  = IStatsProvider.getBlockStatTypes();
+			final var list = new ArrayList<SortBy>(3 + ist.size() + bst.size());
 			//add sorting entries
 			list.add(VANILLA);
 			list.add(ALPHABETICAL);
@@ -227,7 +228,12 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 			for(final var statType : ist)
 				list.add(new SortBy(
 						statType, IStatsProvider.getStatTypeName(statType),
-						comparing(s -> s.getStatsProvider().getIntValue(statType, s.getSubject()))
+						comparing((ItemStats s) -> s.getStatsProvider().getIntValue(statType, s.getSubject())).reversed()
+				));
+			for(final var statType : bst)
+				list.add(new SortBy(
+						statType, IStatsProvider.getStatTypeName(statType),
+						comparing((ItemStats s) -> s.getStatsProvider().getIntValue(statType, s.getItemBlockStats().getSubject())).reversed()
 				));
 			//return the result
 			return list;

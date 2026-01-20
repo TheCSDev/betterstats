@@ -47,6 +47,9 @@ public final class MenubarItemAbout extends MenubarItem
 				.addButton(
 						head("MHF_Spider").append(" ").append(translatable("menu.reportBugs")),
 						__ -> showUrlScreen(BetterStats.getProperty("mod.link.issues"), true))
+				.addButton(
+						item("item/paper").append(" ").append(BSSLang.gui_menubar_about_legalNotices()),
+						__ -> showUrlScreen(BetterStats.getProperty("mod.link.legal"), true))
 				.addSeparator()
 				.addButton(
 						gui(BSSSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),

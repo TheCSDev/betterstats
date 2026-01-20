@@ -221,7 +221,7 @@ public sealed class StatsViewMobs extends SubjectStatsView<EntityStats> permits 
 		{
 			//initialize the list
 			final var ist  = IStatsProvider.getEntityStatTypes();
-			final var list = new ArrayList<SortBy>(2 + ist.size());
+			final var list = new ArrayList<SortBy>(3 + ist.size());
 			//add sorting entries
 			list.add(VANILLA);
 			list.add(ALPHABETICAL);
@@ -229,7 +229,7 @@ public sealed class StatsViewMobs extends SubjectStatsView<EntityStats> permits 
 			for(final var statType : ist)
 				list.add(new SortBy(
 						statType, IStatsProvider.getStatTypeName(statType),
-						comparing(s -> s.getStatsProvider().getIntValue(statType, s.getSubject()))
+						comparing((EntityStats s) -> s.getStatsProvider().getIntValue(statType, s.getSubject())).reversed()
 				));
 			//return the result
 			return list;

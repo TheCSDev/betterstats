@@ -1,29 +1,29 @@
 package com.thecsdev.betterstats.api.mcbs.controller.tab;
 
+import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.resources.BSSLang;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * {@link McbsEditorTab} implementation for displaying the "Settings" GUI for
- * configuring this mod.
+ * The main "homepage" tab that is selected by default when an {@link McbsEditor}
+ * instance is created. This is the "entrypoint" tab.
  */
-public final class McbsEditorSettingsTab extends McbsEditorTab
+@ApiStatus.Experimental
+public final class McbsEditorHomepageTab extends McbsEditorTab
 {
 	// ==================================================
-	/**
-	 * Main singleton instance of this class.
-	 */
-	public static final McbsEditorSettingsTab INSTANCE = new McbsEditorSettingsTab();
+	public static final McbsEditorHomepageTab INSTANCE = new McbsEditorHomepageTab();
 	// ==================================================
-	private McbsEditorSettingsTab() {}
+	private McbsEditorHomepageTab() {}
 	// ==================================================
 	public final @Override int hashCode() { return System.identityHashCode(this); }
 	public final @Override boolean equals(@Nullable Object obj) { return this == obj; }
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() {
-		return BSSLang.gui_menubar_file_settings();
+		return BSSLang.gui_menubar_view_homepage();
 	}
 	// ==================================================
 }

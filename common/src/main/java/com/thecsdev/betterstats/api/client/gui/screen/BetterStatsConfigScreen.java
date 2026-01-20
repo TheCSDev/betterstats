@@ -105,8 +105,8 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				TTooltip.of(BSSLang.config_common_apiEndpoint_tooltip()),
 				bss_config.getApiEndpoint().toString(),
 				(p, o, n) -> {
-					try { bss_config.setApiEndpoint(URI.create(n).toURL());}
-					catch(Exception __) { /*ignored*/ }
+					try { bss_config.setApiEndpoint(URI.create(n));}
+					catch(RuntimeException __) { /*ignored*/ }
 				}
 		);
 
