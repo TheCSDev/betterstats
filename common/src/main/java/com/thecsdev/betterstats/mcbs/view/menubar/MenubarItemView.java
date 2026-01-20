@@ -3,6 +3,7 @@ package com.thecsdev.betterstats.mcbs.view.menubar;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resources.BSSLang;
@@ -56,6 +57,13 @@ public final class MenubarItemView extends MenubarItem
 					final var screen = new StatsScreen(client.screen, player.getStats());
 					client.setScreen(screen);
 				});
+
+		//home-page tab
+		/*if(mcbsEditor.getCurrentTab() != McbsEditorHomepageTab.INSTANCE)
+			builder.addButton(
+					gui("icon/news").append(" ").append(BSSLang.gui_menubar_view_homepage()),
+					__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
+			);*/
 
 		//local-player statistics tab
 		if(mcbsEditor.getCurrentTab() != McbsEditorFileTab.LOCALPLAYER)

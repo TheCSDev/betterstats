@@ -12,6 +12,8 @@
 
 	"betterstats.config.common.register_commands": "Register commands",
 	"betterstats.config.common.register_commands.tooltip": "Registers this mod's commands (ex. '/statistics').",
+	"betterstats.config.common.api_endpoint": "API endpoint",
+	"betterstats.config.common.api_endpoint.tooltip": "The URL address of the restful HTTP API endpoint this mod uses to communicate with this mod developer's servers.",
 	"betterstats.config.client.allow_chat_psa": "Allow chat PSA messages",
 	"betterstats.config.client.allow_chat_psa.tooltip": "Allows rare informational PSA messages from the developer of this mod to show up in chat. Turn this off to suppress all such notifications.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI mobs follow cursor",
@@ -30,11 +32,13 @@
 	"betterstats.gui.menubar.file.close": "Close",
 	"betterstats.gui.menubar.view": "View",
 	"betterstats.gui.menubar.view.vanilla_screen": "Vanilla screen",
+	"betterstats.gui.menubar.view.homepage": "Home",
 	"betterstats.gui.menubar.view.local_player_stats": "My statistics",
 	"betterstats.gui.menubar.view.stats_view": "Switch view",
 	"betterstats.gui.menubar.about": "About",
 	"betterstats.gui.menubar.about.source_code": "Source code",
 	"betterstats.gui.menubar.about.support_me": "Support me",
+	"betterstats.gui.menubar.about.legal_notices": "Legal notices",
 
 	"betterstats.gui.statsview.filters": "Filters",
 	"betterstats.gui.statsview.filter.selected_view": "Selected view",
