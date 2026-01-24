@@ -43,24 +43,24 @@ public final class MenubarItemAbout extends MenubarItem
 		return new TContextMenu.Builder(Objects.requireNonNull(client))
 				.addButton(
 						item("item/filled_map").append(" ").append(BSSLang.gui_menubar_about_sourceCode()),
-						__ -> showUrlScreen(BetterStats.getProperty("mod.link.sources"), true))
+						__ -> showUriScreen(BetterStats.getProperty("mod.link.sources"), true))
 				.addButton(
 						head("MHF_Spider").append(" ").append(translatable("menu.reportBugs")),
-						__ -> showUrlScreen(BetterStats.getProperty("mod.link.issues"), true))
+						__ -> showUriScreen(BetterStats.getProperty("mod.link.issues"), true))
 				.addButton(
 						item("item/paper").append(" ").append(BSSLang.gui_menubar_about_legalNotices()),
-						__ -> showUrlScreen(BetterStats.getProperty("mod.link.legal"), true))
+						__ -> showUriScreen(BetterStats.getProperty("mod.link.legal"), true))
 				.addSeparator()
 				.addButton(
 						gui(BSSSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),
-						__ -> showUrlScreen(BetterStats.getProperty("mod.link.curseforge"), true))
+						__ -> showUriScreen(BetterStats.getProperty("mod.link.curseforge"), true))
 				.addButton(
 						gui(BSSSprites.gui_icon_faviconMr()).append(" ").append(literal("Modrinth")),
-						__ -> showUrlScreen(BetterStats.getProperty("mod.link.modrinth"), true))
+						__ -> showUriScreen(BetterStats.getProperty("mod.link.modrinth"), true))
 				.addSeparator()
 				.addButton(
 						gui(BSSSprites.gui_icon_heart()).append(" ").append(BSSLang.gui_menubar_about_supportMe().withStyle(ChatFormatting.YELLOW)),
-						__ -> showUrlScreen(BetterStats.getProperty("mod.link.support_me"), true))
+						__ -> showUriScreen(BetterStats.getProperty("mod.link.support_me"), true))
 				.build();
 	}
 	// ==================================================
@@ -71,8 +71,9 @@ public final class MenubarItemAbout extends MenubarItem
 	 * @param isTrusted Whether the URI is trusted.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
+	@ApiStatus.Internal
 	@SuppressWarnings("SameParameterValue")
-	private static final void showUrlScreen(@NotNull String uri, boolean isTrusted)
+	public static final void showUriScreen(@NotNull String uri, boolean isTrusted)
 			throws NullPointerException
 	{
 		//argument validity assertion

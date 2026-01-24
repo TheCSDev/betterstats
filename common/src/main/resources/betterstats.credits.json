@@ -1,0 +1,103 @@
+{
+	"sections":
+	[
+		{
+			"name": "Contributors",
+			"summary": "Community members who contributed to this mod during v5.X.",
+			"entries":
+			[
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/66475965?v=4",
+					"name": "TheCSDev",
+					"summary": "Developer of 'Better Statistics Screen'.",
+					"homepage_uri": "https://github.com/TheCSDev"
+				}
+			]
+		},
+		{
+			"name": "Founder contributors",
+			"summary": "Community members who contributed to this mod prior to v5.X.",
+			"entries":
+			[
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/51203385?v=4",
+					"name": "Amirhan-Taipovjan-Greatest-I",
+					"summary": null,
+					"homepage_uri": "https://github.com/Amirhan-Taipovjan-Greatest-I"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/57140941?v=4",
+					"name": "Atakku",
+					"summary": null,
+					"homepage_uri": "https://github.com/Atakku"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/1835732?v=4",
+					"name": "Black-Hole",
+					"summary": null,
+					"homepage_uri": "https://github.com/Black-Hole"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/75726196?v=4",
+					"name": "Felix14-v2",
+					"summary": null,
+					"homepage_uri": "https://github.com/Felix14-v2"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/70762136?v=4",
+					"name": "IwasConfused",
+					"summary": null,
+					"homepage_uri": "https://github.com/IwasConfused"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/506765?v=4",
+					"name": "Korben",
+					"summary": null,
+					"homepage_uri": "https://github.com/Korben"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/113677351?v=4",
+					"name": "MCluoluo",
+					"summary": null,
+					"homepage_uri": "https://github.com/MC-luoluo"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/87866332?v=4",
+					"name": "mcxiangdon",
+					"summary": null,
+					"homepage_uri": "https://github.com/mcxiangdon"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/42416195?v=4",
+					"name": "Missing_Love",
+					"summary": null,
+					"homepage_uri": "https://github.com/Q2297045667"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/66185550?v=4",
+					"name": "MrLoLf",
+					"summary": null,
+					"homepage_uri": "https://github.com/MrLoLf"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/121224522?v=4",
+					"name": "notlin4",
+					"summary": null,
+					"homepage_uri": "https://github.com/notlin4"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/39232658?v=4",
+					"name": "rvbsm",
+					"summary": null,
+					"homepage_uri": "https://github.com/rvbsm"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/81977006?v=4",
+					"name": "Sw3et-Dre4mer",
+					"summary": null,
+					"homepage_uri": "https://github.com/Sw3et-Dre4mer"
+				}
+			]
+		}
+	]
+}

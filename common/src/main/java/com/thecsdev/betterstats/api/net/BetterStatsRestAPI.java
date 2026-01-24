@@ -1,15 +1,22 @@
 package com.thecsdev.betterstats.api.net;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.common.resource.ResourceRequest;
 import com.thecsdev.common.resource.ResourceResolver;
 import com.thecsdev.common.resource.protocol.HttpProtocolHandler;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,10 +26,98 @@ import java.util.concurrent.CompletableFuture;
  * additional features and data beyond the standard statistics screen functionality.
  */
 @ApiStatus.Experimental
-@SuppressWarnings({"UnstableApiUsage", "removal"})
+@SuppressWarnings("removal")
 public final class BetterStatsRestAPI
 {
+	// ================================================== ==================================================
+	//                                 BetterStatsRestAPI IMPLEMENTATION
+	// ================================================== ==================================================
+	private final @NotNull URI apiEndpoint;
+	private final @NotNull URI credits_uri;
 	// ==================================================
+	private BetterStatsRestAPI(
+			@NotNull URI apiEndpoint,
+			@NotNull URI credits_uri) throws NullPointerException
+	{
+		this.apiEndpoint = Objects.requireNonNull(apiEndpoint);
+		this.credits_uri = apiEndpoint.resolve(Objects.requireNonNull(credits_uri));
+	}
+	// ==================================================
+	/**
+	 * Returns the {@link URI} of the RESTful API endpoint used to fetch this
+	 * {@link BetterStatsRestAPI}.
+	 */
+	public final @NotNull URI getApiEndpointURI() { return this.apiEndpoint; }
+
+	/**
+	 * Returns the {@link URI} of the "Credits" endpoint in this RESTful API.
+	 */
+	public final @NotNull URI getCreditsURI() { return this.credits_uri; }
+	// ==================================================
+	/**
+	 * Fetches the "Credits" data from this RESTful API.
+	 * @return A {@link CompletableFuture} that will complete with the fetched
+	 *         {@link CreditsSection} instances.
+	 */
+	public final CompletableFuture<Collection<CreditsSection>> fetchCreditsAsync()
+	{
+		//construct the resource request
+		final var rssReq = addRestHeaders(new ResourceRequest.Builder(this.credits_uri)
+				.add(HttpProtocolHandler.HEADER_HTTP_METHOD, "GET"))
+				.build();
+
+		//fetch async
+		return ResourceResolver.fetchAsync(rssReq).thenApply(rssRes ->
+		{
+			//assert that the status code is 200
+			if(rssRes.getStatus() != 200)
+				throw new IllegalStateException(
+						"Failed to fetch credits - HTTP " + rssRes.getStatus());
+
+			//assert response content-type
+			final var contentType = rssRes.getFirstOrThrow("content-type");
+			if(!contentType.contains("application/json"))
+				throw new IllegalStateException("Invalid 'Content-Type' response | " + contentType);
+
+			//parse json and obtain sections array
+			final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
+					.getAsJsonArray("sections");
+
+			//construct sections and return them
+			return json.asList().stream()
+					.map(el -> CreditsSection.fromJson(el.getAsJsonObject()))
+					.toList();
+		});
+	}
+
+	/**
+	 * Fetches the built-in "Credits" data from the classpath resource.
+	 * @return A {@link CompletableFuture} that will complete with the fetched
+	 *         {@link CreditsSection} instances.
+	 */
+	public static final CompletableFuture<Collection<CreditsSection>> fetchBuiltInCreditsAsync()
+	{
+		return ResourceResolver.fetchAsync(URI.create("classpath:/betterstats.credits.json"))
+				.thenApply(rssRes ->
+				{
+					//assert that the status code is 200
+					if(rssRes.getStatus() != 200)
+						throw new IllegalStateException(
+								"Failed to fetch credits - Status code " + rssRes.getStatus());
+
+					//parse json and obtain sections array
+					final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
+							.getAsJsonArray("sections");
+
+					//construct sections and return them
+					return json.asList().stream()
+							.map(el -> BetterStatsRestAPI.CreditsSection.fromJson(el.getAsJsonObject()))
+							.toList();
+				});
+	}
+	// ================================================== ==================================================
+	//                                 'Static utilities' IMPLEMENTATION
+	// ================================================== ==================================================
 	/**
 	 * The default cached instance of {@link BetterStatsRestAPI}, if fetched before.
 	 */
@@ -35,19 +130,6 @@ public final class BetterStatsRestAPI
 			"BetterStats/" + BetterStats.getProperty("mod.version") +
 			" (https://github.com/TheCSDev/betterstats; https://modrinth.com/project/n6PXGAoM; " +
 			"https://curseforge.com/projects/667464) TheCSDev/1.0 (https://thecsdev.com/)";
-	// ==================================================
-	private final @NotNull URI apiEndpoint;
-	// ==================================================
-	private BetterStatsRestAPI(@NotNull URI apiEndpoint) throws NullPointerException
-	{
-		this.apiEndpoint = Objects.requireNonNull(apiEndpoint);
-	}
-	// ==================================================
-	/**
-	 * Returns the {@link URI} of the RESTful API endpoint used to fetch this
-	 * {@link BetterStatsRestAPI}.
-	 */
-	public final @NotNull URI getApiEndpointURI() { return this.apiEndpoint; }
 	// ==================================================
 	/**
 	 * Fetches the REST API data from the endpoint specified in this mod's configuration.
@@ -87,15 +169,19 @@ public final class BetterStatsRestAPI
 		return ResourceResolver.fetchAsync(rssReq).thenApply(rssRes ->
 		{
 			//assert response content-type
-			if(!rssRes.getFirstOrThrow("content-type").contains("application/json"))
-				throw new IllegalStateException("Invalid 'Content-Type' response");
+			final var contentType = rssRes.getFirstOrThrow("content-type");
+			if(!contentType.contains("application/json"))
+				throw new IllegalStateException("Invalid 'Content-Type' response | " + contentType);
 
-			//parse and obtain json data
-			/*final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
-					.getAsJsonObject("betterstats").getAsJsonObject("v5")*/;
+			//parse json and obtain the api object
+			final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
+					.getAsJsonObject("betterstats").getAsJsonObject("v5");
 
 			//return this once done
-			return new BetterStatsRestAPI(apiEndpoint);
+			return new BetterStatsRestAPI(
+					apiEndpoint,
+					Objects.requireNonNull(parseUri(json.get("credits_uri")), "Missing 'credits' URI")
+			);
 		});
 	}
 	// --------------------------------------------------
@@ -120,4 +206,183 @@ public final class BetterStatsRestAPI
 		return builder;
 	}
 	// ==================================================
+	/**
+	 * Parses a {@link Component} from the specified {@link JsonElement}.
+	 * @param json The JSON element to parse the component from.
+	 * @return The parsed component, or an empty component if the argument is {@code null}.
+	 */
+	@ApiStatus.Internal
+	private static final @Nullable Component parseComponent(@Nullable JsonElement json)
+	{
+		try {
+			if(json == null || json.isJsonNull()) return null;
+			else if(json.isJsonPrimitive()) return Component.literal(json.getAsString());
+			else if(json.isJsonObject()) {
+				final var result = ComponentSerialization.CODEC.parse(JsonOps.INSTANCE, json.getAsJsonObject());
+				return result.getOrThrow();
+			}
+			else throw new IllegalArgumentException("Unsupported JSON element type: " + json.getClass().getSimpleName());
+		} catch(Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Parses a {@link URI} from the specified {@link JsonElement}.
+	 * @param json The JSON element to parse the {@link URI} from.
+	 * @return The parsed {@link URI}, or {@code null} if the argument is {@code null}.
+	 */
+	@ApiStatus.Internal
+	private static final @Nullable URI parseUri(@Nullable JsonElement json) {
+		if(json == null || json.isJsonNull()) return null;
+		try { return URI.create(json.getAsString()); } catch(Exception e) { return null; }
+	}
+	// ================================================== ==================================================
+	//                                       CreditsEntry IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * Represents an entity that can be credited in a "Credits" GUI of this mod.
+	 */
+	public static final class CreditsEntry
+	{
+		// ==================================================
+		private final @Nullable URI       avatar_uri;
+		private final @NotNull  Component name;
+		private final @Nullable Component summary;
+		private final @Nullable URI       homepage_uri;
+		// --------------------------------------------------
+		private final int _hashCode;
+		// ==================================================
+		public CreditsEntry(
+				@Nullable URI       avatar_uri,
+				@NotNull  Component name,
+				@Nullable Component summary,
+				@Nullable URI       homepage_uri) throws NullPointerException
+		{
+			this.avatar_uri    = avatar_uri;
+			this.name          = Objects.requireNonNull(name);
+			this.summary       = summary;
+			this.homepage_uri  = homepage_uri;
+			this._hashCode     = Objects.hash(avatar_uri, name, summary, homepage_uri);
+		}
+		// ==================================================
+		public int hashCode() { return this._hashCode; }
+		public boolean equals(@Nullable Object obj) {
+			if(this == obj) return true;
+			if(obj == null || getClass() != obj.getClass()) return false;
+			final var other = (CreditsEntry) obj;
+			return Objects.equals(this.avatar_uri, other.avatar_uri)
+					&& this.name.equals(other.name)
+					&& Objects.equals(this.summary, other.summary)
+					&& Objects.equals(this.homepage_uri, other.homepage_uri);
+		}
+		// ==================================================
+		/**
+		 * The {@link URI} of the "profile picture" that is associated with
+		 * the credited entity.
+		 */
+		public final @Nullable URI getAvatarURI() { return this.avatar_uri; }
+
+		/**
+		 * User-friendly display name of the credited entity.
+		 */
+		public final @NotNull Component getName() { return this.name; }
+
+		/**
+		 * A short biography or description of the credited entity.
+		 */
+		public final @Nullable Component getSummary() { return this.summary; }
+
+		/**
+		 * The {@link URI} of the homepage or main website of the credited entity.
+		 */
+		public final @Nullable URI getHomepageURI() { return this.homepage_uri; }
+		// ==================================================
+		/**
+		 * Creates a {@link CreditsEntry} instance from the specified JSON object.
+		 * @param json The JSON object to parse the credits entry from.
+		 * @return The created {@link CreditsEntry} instance.
+		 * @throws NullPointerException If the argument is {@code null}.
+		 */
+		@Contract("_ -> new")
+		public static final CreditsEntry fromJson(@NotNull JsonObject json)
+				throws NullPointerException
+		{
+			Objects.requireNonNull(json);
+			try {
+				final @Nullable var avatar_uri   = parseUri(json.get("avatar_uri"));
+				final @NotNull  var name         = Objects.requireNonNull(parseComponent(json.get("name")));
+				final @Nullable var summary      = parseComponent(json.get("summary"));
+				final @Nullable var homepage_uri = parseUri(json.get("homepage_uri"));
+				return new CreditsEntry(avatar_uri, name, summary, homepage_uri);
+			} catch(Exception e) {
+				throw new RuntimeException("Failed to parse a 'credits entry' from JSON", e);
+			}
+		}
+		// ==================================================
+	}
+	// ================================================== ==================================================
+	//                                            Section IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * Represents a section in the "Credits" GUI of this mod, which
+	 * contains multiple {@link CreditsEntry} instances.
+	 */
+	public static final class CreditsSection
+	{
+		// ==================================================
+		private final @NotNull  Component                name;
+		private final @Nullable Component                summary;
+		private final @NotNull  Collection<CreditsEntry> entries;
+		// ==================================================
+		public CreditsSection(
+				@NotNull  Component                name,
+				@Nullable Component                summary,
+				@NotNull  Collection<CreditsEntry> entries) throws NullPointerException
+		{
+			this.name    = Objects.requireNonNull(name);
+			this.summary = summary;
+			this.entries = Objects.requireNonNull(entries);
+		}
+		// ==================================================
+		/**
+		 * The user-friendly name of this credits section.
+		 */
+		public final @NotNull Component getName() { return this.name; }
+
+		/**
+		 * A brief summary or description of this credits section.
+		 */
+		public final @Nullable Component getSummary() { return this.summary; }
+
+		/**
+		 * A collection of {@link CreditsEntry} instances that belong to
+		 * this section.
+		 */
+		public final @NotNull Collection<CreditsEntry> getEntries() { return this.entries; }
+		// ==================================================
+		/**
+		 * Creates a {@link CreditsSection} instance from the specified JSON object.
+		 * @param json The JSON object to parse the credits section from.
+		 * @return The created {@link CreditsSection} instance.
+		 * @throws NullPointerException If the argument is {@code null}.
+		 */
+		@Contract("_ -> new")
+		public static final CreditsSection fromJson(@NotNull JsonObject json) throws NullPointerException
+		{
+			Objects.requireNonNull(json);
+			try {
+				final @NotNull  var name    = Objects.requireNonNull(parseComponent(json.get("name")));
+				final @Nullable var summary = parseComponent(json.get("summary"));
+				final @NotNull  var entries = json.getAsJsonArray("entries").asList().stream()
+						.map(el -> CreditsEntry.fromJson(el.getAsJsonObject()))
+						.toList();
+				return new CreditsSection(name, summary, entries);
+			} catch(Exception e) {
+				throw new RuntimeException("Failed to parse a 'credits section' from JSON", e);
+			}
+		}
+		// ==================================================
+	}
+	// ================================================== ==================================================
 }

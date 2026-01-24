@@ -59,11 +59,11 @@ public final class MenubarItemView extends MenubarItem
 				});
 
 		//home-page tab
-		/*if(mcbsEditor.getCurrentTab() != McbsEditorHomepageTab.INSTANCE)
+		if(mcbsEditor.getCurrentTab() != McbsEditorHomepageTab.INSTANCE)
 			builder.addButton(
 					gui("icon/news").append(" ").append(BSSLang.gui_menubar_view_homepage()),
 					__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
-			);*/
+			);
 
 		//local-player statistics tab
 		if(mcbsEditor.getCurrentTab() != McbsEditorFileTab.LOCALPLAYER)

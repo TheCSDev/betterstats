@@ -3,7 +3,6 @@ package com.thecsdev.betterstats.api.mcbs.controller.tab;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.resources.BSSLang;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
  * The main "homepage" tab that is selected by default when an {@link McbsEditor}
  * instance is created. This is the "entrypoint" tab.
  */
-@ApiStatus.Experimental
 public final class McbsEditorHomepageTab extends McbsEditorTab
 {
 	// ==================================================
