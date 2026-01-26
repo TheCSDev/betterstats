@@ -32,22 +32,22 @@ public final class BetterStatsRestAPI
 	// ================================================== ==================================================
 	//                                 BetterStatsRestAPI IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @NotNull URI apiEndpoint;
+	private final @NotNull URI endpoint_uri;
 	private final @NotNull URI credits_uri;
 	// ==================================================
 	private BetterStatsRestAPI(
-			@NotNull URI apiEndpoint,
+			@NotNull URI endpoint_uri,
 			@NotNull URI credits_uri) throws NullPointerException
 	{
-		this.apiEndpoint = Objects.requireNonNull(apiEndpoint);
-		this.credits_uri = apiEndpoint.resolve(Objects.requireNonNull(credits_uri));
+		this.endpoint_uri = Objects.requireNonNull(endpoint_uri);
+		this.credits_uri  = endpoint_uri.resolve(Objects.requireNonNull(credits_uri));
 	}
 	// ==================================================
 	/**
 	 * Returns the {@link URI} of the RESTful API endpoint used to fetch this
 	 * {@link BetterStatsRestAPI}.
 	 */
-	public final @NotNull URI getApiEndpointURI() { return this.apiEndpoint; }
+	public final @NotNull URI getEndpointURI() { return this.endpoint_uri; }
 
 	/**
 	 * Returns the {@link URI} of the "Credits" endpoint in this RESTful API.
@@ -140,7 +140,7 @@ public final class BetterStatsRestAPI
 	{
 		//return the fetched instance if already fetched before
 		final var apiEndpoint = BetterStats.getConfig().getApiEndpoint();
-		if(DEFAULT != null && DEFAULT.getApiEndpointURI().equals(apiEndpoint))
+		if(DEFAULT != null && DEFAULT.getEndpointURI().equals(apiEndpoint))
 			return CompletableFuture.completedFuture(DEFAULT);
 
 		//fetch a new instance otherwise
@@ -168,6 +168,11 @@ public final class BetterStatsRestAPI
 		//fetch async
 		return ResourceResolver.fetchAsync(rssReq).thenApply(rssRes ->
 		{
+			//assert that the status code is 200
+			if(rssRes.getStatus() != 200)
+				throw new IllegalStateException(
+						"Failed to fetch API - Status code " + rssRes.getStatus());
+
 			//assert response content-type
 			final var contentType = rssRes.getFirstOrThrow("content-type");
 			if(!contentType.contains("application/json"))
@@ -180,7 +185,7 @@ public final class BetterStatsRestAPI
 			//return this once done
 			return new BetterStatsRestAPI(
 					apiEndpoint,
-					Objects.requireNonNull(parseUri(json.get("credits_uri")), "Missing 'credits' URI")
+					Objects.requireNonNull(parseUri(json.get("credits_uri")), "Missing 'credits_uri' URI")
 			);
 		});
 	}
