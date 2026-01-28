@@ -6,16 +6,11 @@ import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorTabGUI;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
-import com.thecsdev.commonmc.client.mixin.hooks.AccessorLocalPlayer;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.nio.file.Path;

@@ -1,20 +1,19 @@
 package com.thecsdev.betterstats.client.gui.panel;
 
-import com.thecsdev.betterstats.api.net.BetterStatsRestAPI;
+import com.thecsdev.betterstats.net.BetterStatsRestAPI.Credits;
+import com.thecsdev.betterstats.net.BetterStatsRestAPI.CreditsSection;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
+import com.thecsdev.commonmc.resources.TCDCLang;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
-import static com.thecsdev.betterstats.api.net.BetterStatsRestAPI.fetchBuiltInCreditsAsync;
 import static com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout.showUriScreen;
 
 /**
@@ -22,41 +21,75 @@ import static com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout.showUr
  */
 public final class BSCreditsPanel extends TPanelElement.Paintable
 {
+	// ================================================== ==================================================
+	//                                     BSCreditsPanel IMPLEMENTATION
+	// ================================================== ==================================================
+	private final @NotNull CompletableFuture<Credits> future;
 	// ==================================================
-	private @Nullable Collection<BetterStatsRestAPI.CreditsSection> credits = null;
-	// ==================================================
-	public BSCreditsPanel()
+	public BSCreditsPanel(@NotNull CompletableFuture<Credits> future) throws NullPointerException
 	{
 		//initialize properties
 		scrollPaddingProperty().set(10, BSCreditsPanel.class);
 		outlineColorProperty().set(0xFF000000, BSCreditsPanel.class);
 
-		//fetch credits from the REST-ful API and built-in classpath
-		BetterStatsRestAPI.fetchAsync()
-				.thenCompose(BetterStatsRestAPI::fetchCreditsAsync)
-				.exceptionally(e -> List.of())
-				.thenCombine(fetchBuiltInCreditsAsync(), (out1, out2) -> {
-					final var merged = new ArrayList<BetterStatsRestAPI.CreditsSection>(out1.size() + out2.size());
-					merged.addAll(out1);
-					merged.addAll(out2);
-					return merged;
-				})
-				.thenAccept(credits -> {
-					//set credits
-					this.credits = credits;
-					//obtain current screen and check if it is open
-					final var scren = screenProperty().get();
-					if(scren == null || !scren.isOpen()) return;
-					//reinitialize gui only if the screen is open
-					scren.getClient().execute(this::clearAndInit); //needs be done on main thread
-				});
+		//initialize fields
+		this.future = future;
 	}
 	// ==================================================
 	protected final @Override void initCallback()
 	{
-		//initialize remote credits first, if applicable
-		if(this.credits != null)
-			this.credits.forEach(this::initSection);
+		switch(this.future.state()) {
+			case RUNNING:
+				initLoading();
+				final var client = Objects.requireNonNull(getClient(), "Missing 'client' instance");
+				this.future.whenComplete((out, err) -> client.execute(this::clearAndInit));
+				break;
+			case SUCCESS: initCredits(this.future.resultNow()); break;
+			default: initSomethingWentWrong(); break;
+		}
+	}
+	// ==================================================
+	/**
+	 * Initializes an interface indicating that the credits information is
+	 * currently loading.
+	 */
+	private final void initLoading()
+	{
+		//values needed for bounding box math and the label
+		final var bb  = getBounds();
+		final int pad = scrollPaddingProperty().getI();
+
+		//initialize and add the label
+		final var lbl = new TLabelElement(TCDCLang.misc_loading());
+		lbl.setBounds(pad, pad, bb.width - (pad * 2), bb.height - (pad * 2));
+		lbl.textAlignmentProperty().set(CompassDirection.CENTER, BSCreditsPanel.class);
+		addRel(lbl);
+	}
+	// --------------------------------------------------
+	/**
+	 * Initializes an interface indicating that something went wrong while
+	 * fetching or processing the 'credits' information.
+	 */
+	private final void initSomethingWentWrong()
+	{
+		//values needed for bounding box math and the label
+		final var bb  = getBounds();
+		final int pad = scrollPaddingProperty().getI();
+
+		//initialize and add the label
+		final var lbl = new TLabelElement(TCDCLang.misc_somethingWentWrong());
+		lbl.setBounds(pad, pad, bb.width - (pad * 2), bb.height - (pad * 2));
+		lbl.textAlignmentProperty().set(CompassDirection.CENTER, BSCreditsPanel.class);
+		addRel(lbl);
+	}
+	// --------------------------------------------------
+	/**
+	 * Initializes the credits GUI inside this panel.
+	 * @param credits The credits information to initialize the GUI with.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	private final void initCredits(@NotNull Credits credits) throws NullPointerException {
+		credits.getSections().forEach(this::initSection);
 	}
 	// ==================================================
 	/**
@@ -64,7 +97,7 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 	 * @param section The credits section to initialize.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	public final void initSection(@NotNull BetterStatsRestAPI.CreditsSection section)
+	public final void initSection(@NotNull CreditsSection section)
 			throws NullPointerException
 	{
 		//section name label

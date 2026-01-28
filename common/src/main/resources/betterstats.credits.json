@@ -2,8 +2,8 @@
 	"sections":
 	[
 		{
-			"name": "Contributors",
-			"summary": "Community members who contributed to this mod during v5.X.",
+			"name": { "translate": "betterstats.credits.section.contributors" },
+			"summary": { "translate": "betterstats.credits.section.contributors.summary" },
 			"entries":
 			[
 				{
@@ -15,8 +15,8 @@
 			]
 		},
 		{
-			"name": "Founder contributors",
-			"summary": "Community members who contributed to this mod prior to v5.X.",
+			"name": { "translate": "betterstats.credits.section.founder_contributors" },
+			"summary": { "translate": "betterstats.credits.section.founder_contributors.summary" },
 			"entries":
 			[
 				{

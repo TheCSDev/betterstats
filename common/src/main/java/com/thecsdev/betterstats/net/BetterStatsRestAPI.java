@@ -1,8 +1,9 @@
-package com.thecsdev.betterstats.api.net;
+package com.thecsdev.betterstats.net;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.realmsclient.util.JsonUtils;
 import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.common.resource.ResourceRequest;
@@ -16,15 +17,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
+import static com.mojang.realmsclient.util.JsonUtils.getBooleanOr;
+import static com.mojang.realmsclient.util.JsonUtils.getStringOr;
 
 /**
  * This class represents TheCSDev's REST-ful APIs specifically designed for this mod.
  * The API provides various endpoints that allow the mod to fetch and interact with
  * additional features and data beyond the standard statistics screen functionality.
  */
+@ApiStatus.Obsolete
 @ApiStatus.Experimental
 @SuppressWarnings("removal")
 public final class BetterStatsRestAPI
@@ -33,14 +41,31 @@ public final class BetterStatsRestAPI
 	//                                 BetterStatsRestAPI IMPLEMENTATION
 	// ================================================== ==================================================
 	private final @NotNull URI endpoint_uri;
+	private final @NotNull URI news_uri;
 	private final @NotNull URI credits_uri;
 	// ==================================================
 	private BetterStatsRestAPI(
 			@NotNull URI endpoint_uri,
+			@NotNull URI news_uri,
 			@NotNull URI credits_uri) throws NullPointerException
 	{
 		this.endpoint_uri = Objects.requireNonNull(endpoint_uri);
+		this.news_uri     = endpoint_uri.resolve(Objects.requireNonNull(news_uri));
 		this.credits_uri  = endpoint_uri.resolve(Objects.requireNonNull(credits_uri));
+	}
+	// ==================================================
+	public final @Override int hashCode() {
+		return Objects.hash(this.endpoint_uri, this.news_uri, this.credits_uri);
+	}
+	// --------------------------------------------------
+	public final @Override boolean equals(Object obj)
+	{
+		if(this == obj) return true;
+		if(obj == null || getClass() != obj.getClass()) return false;
+		final var other = (BetterStatsRestAPI) obj;
+		return this.endpoint_uri.equals(other.endpoint_uri)
+				&& this.news_uri.equals(other.news_uri)
+				&& this.credits_uri.equals(other.credits_uri);
 	}
 	// ==================================================
 	/**
@@ -59,11 +84,40 @@ public final class BetterStatsRestAPI
 	 * @return A {@link CompletableFuture} that will complete with the fetched
 	 *         {@link CreditsSection} instances.
 	 */
-	public final CompletableFuture<Collection<CreditsSection>> fetchCreditsAsync()
+	public final CompletableFuture<Credits> fetchCreditsAsync() {
+		return fetchCreditsAsync(this.credits_uri);
+	}
+
+	/**
+	 * Fetches the built-in "Credits" data from the classpath resource.
+	 * @return A {@link CompletableFuture} that will complete with the fetched
+	 *         {@link CreditsSection} instances.
+	 */
+	public static final CompletableFuture<Credits> fetchBuiltInCreditsAsync() {
+		return fetchCreditsAsync(URI.create("classpath:/betterstats.credits.json"));
+	}
+
+	/**
+	 * Fetches the "News" data from this RESTful API.
+	 * @return A {@link CompletableFuture} that will complete with the fetched
+	 *         {@link CreditsSection} instances.
+	 */
+	public final CompletableFuture<Credits> fetchNewsAsync() {
+		return fetchCreditsAsync(this.news_uri);
+	}
+	// --------------------------------------------------
+	/**
+	 * Fetches the "Credits" data from the specified {@link URI}.
+	 * @param creditsUri The {@link URI} to fetch the "Credits" data from.
+	 * @return A {@link CompletableFuture} that will complete with the fetched
+	 *         {@link CreditsSection} instances.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public static final CompletableFuture<Credits> fetchCreditsAsync(@NotNull URI creditsUri)
 	{
 		//construct the resource request
-		final var rssReq = addRestHeaders(new ResourceRequest.Builder(this.credits_uri)
-				.add(HttpProtocolHandler.HEADER_HTTP_METHOD, "GET"))
+		final var rssReq = addRestHeaders(new ResourceRequest.Builder(creditsUri))
+				.add(HttpProtocolHandler.HEADER_HTTP_METHOD, "GET")
 				.build();
 
 		//fetch async
@@ -75,53 +129,22 @@ public final class BetterStatsRestAPI
 						"Failed to fetch credits - HTTP " + rssRes.getStatus());
 
 			//assert response content-type
-			final var contentType = rssRes.getFirstOrThrow("content-type");
+			final var contentType = rssRes.getFirst("content-type", "application/json");
 			if(!contentType.contains("application/json"))
 				throw new IllegalStateException("Invalid 'Content-Type' response | " + contentType);
 
-			//parse json and obtain sections array
-			final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
-					.getAsJsonArray("sections");
-
-			//construct sections and return them
-			return json.asList().stream()
-					.map(el -> CreditsSection.fromJson(el.getAsJsonObject()))
-					.toList();
+			//parse json and credits
+			final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class);
+			return Credits.fromJson(json);
 		});
-	}
-
-	/**
-	 * Fetches the built-in "Credits" data from the classpath resource.
-	 * @return A {@link CompletableFuture} that will complete with the fetched
-	 *         {@link CreditsSection} instances.
-	 */
-	public static final CompletableFuture<Collection<CreditsSection>> fetchBuiltInCreditsAsync()
-	{
-		return ResourceResolver.fetchAsync(URI.create("classpath:/betterstats.credits.json"))
-				.thenApply(rssRes ->
-				{
-					//assert that the status code is 200
-					if(rssRes.getStatus() != 200)
-						throw new IllegalStateException(
-								"Failed to fetch credits - Status code " + rssRes.getStatus());
-
-					//parse json and obtain sections array
-					final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
-							.getAsJsonArray("sections");
-
-					//construct sections and return them
-					return json.asList().stream()
-							.map(el -> BetterStatsRestAPI.CreditsSection.fromJson(el.getAsJsonObject()))
-							.toList();
-				});
 	}
 	// ================================================== ==================================================
 	//                                 'Static utilities' IMPLEMENTATION
 	// ================================================== ==================================================
 	/**
-	 * The default cached instance of {@link BetterStatsRestAPI}, if fetched before.
+	 * The main instance of {@link BetterStatsRestAPI}.
 	 */
-	private static @Nullable BetterStatsRestAPI DEFAULT;
+	private static @Nullable CompletableFuture<BetterStatsRestAPI> INSTANCE;
 
 	/**
 	 * The "User-Agent" string to be used in HTTP requests.
@@ -138,13 +161,10 @@ public final class BetterStatsRestAPI
 	 */
 	public static final CompletableFuture<BetterStatsRestAPI> fetchAsync()
 	{
-		//return the fetched instance if already fetched before
 		final var apiEndpoint = BetterStats.getConfig().getApiEndpoint();
-		if(DEFAULT != null && DEFAULT.getEndpointURI().equals(apiEndpoint))
-			return CompletableFuture.completedFuture(DEFAULT);
-
-		//fetch a new instance otherwise
-		return fetchAsync(apiEndpoint).thenApply(api -> DEFAULT = api);
+		if(INSTANCE == null || (INSTANCE.state() == Future.State.SUCCESS && !INSTANCE.resultNow().getEndpointURI().equals(apiEndpoint)))
+			INSTANCE = fetchAsync(apiEndpoint);
+		return INSTANCE;
 	}
 
 	/**
@@ -154,6 +174,7 @@ public final class BetterStatsRestAPI
 	 *         {@link BetterStatsRestAPI} instance.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
+	@ApiStatus.Internal
 	public static final CompletableFuture<BetterStatsRestAPI> fetchAsync(
 			@NotNull URI apiEndpoint) throws NullPointerException
 	{
@@ -161,8 +182,8 @@ public final class BetterStatsRestAPI
 		Objects.requireNonNull(apiEndpoint);
 
 		//construct the resource request
-		final var rssReq = addRestHeaders(new ResourceRequest.Builder(apiEndpoint)
-				.add(HttpProtocolHandler.HEADER_HTTP_METHOD, "GET"))
+		final var rssReq = addRestHeaders(new ResourceRequest.Builder(apiEndpoint))
+				.add(HttpProtocolHandler.HEADER_HTTP_METHOD, "GET")
 				.build();
 
 		//fetch async
@@ -182,9 +203,16 @@ public final class BetterStatsRestAPI
 			final var json = new Gson().fromJson(new String(rssRes.getData()), JsonObject.class)
 					.getAsJsonObject("betterstats").getAsJsonObject("v5");
 
+			//handle end-of-life
+			if(getBooleanOr("eol", json, true)) {
+				final var msg = getStringOr("eol_message", json, "The REST-ful API is unavailable at this time.");
+				throw new UnsupportedOperationException(msg);
+			}
+
 			//return this once done
 			return new BetterStatsRestAPI(
 					apiEndpoint,
+					Objects.requireNonNull(parseUri(json.get("news_uri")), "Missing 'news_uri' URI"),
 					Objects.requireNonNull(parseUri(json.get("credits_uri")), "Missing 'credits_uri' URI")
 			);
 		});
@@ -386,6 +414,82 @@ public final class BetterStatsRestAPI
 			} catch(Exception e) {
 				throw new RuntimeException("Failed to parse a 'credits section' from JSON", e);
 			}
+		}
+		// ==================================================
+	}
+	// ================================================== ==================================================
+	//                                            Credits IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * Represents the complete "Credits" data structure used in the
+	 * "Credits" GUI of this mod.
+	 */
+	public static final class Credits
+	{
+		// ==================================================
+		/**
+		 * {@link Credits} instance that has no "credits" data.
+		 */
+		public static final Credits EMPTY = new Credits(List.of());
+		// ==================================================
+		private final @NotNull Collection<CreditsSection> sections;
+		// ==================================================
+		public Credits(@NotNull Collection<CreditsSection> sections) throws NullPointerException {
+			this.sections = Objects.requireNonNull(sections);
+		}
+		// ==================================================
+		/**
+		 * A {@link Collection} of all {@link CreditsSection} instances contained
+		 * in these {@link Credits}.
+		 */
+		public final @NotNull Collection<CreditsSection> getSections() { return this.sections; }
+		// ==================================================
+		/**
+		 * Creates a {@link Credits} instance from the specified JSON object.
+		 * @param json The JSON object to parse the credits from.
+		 * @return The created {@link Credits} instance.
+		 * @throws NullPointerException If the argument is {@code null}.
+		 */
+		@Contract("_ -> new")
+		public static final Credits fromJson(@NotNull JsonObject json) throws NullPointerException
+		{
+			Objects.requireNonNull(json);
+			try {
+				final @NotNull var sections = json.getAsJsonArray("sections").asList().stream()
+						.map(el -> CreditsSection.fromJson(el.getAsJsonObject()))
+						.toList();
+				return new Credits(sections);
+			} catch(Exception e) {
+				throw new RuntimeException("Failed to parse 'credits' from JSON", e);
+			}
+		}
+		// --------------------------------------------------
+		/**
+		 * Merges two {@link Credits} instances into a new one.
+		 * @param arg1 The first {@link Credits} instance.
+		 * @param arg2 The second {@link Credits} instance.
+		 * @throws NullPointerException If an arguments is {@code null}.
+		 */
+		@Contract("_, _ -> new")
+		public static final Credits merge(@NotNull Credits arg1, @NotNull Credits arg2)
+				throws NullPointerException
+		{
+			//not null requirements
+			Objects.requireNonNull(arg1);
+			Objects.requireNonNull(arg2);
+
+			//some optimization
+			if(arg1 == EMPTY || arg1.getSections().isEmpty())      return arg2;
+			else if(arg2 == EMPTY || arg2.getSections().isEmpty()) return arg1;
+
+			//merge sections
+			final var mergedSections = new ArrayList<CreditsSection>(
+					arg1.getSections().size() + arg2.getSections().size());
+			mergedSections.addAll(arg1.getSections());
+			mergedSections.addAll(arg2.getSections());
+
+			//return new credits instance
+			return new Credits(mergedSections);
 		}
 		// ==================================================
 	}
