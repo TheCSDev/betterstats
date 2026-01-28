@@ -21,10 +21,18 @@ public final class McbsEditorHomepageTabGUI extends McbsEditorTabGUI<McbsEditorH
 	// ==================================================
 	protected final @Override void initTabGuiCallback()
 	{
-		//FIXME - Implement
+		//news panel
+		final var news = new BSCreditsPanel(getEditorTab().getNewsAsync());
+		add(news);
+		news.setBounds(new UDim2(0, 10, 0, 10), new UDim2(0.7, -38, 1, -20));
+
+		final var newsBB      = news.getBounds();
+		final var scroll_news = new TScrollBarWidget.Flat(news);
+		scroll_news.setBounds(newsBB.endX - 1, newsBB.y, 8, newsBB.height);
+		add(scroll_news);
 
 		//credits panel
-		final var credits = new BSCreditsPanel();
+		final var credits = new BSCreditsPanel(getEditorTab().getCreditsAsync());
 		add(credits);
 		credits.setBounds(new UDim2(0.7, -10, 0, 10), new UDim2(0.3, -7, 1, -20));
 
