@@ -1,17 +1,16 @@
 package com.thecsdev.betterstats.api.mcbs.controller.tab;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
-import com.thecsdev.betterstats.net.BetterStatsRestAPI;
-import com.thecsdev.betterstats.net.BetterStatsRestAPI.Credits;
+import com.thecsdev.betterstats.resources.BetterStatsRestAPI;
+import com.thecsdev.betterstats.resources.BetterStatsRestAPI.Credits;
 import com.thecsdev.betterstats.resources.BSSLang;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
-import static com.thecsdev.betterstats.net.BetterStatsRestAPI.fetchBuiltInCreditsAsync;
+import static com.thecsdev.betterstats.resources.BetterStatsRestAPI.fetchBuiltInCreditsAsync;
 
 /**
  * The main "homepage" tab that is selected by default when an {@link McbsEditor}

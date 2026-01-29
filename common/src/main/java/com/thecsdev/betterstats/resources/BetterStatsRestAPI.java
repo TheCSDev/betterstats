@@ -1,9 +1,8 @@
-package com.thecsdev.betterstats.net;
+package com.thecsdev.betterstats.resources;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.realmsclient.util.JsonUtils;
 import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.common.resource.ResourceRequest;
@@ -32,10 +31,7 @@ import static com.mojang.realmsclient.util.JsonUtils.getStringOr;
  * The API provides various endpoints that allow the mod to fetch and interact with
  * additional features and data beyond the standard statistics screen functionality.
  */
-@ApiStatus.Obsolete
-@ApiStatus.Experimental
-@SuppressWarnings("removal")
-public final class BetterStatsRestAPI
+public final @ApiStatus.Experimental class BetterStatsRestAPI
 {
 	// ================================================== ==================================================
 	//                                 BetterStatsRestAPI IMPLEMENTATION
@@ -149,6 +145,7 @@ public final class BetterStatsRestAPI
 	/**
 	 * The "User-Agent" string to be used in HTTP requests.
 	 */
+	@SuppressWarnings("removal")
 	private static final @NotNull String USER_AGENT =
 			"BetterStats/" + BetterStats.getProperty("mod.version") +
 			" (https://github.com/TheCSDev/betterstats; https://modrinth.com/project/n6PXGAoM; " +
