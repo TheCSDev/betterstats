@@ -39,8 +39,9 @@ public final class McbsEditor
 	private long _editCount = Long.MIN_VALUE;
 	// ==================================================
 	public McbsEditor() {
-		addTab(McbsEditorHomepageTab.INSTANCE, true);
-		addTab(McbsEditorFileTab.LOCALPLAYER, false);
+		//FIXME - Re-implement the 'Home' tab
+		//addTab(McbsEditorHomepageTab.INSTANCE, true);
+		addTab(McbsEditorFileTab.LOCALPLAYER, true);
 	}
 	// ==================================================
 	public final @Override int hashCode() { return super.hashCode(); }
