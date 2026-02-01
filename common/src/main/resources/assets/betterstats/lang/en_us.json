@@ -10,6 +10,11 @@
 
 	"betterstats": "Better Statistics Screen",
 
+	"commands.statistics.edit.output": "Edited the stat %s for %d player(s).",
+	"commands.statistics.clear.output": "Cleared statistics of %d player(s).",
+	"commands.statistics.clear.kick": "Your statistics were cleared, which requires you to disconnect and re-join.",
+	"commands.statistics.query.output": "%s's stat value for %s is %d.",
+
 	"betterstats.config.common.register_commands": "Register commands",
 	"betterstats.config.common.register_commands.tooltip": "Registers this mod's commands (ex. '/statistics').",
 	"betterstats.config.common.api_endpoint": "API endpoint",
@@ -18,11 +23,6 @@
 	"betterstats.config.client.allow_chat_psa.tooltip": "Allows rare informational PSA messages from the developer of this mod to show up in chat. Turn this off to suppress all such notifications.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI mobs follow cursor",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Entity stats' GUI mobs visually follow the cursor location.",
-
-	"commands.statistics.edit.output": "Edited the stat %s for %d player(s).",
-	"commands.statistics.clear.output": "Cleared statistics of %d player(s).",
-	"commands.statistics.clear.kick": "Your statistics were cleared, which requires you to disconnect and re-join.",
-	"commands.statistics.query.output": "%s's stat value for %s is %d.",
 
 	"betterstats.gui.menubar.file": "File",
 	"betterstats.gui.menubar.file.new": "New",
@@ -53,5 +53,21 @@
 	"betterstats.gui.statsview.filter.distance_unit": "Distance unit",
 	"betterstats.gui.statsview.filter.time_unit": "Time unit",
 	"betterstats.gui.statsview.stats.no_stats": "There are no stats to show yet...",
-	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "View on Wiki"
+	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "View on Wiki",
+
+	"betterstats.credits": "Credits",
+	"betterstats.credits.section.top_sponsors": "Top sponsors",
+	"betterstats.credits.section.top_sponsors.summary": "Top funding contributions to this project. Entries may be shown in random order.",
+	"betterstats.credits.section.recent_sponsors": "Recent sponsors",
+	"betterstats.credits.section.recent_sponsors.summary": "Recent funding contributions to this project. Entries may be shown in random order.",
+	"betterstats.credits.section.special_thanks": "Special thanks",
+	"betterstats.credits.section.special_thanks.summary": "Special credits and those who made this mod possible.",
+	"betterstats.credits.section.special_thanks.entry.you": "[You]",
+	"betterstats.credits.section.special_thanks.entry.you.summary": "Special thanks to YOU, for your support and for helping keep this mod alive.",
+	"betterstats.credits.section.special_thanks.entry.contributors": "[Contributors]",
+	"betterstats.credits.section.special_thanks.entry.contributors.summary": "Everyone who contributed to the mod, reported bugs, and provided feedback. Your help means a lot.",
+	"betterstats.credits.section.contributors": "Contributors",
+	"betterstats.credits.section.contributors.summary": "Community members who contributed to this mod during v5.X.",
+	"betterstats.credits.section.founder_contributors": "Founder contributors",
+	"betterstats.credits.section.founder_contributors.summary": "Community members who contributed to this mod prior to v5.X."
 }

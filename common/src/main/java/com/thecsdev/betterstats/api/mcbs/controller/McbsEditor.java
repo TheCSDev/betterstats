@@ -39,6 +39,7 @@ public final class McbsEditor
 	private long _editCount = Long.MIN_VALUE;
 	// ==================================================
 	public McbsEditor() {
+		//FIXME - Re-implement the 'Home' tab
 		//addTab(McbsEditorHomepageTab.INSTANCE, true);
 		addTab(McbsEditorFileTab.LOCALPLAYER, true);
 	}
@@ -123,7 +124,6 @@ public final class McbsEditor
 	/**
 	 * Returns the current {@link McbsEditorTab} being edited by this {@link McbsEditor}.
 	 */
-	//FIXME - May wanna make this NotNull to avoid confusion with the null tab
 	public final @NotNull McbsEditorTab getCurrentTab() { return this._currentTab; }
 
 	/**

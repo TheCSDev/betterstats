@@ -1,6 +1,7 @@
 package com.thecsdev.betterstats.resources;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.common.util.annotations.Reflected;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -90,5 +91,21 @@ public final class BSSLang
 	public static final MutableComponent gui_statsview_filter_timeUnit() { return translatable("betterstats.gui.statsview.filter.time_unit"); }
 	public static final MutableComponent gui_statsview_stats_noStats() { return translatable("betterstats.gui.statsview.stats.no_stats"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
+	// ==================================================
+	public static final @Reflected MutableComponent credits() { return translatable("betterstats.credits"); }
+	public static final @Reflected MutableComponent credits_section_topSponsors() { return translatable("betterstats.credits.section.top_sponsors"); }
+	public static final @Reflected MutableComponent credits_section_topSponsors_summary() { return translatable("betterstats.credits.section.top_sponsors.summary"); }
+	public static final @Reflected MutableComponent credits_section_recentSponsors() { return translatable("betterstats.credits.section.recent_sponsors"); }
+	public static final @Reflected MutableComponent credits_section_recentSponsors_summary() { return translatable("betterstats.credits.section.recent_sponsors.summary"); }
+	public static final @Reflected MutableComponent credits_section_specialThanks() { return translatable("betterstats.credits.section.special_thanks"); }
+	public static final @Reflected MutableComponent credits_section_specialThanks_summary() { return translatable("betterstats.credits.section.special_thanks.summary"); }
+	public static final @Reflected MutableComponent credits_section_specialThanks_entry_you() { return translatable("betterstats.credits.section.special_thanks.entry.you"); }
+	public static final @Reflected MutableComponent credits_section_specialThanks_entry_you_summary() { return translatable("betterstats.credits.section.special_thanks.entry.you.summary"); }
+	public static final @Reflected MutableComponent credits_section_specialThanks_entry_contributors() { return translatable("betterstats.credits.section.special_thanks.entry.contributors"); }
+	public static final @Reflected MutableComponent credits_section_specialThanks_entry_contributors_summary() { return translatable("betterstats.credits.section.special_thanks.entry.contributors.summary"); }
+	public static final @Reflected MutableComponent credits_section_contributors() { return translatable("betterstats.credits.section.contributors"); }
+	public static final @Reflected MutableComponent credits_section_contributors_summary() { return translatable("betterstats.credits.section.contributors.summary"); }
+	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
+	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
 	// ==================================================
 }

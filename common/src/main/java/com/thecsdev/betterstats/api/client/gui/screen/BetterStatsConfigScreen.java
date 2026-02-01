@@ -152,15 +152,10 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 
 		// ---------- end
 		//flag element that saves the config once this gui is removed
-		final var client      = Objects.requireNonNull(panel.getClient(), "Missing 'client' instance");
 		final var el_saveFlag = new TElement();
 		el_saveFlag.setBounds(panel.computeNextYBounds(0, 0));
 		el_saveFlag.screenProperty().addChangeListener((p, o, n) ->
 		{
-			//do nothing if the client's screen didn't change
-			if((o != null && client.screen == o.getAsScreen()) ||
-					(n != null && client.screen == n.getAsScreen()))
-				return;
 			//save the config files otherwise
 			if(n == null) TUtils.uncheckedCall(() -> {
 				bss_config.saveToFile();

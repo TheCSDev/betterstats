@@ -82,9 +82,9 @@ body:
       options:
         - label: I titled this issue properly
           required: true
+        - label: This issue is related to the latest version of this mod
+          required: true
         - label: If this issue is related to a crash, I provided a crash report
           required: true
-        - label: >-
-            I will answer any follow-up questions to help diagnose and resolve
-            this issue
+        - label: I will answer any follow-up questions to help diagnose and resolve this issue
           required: true
