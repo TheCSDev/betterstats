@@ -59,6 +59,7 @@ public final class MenubarItemView extends MenubarItem
 				});
 
 		//home-page tab
+		//FIXME - Re-implement the 'Home' tab
 		/*if(mcbsEditor.getCurrentTab() != McbsEditorHomepageTab.INSTANCE)
 			builder.addButton(
 					gui("icon/news").append(" ").append(BSSLang.gui_menubar_view_homepage()),
