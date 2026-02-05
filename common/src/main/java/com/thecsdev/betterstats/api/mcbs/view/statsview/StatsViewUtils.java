@@ -10,10 +10,12 @@ import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TCheckboxWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
+import com.thecsdev.commonmc.api.client.gui.widget.stats.TBlockStatsWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TCustomStatWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TEntityStatsWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TItemStatsWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.text.TSimpleTextFieldWidget;
+import com.thecsdev.commonmc.api.stats.util.BlockStats;
 import com.thecsdev.commonmc.api.stats.util.CustomStat;
 import com.thecsdev.commonmc.api.stats.util.EntityStats;
 import com.thecsdev.commonmc.api.stats.util.ItemStats;
@@ -296,6 +298,70 @@ public final class StatsViewUtils
 		{
 			//create and add the widget
 			final var widget = new TItemStatsWidget(iterator.next());
+			widget.setBounds(nextX, nextY, size, size);
+			if(widgetPostProcessor != null) //right before adding to panel
+				widgetPostProcessor.accept(widget);
+			panel.add(widget);
+			//increment position values
+			nextX += size + GAP;
+			if(nextX + size > endX) { nextX = startX; nextY += size + GAP; }
+		}
+	}
+	// --------------------------------------------------
+	/**
+	 * Initializes a collection of "Block" statistics in a given "group".
+	 * @param panel The {@link TPanelElement} where the stats initialize.
+	 * @param groupLabel The display name of the group of statistics.
+	 * @param blockStats The "Block" statistics collection.
+	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
+	 */
+	public static final void initBlockStats(
+			@NotNull TPanelElement panel,
+			@NotNull Component groupLabel,
+			@NotNull Iterable<BlockStats> blockStats) throws NullPointerException {
+		initBlockStats(panel, groupLabel, blockStats, null);
+	}
+
+	/**
+	 * Initializes a collection of "Block" statistics in a given "group".
+	 * @param panel The {@link TPanelElement} where the stats initialize.
+	 * @param groupLabel The display name of the group of statistics.
+	 * @param blockStats The "Block" statistics collection.
+	 * @param widgetPostProcessor An optional post-processor for each created {@link TBlockStatsWidget}.
+	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
+	 */
+	public static final void initBlockStats(
+			@NotNull TPanelElement panel,
+			@NotNull Component groupLabel,
+			@NotNull Iterable<BlockStats> blockStats,
+			@Nullable Consumer<TBlockStatsWidget> widgetPostProcessor) throws NullPointerException
+	{
+		//not null requirements
+		Objects.requireNonNull(panel);
+		Objects.requireNonNull(groupLabel);
+		Objects.requireNonNull(blockStats);
+
+		//obtain iterator instance, cancel if there are no entries
+		final var iterator = blockStats.iterator();
+		if(!iterator.hasNext()) return;
+
+		//initialize group label
+		initGroupLabel(panel, groupLabel);
+
+		//prepare maths to initialize stats
+		int size = 20; //widget width and height
+		int startX, endX, nextX, nextY; {
+			final var nextBounds = panel.computeNextYBounds(0, GAP);
+			startX = nextX = nextBounds.x;
+			endX   = nextBounds.endX;
+			nextY  = nextBounds.y;
+		}
+
+		//initialize stat widgets
+		while(iterator.hasNext())
+		{
+			//create and add the widget
+			final var widget = new TBlockStatsWidget(iterator.next());
 			widget.setBounds(nextX, nextY, size, size);
 			if(widgetPostProcessor != null) //right before adding to panel
 				widgetPostProcessor.accept(widget);

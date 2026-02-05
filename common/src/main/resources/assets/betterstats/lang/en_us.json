@@ -8,6 +8,8 @@
 	"mobCategory.water_ambient": "Water ambient",
 	"mobCategory.misc": "Miscellaneous",
 
+	"stat.blocksButton": "Blocks",
+
 	"betterstats": "Better Statistics Screen",
 
 	"commands.statistics.edit.output": "Edited the stat %s for %d player(s).",
@@ -18,7 +20,7 @@
 	"betterstats.config.common.register_commands": "Register commands",
 	"betterstats.config.common.register_commands.tooltip": "Registers this mod's commands (ex. '/statistics').",
 	"betterstats.config.common.api_endpoint": "API endpoint",
-	"betterstats.config.common.api_endpoint.tooltip": "The URL address of the restful HTTP API endpoint this mod uses to communicate with this mod developer's servers.",
+	"betterstats.config.common.api_endpoint.tooltip": "The URI address of the REST-ful HTTP API endpoint this mod uses to communicate with this mod developer's servers.",
 	"betterstats.config.client.allow_chat_psa": "Allow chat PSA messages",
 	"betterstats.config.client.allow_chat_psa.tooltip": "Allows rare informational PSA messages from the developer of this mod to show up in chat. Turn this off to suppress all such notifications.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI mobs follow cursor",
