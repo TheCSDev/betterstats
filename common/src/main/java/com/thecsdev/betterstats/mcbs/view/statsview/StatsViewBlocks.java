@@ -1,6 +1,5 @@
 package com.thecsdev.betterstats.mcbs.view.statsview;
 
-import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
@@ -13,16 +12,18 @@ import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
-import com.thecsdev.commonmc.api.client.gui.widget.stats.TEntityStatsWidget;
+import com.thecsdev.commonmc.api.client.gui.widget.stats.TBlockStatsWidget;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
-import com.thecsdev.commonmc.api.stats.util.EntityStats;
+import com.thecsdev.commonmc.api.stats.util.BlockStats;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.Util;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,90 +32,115 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static com.thecsdev.commonmc.api.world.item.TItemUtils.getCreativeModeTab;
+import static com.thecsdev.commonmc.resources.TComponent.block;
 import static com.thecsdev.commonmc.resources.TComponent.gui;
-import static com.thecsdev.commonmc.resources.TComponent.head;
 import static java.util.Comparator.comparing;
 import static net.minecraft.network.chat.Component.translatable;
 import static net.minecraft.resources.Identifier.DEFAULT_NAMESPACE;
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 /**
- * {@link StatsView} that displays "Mobs" statistics.
+ * {@link StatsView} that displays "Block" statistics.
  */
 @Environment(EnvType.CLIENT)
-public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<EntityStats>
-		permits StatsViewHunter
+public final @ApiStatus.Internal class StatsViewBlocks extends SubjectStatsView<BlockStats>
 {
-	// ================================================== ==================================================
-	//                                      StatsViewMobs IMPLEMENTATION
-	// ================================================== ==================================================
-	/**
-	 * The main instance of this {@link Class}.
-	 */
-	public static final StatsViewMobs INSTANCE = new StatsViewMobs();
-	// ==================================================
-	protected StatsViewMobs() {}
-	// ==================================================
-	public @Override @NotNull Component getDisplayName() {
-		return head("MHF_Pig").append(" ").append(translatable("stat.mobsButton"));
-	}
-	// ==================================================
+    // ================================================== ==================================================
+    //                                    StatsViewBlocks IMPLEMENTATION
+    // ==================================================
+    /**
+     * The main instance of this {@link Class}.
+     */
+    public static final StatsViewBlocks INSTANCE = new StatsViewBlocks();
+    // ================================================== ==================================================
+    public final @Override @NotNull Component getDisplayName() {
+        return block("block/grass_block_side").append(" ").append(translatable("stat.blocksButton"));
+    }
+    // ==================================================
 	public final @Override void initFilters(@NotNull FiltersInitContext context) {
 		super.initFilters(context);
 		SortBy.initFilter(context);
 		GroupBy.initFilter(context);
 	}
 	// --------------------------------------------------
-	public @Override void initStats(@NotNull StatsInitContext context)
-	{
-		//obtain stats
-		final var allStats = EntityStats.getEntityStats(
-				context.getStats(),
-				getStatsPredicate(context.getFilters()),
-				getStatsSorter(context.getFilters()));
-		if(allStats.isEmpty()) return; //nothing to show
-		final int perPage    = 200;
-		final var pagedStats = StatsPageChooser.applyFilter(allStats, context.getFilters(), perPage);
+    public final @Override void initStats(@NotNull StatsInitContext context)
+    {
+        //obtain stats
+        final var allStats = BlockStats.getBlockStats(
+                context.getStats(),
+                getStatsPredicate(context.getFilters()),
+                getStatsSorter(context.getFilters()));
+        if(allStats.isEmpty()) return; //nothing to show
+        final int perPage    = 1550;
+        final var pagedStats = StatsPageChooser.applyFilter(allStats, context.getFilters(), perPage);
 
-		//group stats and initialize each group
-		StatsPageChooser.initPanel(context.getPanel(), context.getFilters(), perPage, allStats.size());
-		getStatsGrouper(context.getFilters())
-				.apply(pagedStats).forEach((gName, gStats) ->
-						StatsViewUtils.initMobStats(
-								context.getPanel(), gName, gStats,
-								widget -> postProcessWidget(context, widget)
-						));
-		StatsPageChooser.initPanel(context.getPanel(), context.getFilters(), perPage, allStats.size());
-		StatsSummaryPanel.initPanel(context.getPanel(), allStats);
-	}
-	// ==================================================
+        //group stats and initialize each group
+        StatsPageChooser.initPanel(context.getPanel(), context.getFilters(), perPage, allStats.size());
+        getStatsGrouper(context.getFilters())
+                .apply(pagedStats).forEach((gName, gStats) ->
+                        StatsViewUtils.initBlockStats(
+                                context.getPanel(), gName, gStats,
+                                widget -> postProcessWidget(context, widget)
+                        ));
+        StatsPageChooser.initPanel(context.getPanel(), context.getFilters(), perPage, allStats.size());
+        StatsSummaryPanel.initPanel(context.getPanel(), allStats);
+    }
+    // ==================================================
 	/**
-	 * Post-processes each {@link TEntityStatsWidget} after its creation.
-	 * @param context The {@link StatsView.StatsInitContext}.
-	 * @param widget The {@link TEntityStatsWidget} to post-process.
+	 * Post-processes a given {@link TBlockStatsWidget} after it has been created.
+	 * @param context The {@link StatsInitContext} of the current initialization process.
+	 * @param widget The {@link TBlockStatsWidget} to post-process.
 	 * @throws NullPointerException If any of the arguments is {@code null}.
 	 */
-	protected @Virtual void postProcessWidget(@NotNull StatsView.StatsInitContext context, @NotNull TEntityStatsWidget widget)
+	private @Virtual void postProcessWidget(
+			@NotNull StatsView.StatsInitContext context,
+			@NotNull TBlockStatsWidget widget) throws NullPointerException
 	{
 		//obtain stats instance
 		final var stats = widget.statsProperty().get();
 		assert stats != null;
 		//noinspection unchecked - context menu
-		widget.contextMenuProperty().set((Function<TElement, TContextMenu>)(Object) CTX_MENU, StatsViewMobs.class);
-		widget.followsCursorProperty().set(BetterStats.getConfig().getGuiMobsFollowCursor(), StatsViewMobs.class);
+		widget.contextMenuProperty().set((Function<TElement, TContextMenu>)(Object) CTX_MENU, StatsViewBlocks.class);
 	}
 
 	/**
-	 * Constructs a context menu for a given {@link TEntityStatsWidget}.
+	 * Constructs a context menu for a given {@link TBlockStatsWidget}.
 	 */
-	private static final Function<TEntityStatsWidget, TContextMenu> CTX_MENU = widget ->
+	private static final Function<TBlockStatsWidget, TContextMenu> CTX_MENU = widget ->
 	{
 		//obtain the stats data and ensure it is present
 		final var stats = widget.statsProperty().get();
 		assert stats != null;
 
 		//create the context menu builder
-		final var builder = new TContextMenu.Builder(Objects.requireNonNull(widget.getClient()));
+		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
+		final var builder = new TContextMenu.Builder(client);
+
+		//give command
+		Optional.ofNullable(client.player).ifPresent(player ->
+		{
+			//do not show this if player has insufficient permissions
+			if(!player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+				return;
+
+			//add the entry
+			builder.addButton(
+					block("block/command_block_front").append(" /give @s"),
+					__ -> {
+						if(stats.getSubject().asItem() == Items.AIR) try {
+							final var id   = stats.getSubjectID().toString();
+							final var name = stats.getSubjectDisplayName().getString();
+							player.connection.sendCommand("give @s minecraft:command_block[minecraft:item_name=\"" + name + "\",minecraft:block_entity_data={id:\"minecraft:command_block\",auto:1b,Command:\"setblock ~ ~ ~ " + id + "\"}]");
+						} catch(Exception ignored) { /*ignored*/ }
+						else try {
+							final var is = stats.getItemStats();
+							final var id = is.getSubjectID();
+							final var ss = is.getSubject().getDefaultMaxStackSize();
+							player.connection.sendCommand("give @s " + id + " " + ss);
+						} catch(Exception ignored) { /*ignored*/ }
+					});
+		});
 
 		//wiki url
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
@@ -124,25 +150,25 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 					__ -> Util.getPlatform().openUri(url_wiki));
 		}
 
-		//close button, and thenbuild and return a new context menu
+		//close button, and then build and return a new context menu
 		builder.addButton(
 			gui(BSSSprites.gui_icon_close()).append(" ").append(BSSLang.gui_menubar_file_close()),
 			__ -> {});
 		return builder.build();
 	};
 	// --------------------------------------------------
-	protected @Virtual @Override @NotNull Comparator<EntityStats> getStatsSorter(@NotNull Filters filters) throws NullPointerException {
+	protected @Virtual @Override @NotNull Comparator<BlockStats> getStatsSorter(@NotNull Filters filters) throws NullPointerException {
 		return filters.getProperty(SortBy.class, SortBy.FID, SortBy.VANILLA).getStatsSorter();
 	}
 
-	protected final @Override @NotNull Function<Iterable<EntityStats>, LinkedHashMap<Component, Iterable<EntityStats>>> getStatsGrouper(@NotNull Filters filters) {
-		return filters.getProperty(GroupBy.class, GroupBy.FID, GroupBy.MOD).getStatsGrouper();
+	protected final @Override @NotNull Function<Iterable<BlockStats>, LinkedHashMap<Component, Iterable<BlockStats>>> getStatsGrouper(@NotNull Filters filters) {
+		return filters.getProperty(GroupBy.class, GroupBy.FID, GroupBy.TAB).getStatsGrouper();
 	}
-	// ================================================== ==================================================
+    // ================================================== ==================================================
 	//                                             SortBy IMPLEMENTATION
 	// ================================================== ==================================================
 	/**
-	 * {@link TDropdownWidget.Entry}s for sorting {@link EntityStats}.
+	 * {@link TDropdownWidget.Entry}s for sorting {@link BlockStats}.
 	 */
 	public static final class SortBy implements TDropdownWidget.Entry
 	{
@@ -160,23 +186,23 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		/**
 		 * The main "filter id" used for {@link StatsView.Filters}.
 		 */
-		public static final Identifier FID = fromNamespaceAndPath(MOD_ID, "entities_sort_by");
+		public static final Identifier FID = fromNamespaceAndPath(MOD_ID, "blocks_sort_by");
 		// --------------------------------------------------
 		private final @NotNull Object handle;
 		private final @NotNull Component name;
-		private final @NotNull Comparator<EntityStats> sorter;
+		private final @NotNull Comparator<BlockStats> sorter;
 		// ==================================================
 		private SortBy(
 				@NotNull Object handle,
 				@NotNull Component name,
-				@NotNull Comparator<EntityStats> sorter) throws NullPointerException {
+				@NotNull Comparator<BlockStats> sorter) throws NullPointerException {
 			this.handle = Objects.requireNonNull(handle);
 			this.name   = Objects.requireNonNull(name);
 			this.sorter = Objects.requireNonNull(sorter);
 		}
 		// ==================================================
 		public final @Override @NotNull Component getDisplayName() { return this.name; }
-		public @NotNull Comparator<EntityStats> getStatsSorter() { return this.sorter; }
+		public @NotNull Comparator<BlockStats> getStatsSorter() { return this.sorter; }
 		// ==================================================
 		public final @Override int hashCode() { return Objects.hash(this.handle); }
 		public final @Override boolean equals(Object obj) {
@@ -215,21 +241,21 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		}
 		// ==================================================
 		/**
-		 * Retuns all {@link SortBy} instances that are to be used.
+		 * Returns all {@link SortBy} instances that are to be used.
 		 */
 		public static final @NotNull Collection<SortBy> values()
 		{
 			//initialize the list
-			final var ist  = IStatsProvider.getEntityStatTypes();
-			final var list = new ArrayList<SortBy>(3 + ist.size());
+			final var bst  = IStatsProvider.getBlockStatTypes();
+			final var list = new ArrayList<SortBy>(3 + bst.size());
 			//add sorting entries
 			list.add(VANILLA);
 			list.add(ALPHABETICAL);
 			list.add(LACITEBAHPLA);
-			for(final var statType : ist)
+			for(final var statType : bst)
 				list.add(new SortBy(
 						statType, IStatsProvider.getStatTypeName(statType),
-						comparing((EntityStats s) -> s.getStatsProvider().getIntValue(statType, s.getSubject())).reversed()
+						comparing((BlockStats s) -> s.getStatsProvider().getIntValue(statType, s.getSubject())).reversed()
 				));
 			//return the result
 			return list;
@@ -240,19 +266,19 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 	//                                            GroupBy IMPLEMENTATION
 	// ================================================== ==================================================
 	/**
-	 * {@link TDropdownWidget.Entry}s for grouping {@link EntityStats}.
+	 * {@link TDropdownWidget.Entry}s for grouping {@link BlockStats}.
 	 */
 	public static enum GroupBy implements TDropdownWidget.Entry
 	{
 		// ==================================================
 		ALL(BSSLang.gui_statsview_filter_groupBy_all(), stats -> {
-			final var map = new LinkedHashMap<Component, Iterable<EntityStats>>();
+			final var map = new LinkedHashMap<Component, Iterable<BlockStats>>();
 			map.put(Component.literal("*"), stats);
 			return map;
 		}),
-		MOD(Component.literal("Mod"), stats -> {
+		MOD(BSSLang.gui_statsview_filter_groupBy_mod(), stats -> {
 			//create a new map to group stats based on mod id-s
-			final var map = new LinkedHashMap<String, ArrayList<EntityStats>>();
+			final var map = new LinkedHashMap<String, ArrayList<BlockStats>>();
 			//group the stats
 			for(final var stat : stats)
 				map.computeIfAbsent(stat.getSubjectID().getNamespace(), __ -> new ArrayList<>())
@@ -268,17 +294,16 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 					LinkedHashMap::new
 			));
 		}),
-		CATEGORY(BSSLang.gui_statsview_filter_groupBy_mobCategory(), stats -> {
-			//create a new map to group stats based on mob categories
-			final var map = new LinkedHashMap<MobCategory, ArrayList<EntityStats>>();
+		TAB(BSSLang.gui_statsview_filter_groupBy_createiveModeTab(), stats -> {
+			//create a new map to group stats based on creative mode tabs
+			final var map = new LinkedHashMap<CreativeModeTab, ArrayList<BlockStats>>();
 			//group the stats
-			for(final var stat : stats) {
-				final var category = stat.getSubject().getCategory();
-				map.computeIfAbsent(category, __ -> new ArrayList<>()).add(stat);
-			}
+			for(final var stat : stats)
+				map.computeIfAbsent(getCreativeModeTab(stat.getSubject().asItem()), __ -> new ArrayList<>())
+						.add(stat);
 			//remap the map and return it
 			return map.entrySet().stream().collect(Collectors.toMap(
-					entry -> translatable("mobCategory." + entry.getKey().getName()),
+					entry -> entry.getKey() != null ? entry.getKey().getDisplayName() : Component.literal("*"),
 					Map.Entry::getValue,
 					(existing, replacement) -> existing,
 					LinkedHashMap::new
@@ -288,22 +313,22 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		/**
 		 * The main "filter id" used for {@link StatsView.Filters}.
 		 */
-		public static final Identifier FID = fromNamespaceAndPath(MOD_ID, "entities_group_by");
+		public static final Identifier FID = fromNamespaceAndPath(MOD_ID, "blocks_group_by");
 		// --------------------------------------------------
 		private final @NotNull Component name;
-		private final @NotNull Function<Iterable<EntityStats>, LinkedHashMap<Component, Iterable<EntityStats>>> grouper;
+		private final @NotNull Function<Iterable<BlockStats>, LinkedHashMap<Component, Iterable<BlockStats>>> grouper;
 		// ==================================================
 		GroupBy(@NotNull Component name,
-				@NotNull Function<Iterable<EntityStats>, LinkedHashMap<Component, Iterable<EntityStats>>> grouper) {
+				@NotNull Function<Iterable<BlockStats>, LinkedHashMap<Component, Iterable<BlockStats>>> grouper) {
 			this.name    = Objects.requireNonNull(name);
 			this.grouper = grouper;
 		}
 		// ==================================================
 		public final @Override @NotNull Component getDisplayName() { return this.name; }
-		public final @NotNull Function<Iterable<EntityStats>, LinkedHashMap<Component, Iterable<EntityStats>>> getStatsGrouper() { return this.grouper; }
+		public final @NotNull Function<Iterable<BlockStats>, LinkedHashMap<Component, Iterable<BlockStats>>> getStatsGrouper() { return this.grouper; }
 		// ==================================================
 		/**
-		 * Initializes GUI for the {@link StatsViewMobs.GroupBy} filter.
+		 * Initializes GUI for the {@link StatsViewBlocks.GroupBy} filter.
 		 * @param context The {@link StatsView.FiltersInitContext}.
 		 * @throws NullPointerException If the argument is {@code null}.
 		 */
@@ -317,16 +342,16 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
-			final var dropdown = new TDropdownWidget<StatsViewMobs.GroupBy>();
+			final var dropdown = new TDropdownWidget<GroupBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
-			Collections.addAll(dropdown.getEntries(), StatsViewMobs.GroupBy.values());
+			Collections.addAll(dropdown.getEntries(), StatsViewBlocks.GroupBy.values());
 			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_groupBy()), GroupBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
-					context.getFilters().getProperty(StatsViewMobs.GroupBy.class, FID, MOD),
-					StatsViewMobs.GroupBy.class);
+					context.getFilters().getProperty(StatsViewBlocks.GroupBy.class, FID, TAB),
+					StatsViewBlocks.GroupBy.class);
 			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
 					context.getFilters().setProperty(GroupBy.class, FID, n));
 		}

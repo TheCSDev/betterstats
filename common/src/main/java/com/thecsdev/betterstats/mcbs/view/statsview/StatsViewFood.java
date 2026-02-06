@@ -20,9 +20,8 @@ import static net.minecraft.network.chat.Component.translatable;
 /**
  * {@link StatsView} that displays "Food &amp; Drinks" statistics.
  */
-@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class StatsViewFood extends StatsViewItems
+public final @ApiStatus.Internal class StatsViewFood extends StatsViewItems
 {
 	// ==================================================
 	/**

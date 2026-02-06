@@ -75,6 +75,7 @@ public abstract class StatsView implements TDropdownWidget.Entry
 	{
 		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "general"), StatsViewGeneral.INSTANCE);
 		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "items"),   StatsViewItems.INSTANCE);
+		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "blocks"),  StatsViewBlocks.INSTANCE);
 		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "mobs"),    StatsViewMobs.INSTANCE);
 		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "food"),    StatsViewFood.INSTANCE);
 		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "hunter"),  StatsViewHunter.INSTANCE);

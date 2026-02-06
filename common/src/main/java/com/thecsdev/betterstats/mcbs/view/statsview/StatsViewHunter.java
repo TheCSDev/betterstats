@@ -20,9 +20,8 @@ import static net.minecraft.network.chat.Component.translatable;
 /**
  * {@link StatsView} that displays "Hostile Mobs" statistics.
  */
-@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class StatsViewHunter extends StatsViewMobs
+public final @ApiStatus.Internal class StatsViewHunter extends StatsViewMobs
 {
 	// ==================================================
 	/**

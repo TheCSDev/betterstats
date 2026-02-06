@@ -20,6 +20,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.CreativeModeTab;
 import org.jetbrains.annotations.ApiStatus;
@@ -31,8 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.commonmc.api.world.item.TItemUtils.getCreativeModeTab;
-import static com.thecsdev.commonmc.resources.TComponent.gui;
-import static com.thecsdev.commonmc.resources.TComponent.item;
+import static com.thecsdev.commonmc.resources.TComponent.*;
 import static java.util.Comparator.comparing;
 import static net.minecraft.network.chat.Component.translatable;
 import static net.minecraft.resources.Identifier.DEFAULT_NAMESPACE;
@@ -41,9 +41,9 @@ import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 /**
  * {@link StatsView} that displays "Item" statistics.
  */
-@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits StatsViewFood
+public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<ItemStats>
+		permits StatsViewFood
 {
 	// ================================================== ==================================================
 	//                                     StatsViewItems IMPLEMENTATION
@@ -112,7 +112,27 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 		assert stats != null;
 
 		//create the context menu builder
-		final var builder = new TContextMenu.Builder(Objects.requireNonNull(widget.getClient()));
+		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
+		final var builder = new TContextMenu.Builder(client);
+
+		//give command
+		Optional.ofNullable(client.player).ifPresent(player ->
+		{
+			//do not show this if player has insufficient permissions
+			if(!player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+				return;
+
+			//add the entry
+			builder.addButton(
+					block("block/command_block_front").append(" /give @s"),
+					__ -> {
+						try {
+							final var id = stats.getSubjectID().toString();
+							final var ss = stats.getSubject().getDefaultMaxStackSize();
+							player.connection.sendCommand("give @s " + id + " " + ss);
+						} catch(Exception ignored) { /*ignored*/ }
+					});
+		});
 
 		//wiki url
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
@@ -122,7 +142,7 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 					__ -> Util.getPlatform().openUri(url_wiki));
 		}
 
-		//close button, and thenbuild and return a new context menu
+		//close button, and then build and return a new context menu
 		builder.addButton(
 			gui(BSSSprites.gui_icon_close()).append(" ").append(BSSLang.gui_menubar_file_close()),
 			__ -> {});
@@ -213,14 +233,13 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 		}
 		// ==================================================
 		/**
-		 * Retuns all {@link SortBy} instances that are to be used.
+		 * Returns all {@link SortBy} instances that are to be used.
 		 */
 		public static final @NotNull Collection<SortBy> values()
 		{
 			//initialize the list
 			final var ist  = IStatsProvider.getItemStatTypes();
-			final var bst  = IStatsProvider.getBlockStatTypes();
-			final var list = new ArrayList<SortBy>(3 + ist.size() + bst.size());
+			final var list = new ArrayList<SortBy>(3 + ist.size());
 			//add sorting entries
 			list.add(VANILLA);
 			list.add(ALPHABETICAL);
@@ -229,11 +248,6 @@ public sealed class StatsViewItems extends SubjectStatsView<ItemStats> permits S
 				list.add(new SortBy(
 						statType, IStatsProvider.getStatTypeName(statType),
 						comparing((ItemStats s) -> s.getStatsProvider().getIntValue(statType, s.getSubject())).reversed()
-				));
-			for(final var statType : bst)
-				list.add(new SortBy(
-						statType, IStatsProvider.getStatTypeName(statType),
-						comparing((ItemStats s) -> s.getStatsProvider().getIntValue(statType, s.getItemBlockStats().getSubject())).reversed()
 				));
 			//return the result
 			return list;

@@ -34,9 +34,8 @@ import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 /**
  * {@link StatsView} that displays "General" statistics.
  */
-@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class StatsViewGeneral extends SubjectStatsView<CustomStat>
+public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView<CustomStat>
 {
 	// ================================================== ==================================================
 	//                                   StatsViewGeneral IMPLEMENTATION

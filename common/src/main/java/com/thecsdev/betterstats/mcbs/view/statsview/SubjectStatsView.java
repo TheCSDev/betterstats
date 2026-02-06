@@ -29,10 +29,9 @@ FIXME - Question is, do I use 'TCDCommons API' SubjectStats or do I deprecate an
 /**
  * Base {@link Class} for {@link BetterStats}'s {@link StatsView} implementations.
  */
-@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public abstract sealed class SubjectStatsView<SS extends SubjectStats<?>> extends StatsView
-		permits StatsViewGeneral, StatsViewItems, StatsViewMobs
+public abstract sealed @ApiStatus.Internal class SubjectStatsView<SS extends SubjectStats<?>> extends StatsView
+        permits StatsViewBlocks, StatsViewGeneral, StatsViewItems, StatsViewMobs
 {
 	// ==================================================
 	/**
