@@ -25,6 +25,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.FID_STATSVIEW;
+import static com.thecsdev.commonmc.resources.TComponent.head;
+import static net.minecraft.network.chat.Component.literal;
 
 /**
  * This {@link Class} serves as the controller component in the MVC architecture.
@@ -40,7 +42,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * "Special" {@link McbsEditorTab} instance, specifically for interfacing with
 	 * {@link LocalPlayerStatsProvider} data.
 	 * <p>
-	 * TODO - This is maked as {@link ApiStatus.Internal} because I plan to come up
+	 * TODO - This is marked as {@link ApiStatus.Internal} because I plan to come up
 	 *        with some other mechanism for identifying and treating "special" tabs.
 	 */
 	@ApiStatus.Internal
@@ -70,11 +72,11 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	public final @Override @NotNull Component getDisplayName()
 	{
 		if(this == LOCALPLAYER)
-			return BSSLang.gui_menubar_view_localPlayerStats();
+			return head("Steve").append(" ").append(BSSLang.gui_menubar_view_localPlayerStats());
 		else if(this._lastSaveFile != null)
-			return Component.literal(this._lastSaveFile.getName());
+			return head("Steve").append(" ").append(literal(this._lastSaveFile.getName()));
 		else
-			return Component.literal(getClass().getSimpleName() + "@" + hashCode());
+			return head("Steve").append(" ").append(literal(getClass().getSimpleName() + "@" + hashCode()));
 	}
 	// --------------------------------------------------
 	/**

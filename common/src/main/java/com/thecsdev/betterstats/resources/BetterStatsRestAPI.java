@@ -158,9 +158,12 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 	 */
 	public static final CompletableFuture<BetterStatsRestAPI> fetchAsync()
 	{
+		//obtain the currently configured api-endpoint uri
 		final var apiEndpoint = BetterStats.getConfig().getApiEndpoint();
+		//if there's an existing main instance whose api-endpoint is outdated, update it
 		if(INSTANCE == null || (INSTANCE.state() == Future.State.SUCCESS && !INSTANCE.resultNow().getEndpointURI().equals(apiEndpoint)))
-			INSTANCE = fetchAsync(apiEndpoint);
+			return (INSTANCE = fetchAsync(apiEndpoint));
+		//return the main instance
 		return INSTANCE;
 	}
 

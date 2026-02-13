@@ -103,7 +103,7 @@ public abstract class McbsEditorTabGUI<T extends McbsEditorTab> extends TElement
 	 *                               provided {@link McbsEditorTab}.
 	 */
 	public static final <T extends McbsEditorTab> @NotNull McbsEditorTabGUI<T> createTabGui(
-			@Nullable T editorTab) throws NullPointerException
+			@Nullable T editorTab) throws NullPointerException, IllegalStateException
 	{
 		//argument not null requirement
 		Objects.requireNonNull(editorTab);

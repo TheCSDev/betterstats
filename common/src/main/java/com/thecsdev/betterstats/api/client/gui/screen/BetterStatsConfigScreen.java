@@ -35,7 +35,6 @@ import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resources.TComponent.gui;
-import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**
@@ -77,7 +76,6 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	 * @param panel The {@link TPanelElement} onto which the GUI is initialized.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	@SuppressWarnings("UnstableApiUsage")
 	public static final void initConfigGui(@NotNull TPanelElement panel) throws NullPointerException
 	{
 		//argument not null requirement
