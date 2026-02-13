@@ -15,12 +15,20 @@ import org.jetbrains.annotations.NotNull;
 public final class McbsEditorHomepageTabGUI extends McbsEditorTabGUI<McbsEditorHomepageTab>
 {
 	// ==================================================
+	private static long LAST_REFRESH = System.currentTimeMillis();
+	// ==================================================
 	public McbsEditorHomepageTabGUI(@NotNull McbsEditorHomepageTab editorTab) throws NullPointerException {
 		super(editorTab);
 	}
 	// ==================================================
 	protected final @Override void initTabGuiCallback()
 	{
+		//refresh if last refresh was a while ago
+		if(Math.abs(System.currentTimeMillis() - LAST_REFRESH) > (1000 * 60 * 5)) {
+			LAST_REFRESH = System.currentTimeMillis();
+			getEditorTab().refresh();
+		}
+
 		//news panel
 		final var news = new BSCreditsPanel(getEditorTab().getNewsAsync());
 		add(news);
