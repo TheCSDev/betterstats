@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.resources;
+package com.thecsdev.betterstats.resource;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.common.util.annotations.Reflected;
@@ -19,12 +19,12 @@ import static net.minecraft.network.chat.Component.translatable;
 /**
  * {@link BetterStats}'s language translation keys.
  */
-public final class BSSLang
+public final class BLanguage
 {
 	// ==================================================
 	public static final Component WATERMARK;
 	// ==================================================
-	private BSSLang() {}
+	private BLanguage() {}
 	static {
 		//define the 'betterstats' watermark
 		{

@@ -3,8 +3,8 @@ package com.thecsdev.betterstats.mcbs.view.menubar;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
-import com.thecsdev.betterstats.resources.BSSLang;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static com.thecsdev.commonmc.resources.TComponent.*;
+import static com.thecsdev.commonmc.resource.TComponent.*;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
@@ -32,7 +32,7 @@ public final class MenubarItemAbout extends MenubarItem
 	// ==================================================
 	public static final MenubarItemAbout INSTANCE = new MenubarItemAbout();
 	// ==================================================
-	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_about(); }
+	public final @Override @NotNull Component getDisplayName() { return BLanguage.gui_menubar_about(); }
 	// --------------------------------------------------
 	@SuppressWarnings("removal")
 	public final @Override @NotNull TContextMenu createContextMenu(
@@ -42,24 +42,24 @@ public final class MenubarItemAbout extends MenubarItem
 		Objects.requireNonNull(mcbsEditor, "Missing 'editor' instance");
 		return new TContextMenu.Builder(Objects.requireNonNull(client))
 				.addButton(
-						item("item/filled_map").append(" ").append(BSSLang.gui_menubar_about_sourceCode()),
+						item("item/filled_map").append(" ").append(BLanguage.gui_menubar_about_sourceCode()),
 						__ -> showUriScreen(BetterStats.getProperty("mod.link.sources"), true))
 				.addButton(
 						head("MHF_Spider").append(" ").append(translatable("menu.reportBugs")),
 						__ -> showUriScreen(BetterStats.getProperty("mod.link.issues"), true))
 				.addButton(
-						item("item/paper").append(" ").append(BSSLang.gui_menubar_about_legalNotices()),
+						item("item/paper").append(" ").append(BLanguage.gui_menubar_about_legalNotices()),
 						__ -> showUriScreen(BetterStats.getProperty("mod.link.legal"), true))
 				.addSeparator()
 				.addButton(
-						gui(BSSSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),
+						gui(BSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),
 						__ -> showUriScreen(BetterStats.getProperty("mod.link.curseforge"), true))
 				.addButton(
-						gui(BSSSprites.gui_icon_faviconMr()).append(" ").append(literal("Modrinth")),
+						gui(BSprites.gui_icon_faviconMr()).append(" ").append(literal("Modrinth")),
 						__ -> showUriScreen(BetterStats.getProperty("mod.link.modrinth"), true))
 				.addSeparator()
 				.addButton(
-						gui(BSSSprites.gui_icon_heart()).append(" ").append(BSSLang.gui_menubar_about_supportMe().withStyle(ChatFormatting.YELLOW)),
+						gui(BSprites.gui_icon_heart()).append(" ").append(BLanguage.gui_menubar_about_supportMe().withStyle(ChatFormatting.YELLOW)),
 						__ -> showUriScreen(BetterStats.getProperty("mod.link.support_me"), true))
 				.build();
 	}

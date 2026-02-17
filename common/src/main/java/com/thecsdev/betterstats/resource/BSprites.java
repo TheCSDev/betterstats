@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.resources;
+package com.thecsdev.betterstats.resource;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
@@ -15,10 +15,10 @@ import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
  * @see TextureAtlasSprite
  * @see TTextureElement.Mode#GUI_SPRITE
  */
-public final class BSSSprites
+public final class BSprites
 {
 	// ==================================================
-	private BSSSprites() {}
+	private BSprites() {}
 	// ==================================================
 	public static final Identifier gui_editor_menubar_background() { return fromNamespaceAndPath(MOD_ID, "editor/menubar/background"); }
 	public static final Identifier gui_editor_menubar_foreground() { return fromNamespaceAndPath(MOD_ID, "editor/menubar/foreground"); }

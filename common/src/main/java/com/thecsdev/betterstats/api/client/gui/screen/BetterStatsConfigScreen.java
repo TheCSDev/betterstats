@@ -2,8 +2,8 @@ package com.thecsdev.betterstats.api.client.gui.screen;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
-import com.thecsdev.betterstats.resources.BSSLang;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.math.Bounds2i;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.common.properties.IChangeListener;
@@ -23,7 +23,7 @@ import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TCheckboxWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.text.TSimpleTextFieldWidget;
-import com.thecsdev.commonmc.resources.TCDCLang;
+import com.thecsdev.commonmc.resource.TLanguage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.net.URI;
 import java.util.Objects;
 
-import static com.thecsdev.commonmc.resources.TComponent.gui;
+import static com.thecsdev.commonmc.resource.TComponent.gui;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**
@@ -49,7 +49,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	private final @Nullable Screen lastScreen;
 	// ==================================================
 	public BetterStatsConfigScreen(@Nullable Screen lastScreen) {
-		super(BSSLang.betterstats().append(" - ").append(BSSLang.gui_menubar_file_settings()));
+		super(BLanguage.betterstats().append(" - ").append(BLanguage.gui_menubar_file_settings()));
 		this.lastScreen = lastScreen;
 	}
 	// ==================================================
@@ -90,17 +90,17 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				.textAlignmentProperty().set(CompassDirection.CENTER, BetterStatsConfigScreen.class);
 
 		//[betterstats] initialize common-sided settings
-		initTableHead(panel, TCDCLang.config_common(), TCDCLang.config_propertyValue());
+		initTableHead(panel, TLanguage.config_common(), TLanguage.config_propertyValue());
 		initBooleanProperty(
 				panel,
-				BSSLang.config_common_registerCommands(),
-				TTooltip.of(BSSLang.config_common_registerCommands_tooltip()),
+				BLanguage.config_common_registerCommands(),
+				TTooltip.of(BLanguage.config_common_registerCommands_tooltip()),
 				bss_config.canRegisterCommands(),
 				(p, o, n) -> bss_config.setRegisterCommands(n));
 		initStringProperty(
 				panel,
-				BSSLang.config_common_apiEndpoint(),
-				TTooltip.of(BSSLang.config_common_apiEndpoint_tooltip()),
+				BLanguage.config_common_apiEndpoint(),
+				TTooltip.of(BLanguage.config_common_apiEndpoint_tooltip()),
 				bss_config.getApiEndpoint().toString(),
 				(p, o, n) -> {
 					try { bss_config.setApiEndpoint(URI.create(n));}
@@ -109,22 +109,22 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		);
 
 		//[betterstats] initialize client-sided settings
-		initTableHead(panel, TCDCLang.config_client(), TCDCLang.config_propertyValue());
+		initTableHead(panel, TLanguage.config_client(), TLanguage.config_propertyValue());
 		initBooleanProperty(
 				panel,
-				BSSLang.config_client_guiMobsFollowCursor(),
-				TTooltip.of(BSSLang.config_client_guiMobsFollowCursor_tooltip()),
+				BLanguage.config_client_guiMobsFollowCursor(),
+				TTooltip.of(BLanguage.config_client_guiMobsFollowCursor_tooltip()),
 				bss_config.getGuiMobsFollowCursor(),
 				(p, o, n) -> bss_config.setGuiMobsFollowCursor(n));
 		initBooleanProperty(
 				panel,
-				BSSLang.config_client_allowChatPsa(),
-				TTooltip.of(BSSLang.config_client_allowChatPsa_tooltip()),
+				BLanguage.config_client_allowChatPsa(),
+				TTooltip.of(BLanguage.config_client_allowChatPsa_tooltip()),
 				bss_config.allowsChatPsaMessages(),
 				(p, o, n) -> bss_config.setAllowChatPsaMessages(n));
 
 		//[betterstats] initialize server-sided settings
-		initTableHead(panel, TCDCLang.config_server(), TCDCLang.config_propertyValue());
+		initTableHead(panel, TLanguage.config_server(), TLanguage.config_propertyValue());
 		initNothingSetting(panel);
 
 		// ---------- tcd-commons api
@@ -132,20 +132,20 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				.textAlignmentProperty().set(CompassDirection.CENTER, BetterStatsConfigScreen.class);
 
 		//[tcdcommons] initialize common-sided settings
-		initTableHead(panel, TCDCLang.config_common(), TCDCLang.config_propertyValue());
+		initTableHead(panel, TLanguage.config_common(), TLanguage.config_propertyValue());
 		initNothingSetting(panel);
 
 		//[tcdcommons] initialize client-sided settings
-		initTableHead(panel, TCDCLang.config_client(), TCDCLang.config_propertyValue());
+		initTableHead(panel, TLanguage.config_client(), TLanguage.config_propertyValue());
 		initBooleanProperty(
 				panel,
-				TCDCLang.config_client_updateItemGroupsOnJoin(),
-				TTooltip.of(TCDCLang.config_client_updateItemGroupsOnJoin_tooltip()),
+				TLanguage.config_client_updateItemGroupsOnJoin(),
+				TTooltip.of(TLanguage.config_client_updateItemGroupsOnJoin_tooltip()),
 				tcd_config.updateItemGroupsOnJoin(),
 				(p, o, n) -> tcd_config.setUpdateItemGroupsOnJoin(n));
 
 		//[tcdcommons] initialize server-sided settings
-		initTableHead(panel, TCDCLang.config_server(), TCDCLang.config_propertyValue());
+		initTableHead(panel, TLanguage.config_server(), TLanguage.config_propertyValue());
 		initNothingSetting(panel);
 
 		// ---------- end
@@ -297,7 +297,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		public WindowElement()
 		{
 			titleProperty().set(
-					gui(BSSSprites.gui_icon_settings())
+					gui(BSprites.gui_icon_settings())
 							.append(" ")
 							.append(BetterStatsConfigScreen.this.titleProperty().get()),
 					WindowElement.class);

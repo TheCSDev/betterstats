@@ -6,7 +6,7 @@ import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
-import com.thecsdev.betterstats.resources.BSSLang;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.FID_STATSVIEW;
-import static com.thecsdev.commonmc.resources.TComponent.head;
+import static com.thecsdev.commonmc.resource.TComponent.head;
 import static net.minecraft.network.chat.Component.literal;
 
 /**
@@ -72,7 +72,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	public final @Override @NotNull Component getDisplayName()
 	{
 		if(this == LOCALPLAYER)
-			return head("Steve").append(" ").append(BSSLang.gui_menubar_view_localPlayerStats());
+			return head("Steve").append(" ").append(BLanguage.gui_menubar_view_localPlayerStats());
 		else if(this._lastSaveFile != null)
 			return head("Steve").append(" ").append(literal(this._lastSaveFile.getName()));
 		else

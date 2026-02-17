@@ -5,7 +5,7 @@ import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
-import com.thecsdev.betterstats.resources.BSSLang;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static com.thecsdev.commonmc.resources.TComponent.*;
+import static com.thecsdev.commonmc.resource.TComponent.*;
 
 /**
  * {@link MenubarItem} implementation for "View".
@@ -30,7 +30,7 @@ public final class MenubarItemView extends MenubarItem
 	// ==================================================
 	public static final MenubarItemView INSTANCE = new MenubarItemView();
 	// ==================================================
-	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_view(); }
+	public final @Override @NotNull Component getDisplayName() { return BLanguage.gui_menubar_view(); }
 	// --------------------------------------------------
 	@SuppressWarnings("DataFlowIssue")
 	public final @Override @NotNull TContextMenu createContextMenu(
@@ -50,7 +50,7 @@ public final class MenubarItemView extends MenubarItem
 
 		//the vanilla screen button opens the vanilla stats screen
 		builder.addButton(
-				gui("statistics/item_picked_up").append(" ").append(BSSLang.gui_menubar_view_vanillaScreen()),
+				gui("statistics/item_picked_up").append(" ").append(BLanguage.gui_menubar_view_vanillaScreen()),
 				__ -> {
 					final var player = Objects.requireNonNull(client.player, "Missing 'local player' instance");
 					final var screen = new StatsScreen(client.screen, player.getStats());
@@ -68,7 +68,7 @@ public final class MenubarItemView extends MenubarItem
 		//local-player statistics tab
 		if(mcbsEditor.getCurrentTab() != McbsEditorFileTab.LOCALPLAYER)
 			builder.addButton(
-					localPlayerComponent.append(" ").append(BSSLang.gui_menubar_view_localPlayerStats()),
+					localPlayerComponent.append(" ").append(BLanguage.gui_menubar_view_localPlayerStats()),
 					__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
 			);
 
@@ -76,7 +76,7 @@ public final class MenubarItemView extends MenubarItem
 		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab meft) {
 			builder.addSeparator();
 			builder.addContextMenu(
-					gui("statistics/item_used").append(" ").append(BSSLang.gui_menubar_view_statsView()),
+					gui("statistics/item_used").append(" ").append(BLanguage.gui_menubar_view_statsView()),
 					view_statsView(client, meft));
 		}
 

@@ -1,13 +1,13 @@
 package com.thecsdev.betterstats.client.gui.panel;
 
-import com.thecsdev.betterstats.resources.BetterStatsRestAPI.Credits;
-import com.thecsdev.betterstats.resources.BetterStatsRestAPI.CreditsSection;
+import com.thecsdev.betterstats.resource.BetterStatsRestAPI.Credits;
+import com.thecsdev.betterstats.resource.BetterStatsRestAPI.CreditsSection;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
-import com.thecsdev.commonmc.resources.TCDCLang;
+import com.thecsdev.commonmc.resource.TLanguage;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,7 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 		final int pad = scrollPaddingProperty().getI();
 
 		//initialize and add the label
-		final var lbl = new TLabelElement(TCDCLang.misc_loading());
+		final var lbl = new TLabelElement(TLanguage.misc_loading());
 		lbl.setBounds(pad, pad, bb.width - (pad * 2), bb.height - (pad * 2));
 		lbl.textAlignmentProperty().set(CompassDirection.CENTER, BSCreditsPanel.class);
 		addRel(lbl);
@@ -77,7 +77,7 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 		final int pad = scrollPaddingProperty().getI();
 
 		//initialize and add the label
-		final var lbl = new TLabelElement(TCDCLang.misc_somethingWentWrong());
+		final var lbl = new TLabelElement(TLanguage.misc_somethingWentWrong());
 		lbl.setBounds(pad, pad, bb.width - (pad * 2), bb.height - (pad * 2));
 		lbl.textAlignmentProperty().set(CompassDirection.CENTER, BSCreditsPanel.class);
 		addRel(lbl);

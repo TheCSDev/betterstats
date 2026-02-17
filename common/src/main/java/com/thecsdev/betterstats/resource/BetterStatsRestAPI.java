@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.resources;
+package com.thecsdev.betterstats.resource;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

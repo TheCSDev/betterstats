@@ -3,8 +3,8 @@ package com.thecsdev.betterstats.mcbs.view.statsview;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
-import com.thecsdev.betterstats.resources.BSSLang;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
-import static com.thecsdev.commonmc.resources.TComponent.item;
+import static com.thecsdev.commonmc.resource.TComponent.item;
 import static java.util.Comparator.comparing;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
@@ -157,14 +157,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var panel = context.getPanel();
 			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
 
-			final var icon = new TTextureElement(BSSSprites.gui_icon_filterSort());
+			final var icon = new TTextureElement(BSprites.gui_icon_filterSort());
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
 			final var dropdown = new TDropdownWidget<SortBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), SortBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_sortBy()), SortBy.class);
+			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
@@ -185,12 +185,12 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 	public static enum GroupBy implements TDropdownWidget.Entry
 	{
 		// ==================================================
-		ALL(BSSLang.gui_statsview_filter_groupBy_all(), stats -> {
+		ALL(BLanguage.gui_statsview_filter_groupBy_all(), stats -> {
 			final var map = new LinkedHashMap<Component, Iterable<CustomStat>>();
 			map.put(literal("*"), stats);
 			return map;
 		}),
-		MOD(BSSLang.gui_statsview_filter_groupBy_mod(), stats -> {
+		MOD(BLanguage.gui_statsview_filter_groupBy_mod(), stats -> {
 			//create a new map to group stats based on mod id-s
 			final var map = new LinkedHashMap<String, ArrayList<CustomStat>>();
 			//group the stats
@@ -237,14 +237,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var panel = context.getPanel();
 			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
 
-			final var icon = new TTextureElement(BSSSprites.gui_icon_filterGroup());
+			final var icon = new TTextureElement(BSprites.gui_icon_filterGroup());
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
 			final var dropdown = new TDropdownWidget<GroupBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), GroupBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_groupBy()), GroupBy.class);
+			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
@@ -301,14 +301,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var panel = context.getPanel();
 			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
 
-			final var icon = new TTextureElement(BSSSprites.gui_icon_filterUnitDist());
+			final var icon = new TTextureElement(BSprites.gui_icon_filterUnitDist());
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
 			final var dropdown = new TDropdownWidget<DistanceUnit>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), DistanceUnit.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_distanceUnit()), DistanceUnit.class);
+			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_distanceUnit()), DistanceUnit.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
@@ -376,14 +376,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var panel = context.getPanel();
 			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
 
-			final var icon = new TTextureElement(BSSSprites.gui_icon_filterUnitTime());
+			final var icon = new TTextureElement(BSprites.gui_icon_filterUnitTime());
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
 			final var dropdown = new TDropdownWidget<TimeUnit>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), TimeUnit.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_timeUnit()), TimeUnit.class);
+			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_timeUnit()), TimeUnit.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update

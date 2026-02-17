@@ -3,7 +3,7 @@ package com.thecsdev.betterstats.mcbs.view.editor;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
@@ -38,11 +38,11 @@ public final class MenubarPanel extends TElement
 	// ==================================================
 	public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 		final var bb = getBounds();
-		pencil.drawGuiSprite(BSSSprites.gui_editor_menubar_background(), bb.x, bb.y, bb.width, bb.height, -1);
+		pencil.drawGuiSprite(BSprites.gui_editor_menubar_background(), bb.x, bb.y, bb.width, bb.height, -1);
 	}
 	public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 		final var bb = getBounds();
-		pencil.drawGuiSprite(BSSSprites.gui_editor_menubar_foreground(), bb.x, bb.y, bb.width, bb.height, -1);
+		pencil.drawGuiSprite(BSprites.gui_editor_menubar_foreground(), bb.x, bb.y, bb.width, bb.height, -1);
 	}
 	// --------------------------------------------------
 	protected final @Override void initCallback()
