@@ -3,6 +3,7 @@ package com.thecsdev.betterstats.mcbs.view.menubar;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resource.BLanguage;
@@ -56,29 +57,19 @@ public final class MenubarItemView extends MenubarItem
 					final var screen = new StatsScreen(client.screen, player.getStats());
 					client.setScreen(screen);
 				});
+		builder.addSeparator();
 
 		//home-page tab
-		//FIXME - Re-implement the 'Home' tab
-		/*if(mcbsEditor.getCurrentTab() != McbsEditorHomepageTab.INSTANCE)
-			builder.addButton(
-					gui("icon/news").append(" ").append(BSSLang.gui_menubar_view_homepage()),
-					__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
-			);*/
+		builder.addButton(
+				gui("icon/news").append(" ").append(BLanguage.gui_menubar_view_homepage()),
+				__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
+		);
 
 		//local-player statistics tab
-		if(mcbsEditor.getCurrentTab() != McbsEditorFileTab.LOCALPLAYER)
-			builder.addButton(
-					localPlayerComponent.append(" ").append(BLanguage.gui_menubar_view_localPlayerStats()),
-					__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
-			);
-
-		//the stats tab submenu allows switching between stats tabs
-		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab meft) {
-			builder.addSeparator();
-			builder.addContextMenu(
-					gui("statistics/item_used").append(" ").append(BLanguage.gui_menubar_view_statsView()),
-					view_statsView(client, meft));
-		}
+		builder.addButton(
+				localPlayerComponent.append(" ").append(BLanguage.gui_menubar_view_localPlayerStats()),
+				__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
+		);
 
 		//build and return the context menu
 		return builder.build();

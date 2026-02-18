@@ -1,7 +1,7 @@
 package com.thecsdev.betterstats.client.gui.panel;
 
-import com.thecsdev.betterstats.resource.BetterStatsRestAPI.Credits;
-import com.thecsdev.betterstats.resource.BetterStatsRestAPI.CreditsSection;
+import com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI.Credits;
+import com.thecsdev.betterstats.resource.dto.credits.CreditsSection;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;

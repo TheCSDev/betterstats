@@ -2,8 +2,8 @@ package com.thecsdev.betterstats.api.mcbs.controller.tab;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.resource.BLanguage;
-import com.thecsdev.betterstats.resource.BetterStatsRestAPI;
-import com.thecsdev.betterstats.resource.BetterStatsRestAPI.Credits;
+import com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI;
+import com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI.Credits;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static com.thecsdev.betterstats.resource.BetterStatsRestAPI.fetchBuiltInCreditsAsync;
+import static com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI.fetchBuiltInCreditsAsync;
 import static com.thecsdev.commonmc.resource.TComponent.gui;
 
 /**
