@@ -1,7 +1,6 @@
 package com.thecsdev.betterstats.client.gui.panel;
 
-import com.thecsdev.betterstats.resource.BetterStatsRestAPI.Credits;
-import com.thecsdev.betterstats.resource.BetterStatsRestAPI.CreditsSection;
+import com.thecsdev.betterstats.resource.dto.credits.CreditsSection;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
@@ -11,6 +10,7 @@ import com.thecsdev.commonmc.resource.TLanguage;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,9 +24,9 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 	// ================================================== ==================================================
 	//                                     BSCreditsPanel IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @NotNull CompletableFuture<Credits> future;
+	private final @NotNull CompletableFuture<List<CreditsSection>> future;
 	// ==================================================
-	public BSCreditsPanel(@NotNull CompletableFuture<Credits> future) throws NullPointerException
+	public BSCreditsPanel(@NotNull CompletableFuture<List<CreditsSection>> future) throws NullPointerException
 	{
 		//initialize properties
 		scrollPaddingProperty().set(10, BSCreditsPanel.class);
@@ -88,8 +88,8 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 	 * @param credits The credits information to initialize the GUI with.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	private final void initCredits(@NotNull Credits credits) throws NullPointerException {
-		credits.getSections().forEach(this::initSection);
+	private final void initCredits(@NotNull List<CreditsSection> credits) throws NullPointerException {
+		credits.forEach(this::initSection);
 	}
 	// ==================================================
 	/**
