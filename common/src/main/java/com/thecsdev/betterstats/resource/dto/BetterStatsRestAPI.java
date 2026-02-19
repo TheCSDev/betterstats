@@ -9,8 +9,6 @@ import com.thecsdev.betterstats.resource.dto.credits.CreditsSection;
 import com.thecsdev.common.resource.ResourceRequest;
 import com.thecsdev.common.resource.ResourceResolver;
 import com.thecsdev.common.resource.protocol.HttpProtocolHandler;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -240,27 +238,6 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 		return builder;
 	}
 	// ==================================================
-	/**
-	 * Parses a {@link Component} from the specified {@link JsonElement}.
-	 * @param json The JSON element to parse the component from.
-	 * @return The parsed component, or an empty component if the argument is {@code null}.
-	 */
-	@ApiStatus.Internal
-	public static final @Nullable Component parseComponent(@Nullable JsonElement json)
-	{
-		try {
-			if(json == null || json.isJsonNull()) return null;
-			else if(json.isJsonPrimitive()) return Component.literal(json.getAsString());
-			else if(json.isJsonObject()) {
-				final var result = ComponentSerialization.CODEC.parse(JsonOps.INSTANCE, json.getAsJsonObject());
-				return result.getOrThrow();
-			}
-			else throw new IllegalArgumentException("Unsupported JSON element type: " + json.getClass().getSimpleName());
-		} catch(Exception e) {
-			return null;
-		}
-	}
-
 	/**
 	 * Parses a {@link URI} from the specified {@link JsonElement}.
 	 * @param json The JSON element to parse the {@link URI} from.

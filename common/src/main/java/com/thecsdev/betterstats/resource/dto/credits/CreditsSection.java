@@ -69,42 +69,50 @@ public final class CreditsSection
 		public final @Override <T> @NotNull DataResult<Pair<CreditsSection, T>> decode(
 				@NotNull DynamicOps<T> ops, @NotNull T input)
 		{
-			return ops.getMap(input).flatMap(map ->
+			try
 			{
-				//obtain property values from the map
-				final var name    = ComponentSerialization.CODEC.parse(ops, map.get("name"));
-				final var summary = ComponentSerialization.CODEC.parse(ops, map.get("summary")).result();
-				final var entries = CreditsEntry.CODEC.listOf().parse(ops, map.get("entries"));
+				return ops.getMap(input).flatMap(map ->
+				{
+					//obtain property values from the map
+					final var name = ComponentSerialization.CODEC.parse(ops, map.get("name"));
+					final var summary = ComponentSerialization.CODEC.parse(ops, map.get("summary")).result();
+					final var entries = CreditsEntry.CODEC.listOf().parse(ops, map.get("entries"));
 
-				//name value is required
-				if(name.error().isPresent()) //noinspection OptionalGetWithoutIsPresent
-					return DataResult.error(() -> name.error().get().message());
-				if(entries.error().isPresent()) //noinspection OptionalGetWithoutIsPresent
-					return DataResult.error(() -> name.error().get().message());
+					//name value is required
+					if (name.error().isPresent()) //noinspection OptionalGetWithoutIsPresent
+						return DataResult.error(() -> name.error().get().message());
+					if (entries.error().isPresent()) //noinspection OptionalGetWithoutIsPresent
+						return DataResult.error(() -> name.error().get().message());
 
-				//construct and return result
-				return DataResult.success(Pair.of(new CreditsSection(
-						name.getOrThrow(),
-						summary.orElse(null),
-						entries.getOrThrow()
-				), input));
-			});
+					//construct and return result
+					return DataResult.success(Pair.of(new CreditsSection(
+							name.getOrThrow(),
+							summary.orElse(null),
+							entries.getOrThrow()
+					), input));
+				});
+			}
+			catch(Exception e) { return DataResult.error(() -> e.getClass() + ": " + e.getMessage()); }
 		}
 		// --------------------------------------------------
 		public final @Override <T> @NotNull DataResult<T> encode(
 				@NotNull CreditsSection input, @NotNull DynamicOps<T> ops, @NotNull T prefix)
 		{
-			//use a map builder
-			final var mapBuilder = ops.mapBuilder();
+			try
+			{
+				//use a map builder
+				final var mapBuilder = ops.mapBuilder();
 
-			//put property values in the map
-			mapBuilder.add("name", ComponentSerialization.CODEC.encodeStart(ops, input.getName()));
-			if(input.getSummary() != null)
-				mapBuilder.add("summary", ComponentSerialization.CODEC.encodeStart(ops, input.getSummary()));
-			mapBuilder.add("entries", CreditsEntry.CODEC.listOf().encodeStart(ops, input.getEntries()));
+				//put property values in the map
+				mapBuilder.add("name", ComponentSerialization.CODEC.encodeStart(ops, input.getName()));
+				if (input.getSummary() != null)
+					mapBuilder.add("summary", ComponentSerialization.CODEC.encodeStart(ops, input.getSummary()));
+				mapBuilder.add("entries", CreditsEntry.CODEC.listOf().encodeStart(ops, input.getEntries()));
 
-			//build and return the map
-			return mapBuilder.build(prefix);
+				//build and return the map
+				return mapBuilder.build(prefix);
+			}
+			catch(Exception e) { return DataResult.error(() -> e.getClass() + ": " + e.getMessage()); }
 		}
 		// ==================================================
 	}

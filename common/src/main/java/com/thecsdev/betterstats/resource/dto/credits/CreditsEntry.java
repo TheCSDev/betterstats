@@ -91,45 +91,53 @@ public final class CreditsEntry
 		public final @Override <T> @NotNull DataResult<Pair<CreditsEntry, T>> decode(
 				@NotNull DynamicOps<T> ops, @NotNull T input)
 		{
-			return ops.getMap(input).flatMap(map ->
+			try
 			{
-				//obtain property values from the map
-				final var avatar_uri   = BCodecs.URI.parse(ops, map.get("avatar_uri")).result();
-				final var name         = ComponentSerialization.CODEC.parse(ops, map.get("name"));
-				final var homepage_uri = BCodecs.URI.parse(ops, map.get("homepage_uri")).result();
-				final var summary      = ComponentSerialization.CODEC.parse(ops, map.get("summary")).result();
+				return ops.getMap(input).flatMap(map ->
+				{
+					//obtain property values from the map
+					final var avatar_uri = BCodecs.URI.parse(ops, map.get("avatar_uri")).result();
+					final var name = ComponentSerialization.CODEC.parse(ops, map.get("name"));
+					final var homepage_uri = BCodecs.URI.parse(ops, map.get("homepage_uri")).result();
+					final var summary = ComponentSerialization.CODEC.parse(ops, map.get("summary")).result();
 
-				//name value is required
-				if(name.error().isPresent()) //noinspection OptionalGetWithoutIsPresent
-					return DataResult.error(() -> name.error().get().message());
+					//name value is required
+					if (name.error().isPresent()) //noinspection OptionalGetWithoutIsPresent
+						return DataResult.error(() -> name.error().get().message());
 
-				//construct and return result
-				return DataResult.success(Pair.of(new CreditsEntry(
-						avatar_uri.orElse(null),
-						name.getOrThrow(),
-						summary.orElse(null),
-						homepage_uri.orElse(null)
-				), input));
-			});
+					//construct and return result
+					return DataResult.success(Pair.of(new CreditsEntry(
+							avatar_uri.orElse(null),
+							name.getOrThrow(),
+							summary.orElse(null),
+							homepage_uri.orElse(null)
+					), input));
+				});
+			}
+			catch(Exception e) { return DataResult.error(() -> e.getClass() + ": " + e.getMessage()); }
 		}
 		// --------------------------------------------------
 		public final @Override <T> @NotNull DataResult<T> encode(
 				@NotNull CreditsEntry input, @NotNull DynamicOps<T> ops, @NotNull T prefix)
 		{
-			//use a map builder
-			final var mapBuilder = ops.mapBuilder();
+			try
+			{
+				//use a map builder
+				final var mapBuilder = ops.mapBuilder();
 
-			//put property values in the map
-			if(input.getAvatarURI() != null)
-				mapBuilder.add("avatar_uri", BCodecs.URI.encodeStart(ops, input.getAvatarURI()));
-			mapBuilder.add("name", ComponentSerialization.CODEC.encodeStart(ops, input.getName()));
-			if(input.getSummary() != null)
-				mapBuilder.add("summary", ComponentSerialization.CODEC.encodeStart(ops, input.getSummary()));
-			if(input.getHomepageURI() != null)
-				mapBuilder.add("homepage_uri", BCodecs.URI.encodeStart(ops, input.getHomepageURI()));
+				//put property values in the map
+				if (input.getAvatarURI() != null)
+					mapBuilder.add("avatar_uri", BCodecs.URI.encodeStart(ops, input.getAvatarURI()));
+				mapBuilder.add("name", ComponentSerialization.CODEC.encodeStart(ops, input.getName()));
+				if (input.getSummary() != null)
+					mapBuilder.add("summary", ComponentSerialization.CODEC.encodeStart(ops, input.getSummary()));
+				if (input.getHomepageURI() != null)
+					mapBuilder.add("homepage_uri", BCodecs.URI.encodeStart(ops, input.getHomepageURI()));
 
-			//build and return the map
-			return mapBuilder.build(prefix);
+				//build and return the map
+				return mapBuilder.build(prefix);
+			}
+			catch(Exception e) { return DataResult.error(() -> e.getClass() + ": " + e.getMessage()); }
 		}
 		// ==================================================
 	}
