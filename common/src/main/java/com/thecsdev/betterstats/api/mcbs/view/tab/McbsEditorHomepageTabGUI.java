@@ -1,7 +1,8 @@
 package com.thecsdev.betterstats.api.mcbs.view.tab;
 
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
-import com.thecsdev.betterstats.client.gui.panel.BSCreditsPanel;
+import com.thecsdev.betterstats.client.gui.panel.CreditsPanel;
+import com.thecsdev.betterstats.client.gui.panel.PersonalHomePanel;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
 import net.fabricmc.api.EnvType;
@@ -29,18 +30,19 @@ public final class McbsEditorHomepageTabGUI extends McbsEditorTabGUI<McbsEditorH
 			getEditorTab().refresh();
 		}
 
-		//news panel
-		final var news = new BSCreditsPanel(getEditorTab().getNewsAsync());
-		add(news);
-		news.setBounds(new UDim2(0, 10, 0, 10), new UDim2(0.7, -38, 1, -20));
+		//nothing panel
+		final var nothing = new PersonalHomePanel();
+		nothing.outlineColorProperty().set(0xFF000000, McbsEditorHomepageTabGUI.class);
+		add(nothing);
+		nothing.setBounds(new UDim2(0, 10, 0, 10), new UDim2(0.7, -38, 1, -20));
 
-		final var newsBB      = news.getBounds();
-		final var scroll_news = new TScrollBarWidget.Flat(news);
+		final var newsBB      = nothing.getBounds();
+		final var scroll_news = new TScrollBarWidget.Flat(nothing);
 		scroll_news.setBounds(newsBB.endX - 1, newsBB.y, 8, newsBB.height);
 		add(scroll_news);
 
 		//credits panel
-		final var credits = new BSCreditsPanel(getEditorTab().getCreditsAsync());
+		final var credits = new CreditsPanel(getEditorTab().getCreditsAsync());
 		add(credits);
 		credits.setBounds(new UDim2(0.7, -10, 0, 10), new UDim2(0.3, -7, 1, -20));
 

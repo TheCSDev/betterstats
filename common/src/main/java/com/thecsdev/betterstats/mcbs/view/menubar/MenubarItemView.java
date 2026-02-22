@@ -93,10 +93,8 @@ public final class MenubarItemView extends MenubarItem
 		//create the builder
 		final var builder = new TContextMenu.Builder(Objects.requireNonNull(client));
 		//iterate all registered stats tabs and add a button for each
-		for(final var statsViewEntry : BClientRegistries.STATS_VIEW.entrySet()) {
-			final var statsView = statsViewEntry.getValue();
+		for(final var statsView : BClientRegistries.STATS_VIEW)
 			builder.addButton(statsView.getDisplayName(), __ -> fileTab.setCurrentView(statsView));
-		}
 
 		//build and return the built context menu
 		return builder.build();

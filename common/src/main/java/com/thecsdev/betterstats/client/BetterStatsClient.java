@@ -2,8 +2,7 @@ package com.thecsdev.betterstats.client;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
-import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
-import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorTabGUI;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
 import net.minecraft.client.Minecraft;
@@ -22,8 +21,7 @@ public class BetterStatsClient extends BetterStats
 	public BetterStatsClient()
 	{
 		//register features
-		MenubarItem.bootstrap();
-		StatsView.bootstrap();
+		BClientRegistries.bootstrap();
 		McbsEditorTabGUI.bootstrap();
 
 		//modify the "Statistics" button on the game's pause screen

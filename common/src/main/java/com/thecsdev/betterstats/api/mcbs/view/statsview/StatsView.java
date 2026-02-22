@@ -3,7 +3,7 @@ package com.thecsdev.betterstats.api.mcbs.view.statsview;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
-import com.thecsdev.betterstats.mcbs.view.statsview.*;
+import com.thecsdev.betterstats.mcbs.view.statsview.StatsViewGeneral;
 import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.common.util.collections.GenericProperties;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
@@ -19,10 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
 
-import static com.thecsdev.betterstats.BetterStats.MOD_ID;
-import static com.thecsdev.betterstats.api.client.registry.BClientRegistries.STATS_VIEW;
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.*;
-import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 /**
  * Represents a 'view' within an {@link McbsEditorTab} of an {@link McbsEditorGUI}.
@@ -67,19 +64,6 @@ public abstract class StatsView implements TDropdownWidget.Entry
 	 * @param context The {@link StatsInitContext}.
 	 */
 	public abstract void initStats(@NotNull StatsInitContext context);
-	// ==================================================
-	/**
-	 * Registers internal {@link StatsView} instances.
-	 */
-	public static final @ApiStatus.Internal void bootstrap()
-	{
-		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "general"), StatsViewGeneral.INSTANCE);
-		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "items"),   StatsViewItems.INSTANCE);
-		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "blocks"),  StatsViewBlocks.INSTANCE);
-		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "mobs"),    StatsViewMobs.INSTANCE);
-		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "food"),    StatsViewFood.INSTANCE);
-		STATS_VIEW.put(fromNamespaceAndPath(MOD_ID, "hunter"),  StatsViewHunter.INSTANCE);
-	}
 	// ================================================== ==================================================
 	//                                            Filters IMPLEMENTATION
 	// ================================================== ==================================================

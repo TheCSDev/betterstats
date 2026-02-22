@@ -13,6 +13,8 @@ import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.api.stats.util.SubjectStats;
 import dev.architectury.event.Event;
 import dev.architectury.event.EventFactory;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +34,7 @@ import static net.minecraft.network.chat.Component.literal;
  * {@link StatsView}s.
  */
 @ApiStatus.Internal
+@Environment(EnvType.CLIENT)
 public final class StatsPageChooser extends TFillColorElement.Flat
 {
 	// ==================================================

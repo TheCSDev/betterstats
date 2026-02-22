@@ -54,15 +54,17 @@ public final class MenubarPanel extends TElement
 		add(panel);
 
 		//initialize the menubar buttons
-		for(final var item : BClientRegistries.MENUBAR_ITEM.entrySet())
+		for(final var item : BClientRegistries.MENUBAR_ITEM)
 		{
+			//item key is needed for identity tracking
+			final var itemKey = BClientRegistries.MENUBAR_ITEM.getKey(item);
 			//attempt to initialize the gui for a menubar item
 			try {
 				//current panel content bounding box
 				final var pcbb = panel.getContentBounds();
 				//the label
 				final var label = requireNonNull(
-						item.getValue().getDisplayName(), "Missing display name");
+						item.getDisplayName(), "Missing display name");
 				//the button
 				final var button = new Button();
 				button.getLabel().setText(label);
@@ -72,10 +74,10 @@ public final class MenubarPanel extends TElement
 						panel.getBounds().height);
 				button.contextMenuProperty().set(
 						__ -> requireNonNull(
-								item.getValue().createContextMenu(
+								item.createContextMenu(
 										requireNonNull(__.getClient(), "Missing 'client' instance"),
 										this.mcbsEditor),
-								"Menubar item failed to produce a context menu, ID " + item.getKey()),
+								"Menubar item failed to produce a context menu, ID " + itemKey),
 						MenubarPanel.class);
 				button.eClicked.register(TElement::showContextMenu);
 				panel.add(button);
@@ -83,7 +85,7 @@ public final class MenubarPanel extends TElement
 			//hold menubar items accountable for failures
 			catch(Exception e) {
 				throw new ReportedException(new CrashReport(
-						"Something went wrong creating menubar item ID " + item.getKey(),
+						"Something went wrong creating menubar item ID " + itemKey,
 						e));
 			}
 		}

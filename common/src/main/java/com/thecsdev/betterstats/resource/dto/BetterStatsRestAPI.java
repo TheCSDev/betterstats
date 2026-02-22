@@ -34,21 +34,18 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 	//                                 BetterStatsRestAPI IMPLEMENTATION
 	// ================================================== ==================================================
 	private final @NotNull URI endpoint_uri;
-	private final @NotNull URI news_uri;
 	private final @NotNull URI credits_uri;
 	// ==================================================
 	private BetterStatsRestAPI(
 			@NotNull URI endpoint_uri,
-			@NotNull URI news_uri,
 			@NotNull URI credits_uri) throws NullPointerException
 	{
 		this.endpoint_uri = Objects.requireNonNull(endpoint_uri);
-		this.news_uri     = endpoint_uri.resolve(Objects.requireNonNull(news_uri));
 		this.credits_uri  = endpoint_uri.resolve(Objects.requireNonNull(credits_uri));
 	}
 	// ==================================================
 	public final @Override int hashCode() {
-		return Objects.hash(this.endpoint_uri, this.news_uri, this.credits_uri);
+		return Objects.hash(this.endpoint_uri, this.credits_uri);
 	}
 	// --------------------------------------------------
 	public final @Override boolean equals(Object obj)
@@ -57,7 +54,6 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 		if(obj == null || getClass() != obj.getClass()) return false;
 		final var other = (BetterStatsRestAPI) obj;
 		return this.endpoint_uri.equals(other.endpoint_uri)
-				&& this.news_uri.equals(other.news_uri)
 				&& this.credits_uri.equals(other.credits_uri);
 	}
 	// ==================================================
@@ -88,15 +84,6 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 	 */
 	public static final CompletableFuture<List<CreditsSection>> fetchBuiltInCreditsAsync() {
 		return fetchCreditsAsync(URI.create("classpath:/betterstats.credits.json"));
-	}
-
-	/**
-	 * Fetches the "News" data from this RESTful API.
-	 * @return A {@link CompletableFuture} that will complete with the fetched
-	 *         {@link CreditsSection} instances.
-	 */
-	public final CompletableFuture<List<CreditsSection>> fetchNewsAsync() {
-		return fetchCreditsAsync(this.news_uri);
 	}
 	// --------------------------------------------------
 	/**
@@ -211,7 +198,6 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 			//return this once done
 			return new BetterStatsRestAPI(
 					apiEndpoint,
-					Objects.requireNonNull(parseUri(json.get("news_uri")), "Missing 'news_uri' URI"),
 					Objects.requireNonNull(parseUri(json.get("credits_uri")), "Missing 'credits_uri' URI")
 			);
 		});

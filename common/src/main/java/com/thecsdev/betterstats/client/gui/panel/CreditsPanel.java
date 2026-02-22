@@ -7,6 +7,8 @@ import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.resource.TLanguage;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,18 +21,19 @@ import static com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout.showUr
 /**
  * A panel GUI element that displays "Credits" information for this mod.
  */
-public final class BSCreditsPanel extends TPanelElement.Paintable
+@Environment(EnvType.CLIENT)
+public final class CreditsPanel extends TPanelElement.Paintable
 {
 	// ================================================== ==================================================
 	//                                     BSCreditsPanel IMPLEMENTATION
 	// ================================================== ==================================================
 	private final @NotNull CompletableFuture<List<CreditsSection>> future;
 	// ==================================================
-	public BSCreditsPanel(@NotNull CompletableFuture<List<CreditsSection>> future) throws NullPointerException
+	public CreditsPanel(@NotNull CompletableFuture<List<CreditsSection>> future) throws NullPointerException
 	{
 		//initialize properties
-		scrollPaddingProperty().set(10, BSCreditsPanel.class);
-		outlineColorProperty().set(0xFF000000, BSCreditsPanel.class);
+		scrollPaddingProperty().set(10, CreditsPanel.class);
+		outlineColorProperty().set(0xFF000000, CreditsPanel.class);
 
 		//initialize fields
 		this.future = future;
@@ -62,7 +65,7 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 		//initialize and add the label
 		final var lbl = new TLabelElement(TLanguage.misc_loading());
 		lbl.setBounds(pad, pad, bb.width - (pad * 2), bb.height - (pad * 2));
-		lbl.textAlignmentProperty().set(CompassDirection.CENTER, BSCreditsPanel.class);
+		lbl.textAlignmentProperty().set(CompassDirection.CENTER, CreditsPanel.class);
 		addRel(lbl);
 	}
 	// --------------------------------------------------
@@ -79,7 +82,7 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 		//initialize and add the label
 		final var lbl = new TLabelElement(TLanguage.misc_somethingWentWrong());
 		lbl.setBounds(pad, pad, bb.width - (pad * 2), bb.height - (pad * 2));
-		lbl.textAlignmentProperty().set(CompassDirection.CENTER, BSCreditsPanel.class);
+		lbl.textAlignmentProperty().set(CompassDirection.CENTER, CreditsPanel.class);
 		addRel(lbl);
 	}
 	// --------------------------------------------------
@@ -102,17 +105,17 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 	{
 		//section name label
 		final var lbl_name = new TLabelElement(section.getName());
-		lbl_name.textColorProperty().set(0xFFFFFF66, BSCreditsPanel.class);
+		lbl_name.textColorProperty().set(0xFFFFFF66, CreditsPanel.class);
 		lbl_name.setBounds(computeNextYBounds(15, 5));
 		add(lbl_name);
 
 		//section summary text label
 		final var lbl_summary = new TLabelElement(section.getSummary() != null ?
 				section.getSummary() : Component.empty());
-		lbl_summary.textAlignmentProperty().set(CompassDirection.NORTH_WEST, BSCreditsPanel.class);
-		lbl_summary.wrapTextProperty().set(true, BSCreditsPanel.class);
-		lbl_summary.textScaleProperty().set(0.85, BSCreditsPanel.class);
-		lbl_summary.textColorProperty().set(0xFFAAAAAA, BSCreditsPanel.class);
+		lbl_summary.textAlignmentProperty().set(CompassDirection.NORTH_WEST, CreditsPanel.class);
+		lbl_summary.wrapTextProperty().set(true, CreditsPanel.class);
+		lbl_summary.textScaleProperty().set(0.85, CreditsPanel.class);
+		lbl_summary.textColorProperty().set(0xFFAAAAAA, CreditsPanel.class);
 		lbl_summary.setBounds(computeNextYBounds(0, 3));
 		if(section.getSummary() != null) {
 			lbl_summary.setBoundsToFitText(lbl_summary.getBounds().width);
@@ -125,10 +128,10 @@ public final class BSCreditsPanel extends TPanelElement.Paintable
 		{
 			final var el_entry = new TButtonWidget.Transparent();
 			el_entry.getLabel().setText(entry.getName());
-			el_entry.getLabel().textScaleProperty().set(0.85, BSCreditsPanel.class);
-			el_entry.getLabel().textAlignmentProperty().set(CompassDirection.WEST, BSCreditsPanel.class);
+			el_entry.getLabel().textScaleProperty().set(0.85, CreditsPanel.class);
+			el_entry.getLabel().textAlignmentProperty().set(CompassDirection.WEST, CreditsPanel.class);
 			if(entry.getSummary() != null)
-				el_entry.tooltipProperty().set(__ -> TTooltip.of(entry.getSummary()), BSCreditsPanel.class);
+				el_entry.tooltipProperty().set(__ -> TTooltip.of(entry.getSummary()), CreditsPanel.class);
 			if(entry.getHomepageURI() != null)
 				el_entry.eClicked.register(__ -> showUriScreen(entry.getHomepageURI().toString(), false));
 			el_entry.setBounds(computeNextYBounds(15, 0));

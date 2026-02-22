@@ -105,6 +105,8 @@ public final class BLanguage
 	public static final @Reflected MutableComponent credits_section_specialThanks_entry_contributors_summary() { return translatable("betterstats.credits.section.special_thanks.entry.contributors.summary"); }
 	public static final @Reflected MutableComponent credits_section_contributors() { return translatable("betterstats.credits.section.contributors"); }
 	public static final @Reflected MutableComponent credits_section_contributors_summary() { return translatable("betterstats.credits.section.contributors.summary"); }
+	public static final @Reflected MutableComponent credits_section_contributors_entry_contribute() { return translatable("betterstats.credits.section.contributors.entry.contribute"); }
+	public static final @Reflected MutableComponent credits_section_contributors_entry_contribute_summary() { return translatable("betterstats.credits.section.contributors.entry.contribute.summary"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
 	// ==================================================

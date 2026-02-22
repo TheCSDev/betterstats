@@ -70,6 +70,8 @@
 	"betterstats.credits.section.special_thanks.entry.contributors.summary": "Everyone who contributed to the mod, reported bugs, and provided feedback. Your help means a lot.",
 	"betterstats.credits.section.contributors": "Contributors",
 	"betterstats.credits.section.contributors.summary": "Community members who contributed to this mod during v5.X.",
+	"betterstats.credits.section.contributors.entry.contribute": "[+] [Contribute]",
+	"betterstats.credits.section.contributors.entry.contribute.summary": "Contribute to this mod's development to be credited on this list.",
 	"betterstats.credits.section.founder_contributors": "Founder contributors",
 	"betterstats.credits.section.founder_contributors.summary": "Community members who contributed to this mod prior to v5.X."
 }

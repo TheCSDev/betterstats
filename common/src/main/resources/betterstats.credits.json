@@ -7,10 +7,10 @@
 			"entries":
 			[
 				{
-					"avatar_uri": "https://avatars.githubusercontent.com/u/66475965?v=4",
-					"name": "TheCSDev",
-					"summary": "Developer of 'Better Statistics Screen'.",
-					"homepage_uri": "https://github.com/TheCSDev"
+					"avatar_uri": null,
+					"name": { "translate": "betterstats.credits.section.contributors.entry.contribute" },
+					"summary": { "translate": "betterstats.credits.section.contributors.entry.contribute.summary" },
+					"homepage_uri": "https://thecsdev.com/fwd/betterstats-sources/"
 				}
 			]
 		},

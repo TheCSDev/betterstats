@@ -25,7 +25,6 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 	// ==================================================
 	public static final McbsEditorHomepageTab INSTANCE = new McbsEditorHomepageTab();
 	// --------------------------------------------------
-	private @NotNull CompletableFuture<List<CreditsSection>> news;
 	private @NotNull CompletableFuture<List<CreditsSection>> credits;
 	// ==================================================
 	private McbsEditorHomepageTab() { refresh(); }
@@ -37,13 +36,6 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 		return gui("icon/news").append(" ").append(BLanguage.gui_menubar_view_homepage());
 	}
 	// --------------------------------------------------
-	/**
-	 * Returns the future that will complete (or has completed) with the
-	 * {@link CreditsSection}s information containing news to be displayed on the
-	 * homepage tab.
-	*/
-	public final @NotNull CompletableFuture<List<CreditsSection>> getNewsAsync() { return news; }
-
 	/**
 	 * Returns the future that will complete (or has completed) with the
 	 * {@link CreditsSection}s information to be displayed on the homepage tab.
@@ -58,8 +50,6 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 	{
 		//fetch the REST-ful API
 		final var api = BetterStatsRestAPI.fetchAsync();
-		//fetch news from the REST-ful API
-		this.news     = api.thenCompose(BetterStatsRestAPI::fetchNewsAsync);
 		//fetch credits from the REST-ful API and built-in classpath
 		this.credits  = api
 				.thenCompose(BetterStatsRestAPI::fetchCreditsAsync)

@@ -129,8 +129,8 @@ public final class StatsViewUtils
 
 		//add entries to the widget
 		final var entries = widget.getEntries();
-		for(final var st : BClientRegistries.STATS_VIEW.entrySet())
-			entries.add(st.getValue());
+		for(final var st : BClientRegistries.STATS_VIEW)
+			entries.add(st);
 
 		//set currently selected tab, and then add change listener
 		widget.selectedEntryProperty().set(context.getStatsView(), StatsViewUtils.class);
