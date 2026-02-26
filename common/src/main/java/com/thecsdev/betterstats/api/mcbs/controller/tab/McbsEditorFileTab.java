@@ -10,6 +10,8 @@ import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.apache.commons.io.FileUtils;
@@ -17,9 +19,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -28,6 +33,7 @@ import java.util.function.Function;
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.FID_STATSVIEW;
 import static com.thecsdev.commonmc.resource.TComponent.head;
 import static net.minecraft.network.chat.Component.literal;
+import static org.apache.commons.io.FilenameUtils.getExtension;
 
 /**
  * This {@link Class} serves as the controller component in the MVC architecture.
@@ -123,15 +129,45 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * specified file.
 	 * @param file The file to save the data to.
 	 * @throws IOException If an I/O error occurs during {@link File} writing.
-	 * @throws NullPointerException If an argument is {@code null}.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 * @throws IllegalArgumentException If the {@link File}'s extension-name is unsupported.
+	 * @apiNote Supports {@code .json} and {@code .nbt} {@link File}s only.
 	 */
-	public final void saveAs(@NotNull File file) throws IOException
+	public final void saveAs(@NotNull File file) throws IOException, IllegalArgumentException
 	{
 		//not null requirements
 		Objects.requireNonNull(file);
+
 		//save to file
-		final var json = McbsFile.CODEC.encodeStart(JsonOps.INSTANCE, this.mcbsFile);
-		FileUtils.writeStringToFile(file, new Gson().toJson(json), StandardCharsets.UTF_8);
+		final var fileExtname = getExtension(file.getPath()).toLowerCase(Locale.ROOT);
+		byte[] fileBytes;
+
+		try {
+			switch (fileExtname)
+			{
+				case "json": {
+					final var json = McbsFile.CODEC.encodeStart(JsonOps.INSTANCE, this.mcbsFile).getOrThrow();
+					fileBytes = new Gson().toJson(json).getBytes(StandardCharsets.UTF_8);
+					break;
+				}
+				case "nbt": {
+					final var nbt = McbsFile.CODEC.encodeStart(NbtOps.INSTANCE, this.mcbsFile)
+							.getOrThrow().asCompound().orElseThrow();
+					final var bos = new ByteArrayOutputStream();
+					final var dos = new DataOutputStream(bos);
+					NbtIo.write(nbt, dos);
+					fileBytes = bos.toByteArray();
+					dos.close();
+					break;
+				}
+				default:
+					throw new IllegalArgumentException("Unsupported File extension name: " + fileExtname);
+			}
+			FileUtils.writeByteArrayToFile(file, Objects.requireNonNull(fileBytes));
+		}
+		catch (IllegalArgumentException | IOException e) { throw e; }
+		catch (Exception e) { throw new IOException("Failed to save statistics file", e); }
+
 		//if successful (no io-exceptions), set the last saved file
 		this._lastSaveFile = file;
 	}
@@ -144,20 +180,39 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * @param file The file to load the data from.
 	 * @throws IOException If an I/O error occurs during {@link File} reading.
 	 * @throws NullPointerException If an argument is {@code null}.
+	 * @throws IllegalArgumentException If the {@link File}'s extension-name is unsupported.
+	 * @apiNote Supports {@code .json} and {@code .nbt} {@link File}s only.
 	 */
-	public final void loadFrom(@NotNull File file) throws IOException
+	public final void loadFrom(@NotNull File file) throws IOException, IllegalArgumentException
 	{
 		//not null requirements
 		Objects.requireNonNull(file);
+
 		//load from file
-		final var jsonStr = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+		final var fileExtname = getExtension(file.getPath()).toLowerCase(Locale.ROOT);
 		try {
-			final var json   = new Gson().fromJson(jsonStr, JsonObject.class);
-			final var loaded = McbsFile.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
-			this.mcbsFile.reloadFrom(loaded);
-		} catch (RuntimeException re) {
-			throw new IOException("Failed to parse statistics file data", re);
+			switch (fileExtname)
+			{
+				case "json": {
+					final var jsonStr = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+					final var json = new Gson().fromJson(jsonStr, JsonObject.class);
+					final var loaded = McbsFile.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
+					this.mcbsFile.reloadFrom(loaded);
+					break;
+				}
+				case "nbt": {
+					final var nbt = NbtIo.read(file.toPath());
+					final var loaded = McbsFile.CODEC.decode(NbtOps.INSTANCE, nbt).getOrThrow().getFirst();
+					this.mcbsFile.reloadFrom(loaded);
+					break;
+				}
+				default:
+					throw new IllegalArgumentException("Unsupported File extension name: " + fileExtname);
+			}
 		}
+		catch (IllegalArgumentException | IOException e) { throw e; }
+		catch (Exception e) { throw new IOException("Failed to load statistics file", e); }
+
 		//if successful (no io-exceptions), add edit count and set the last saved file
 		addEditCount();
 		this._lastSaveFile = file;

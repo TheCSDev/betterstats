@@ -67,7 +67,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 	{
 		//if already received stats before, do nothing. the reason for this is
 		//that some servers love to spam statistics packets, resulting in client's
-		//screen refreshing englessly - 'bricking' the user's ability to interface.
+		//screen refreshing endlessly - 'bricking' the user's ability to interface.
 		//tldr - don't trust the server. rate-limit it.
 		if(this.receivedLocalPlayerStatsFlag) return;
 		this.receivedLocalPlayerStatsFlag = true;

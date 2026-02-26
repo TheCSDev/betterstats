@@ -94,6 +94,7 @@ public final class MenubarItemFile extends MenubarItem
 		final var dialog     = new TFileChooserScreen.Builder(TFileChooserScreen.Mode.CHOOSE_FILE)
 				.setLastScreen(lastScreen)
 				.setFileFilter(TFileChooserScreen.FileFilter.extname("json"))
+				.addFileFilter(TFileChooserScreen.FileFilter.extname("nbt"))
 				.build((result, file) -> TUtils.uncheckedCall(() -> {
 					if(result != TFileChooserScreen.Result.APPROVE || file == null || !file.exists())
 						return;
@@ -122,6 +123,7 @@ public final class MenubarItemFile extends MenubarItem
 		final var dialog     = new TFileChooserScreen.Builder(TFileChooserScreen.Mode.CREATE_FILE)
 				.setLastScreen(lastScreen)
 				.setFileFilter(TFileChooserScreen.FileFilter.extname("json"))
+				.addFileFilter(TFileChooserScreen.FileFilter.extname("nbt"))
 				.build((result, file) -> TUtils.uncheckedCall(() -> {
 					if(result != TFileChooserScreen.Result.APPROVE || file == null)
 						return;
