@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.api.mcbs.controller.tab;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
@@ -129,7 +130,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		//not null requirements
 		Objects.requireNonNull(file);
 		//save to file
-		final var json = this.mcbsFile.toJson();
+		final var json = McbsFile.CODEC.encodeStart(JsonOps.INSTANCE, this.mcbsFile);
 		FileUtils.writeStringToFile(file, new Gson().toJson(json), StandardCharsets.UTF_8);
 		//if successful (no io-exceptions), set the last saved file
 		this._lastSaveFile = file;
@@ -149,8 +150,14 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		//not null requirements
 		Objects.requireNonNull(file);
 		//load from file
-		final var json = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-		this.mcbsFile.loadFromJson(new Gson().fromJson(json, JsonObject.class));
+		final var jsonStr = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+		try {
+			final var json   = new Gson().fromJson(jsonStr, JsonObject.class);
+			final var loaded = McbsFile.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
+			this.mcbsFile.reloadFrom(loaded);
+		} catch (RuntimeException re) {
+			throw new IOException("Failed to parse statistics file data", re);
+		}
 		//if successful (no io-exceptions), add edit count and set the last saved file
 		addEditCount();
 		this._lastSaveFile = file;

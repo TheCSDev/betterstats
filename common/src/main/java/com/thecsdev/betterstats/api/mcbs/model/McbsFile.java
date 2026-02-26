@@ -1,10 +1,8 @@
 package com.thecsdev.betterstats.api.mcbs.model;
 
-import com.google.gson.JsonObject;
-import io.netty.util.internal.UnstableApi;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -13,11 +11,18 @@ import java.util.Objects;
  * This {@link Class} serves as the main MVC data structure for storing and managing all
  * statistics associated with a specific player.
  */
-@UnstableApi
 public final class McbsFile
 {
+	// ================================================== ==================================================
+	//                                           McbsFile IMPLEMENTATION
+	// ================================================== ==================================================
+	private final @NotNull McbsStats stats;
 	// ==================================================
-	private final @NotNull McbsStats stats = new McbsStats();
+	public McbsFile() { this(new McbsStats()); }
+	private McbsFile(@NotNull McbsStats stats) throws NullPointerException {
+		//the stats must be truly independent and not associated with any other instances
+		this.stats = Objects.requireNonNull(stats);
+	}
 	// ==================================================
 	/**
 	 * Returns the {@link McbsStats} that holds statistics values.
@@ -25,75 +30,25 @@ public final class McbsFile
 	public final @NotNull McbsStats getStats() { return this.stats; }
 	// ==================================================
 	/**
-	 * Serializes this {@link McbsFile} instance into a new {@link JsonObject}.
-	 * @return The newly created {@link JsonObject} containing the serialized data.
+	 * This method completely replaces all the data in this {@link McbsFile} with data
+	 * copied from the provided {@link McbsFile}.
 	 */
-	@Contract("-> new")
-	public final JsonObject toJson() { return saveToJson(new JsonObject()); }
-
-	/**
-	 * Serializes this {@link McbsFile} instance into the given {@link JsonObject}.
-	 * @param saveTo The {@link JsonObject} to serialize the data into.
-	 * @return The same {@link JsonObject} instance that was passed as argument.
-	 * @throws NullPointerException If the argument is {@code null}.
-	 */
-	@Contract("_ -> param1")
-	public final JsonObject saveToJson(@NotNull JsonObject saveTo) throws NullPointerException
-	{
-		//not null check
-		Objects.requireNonNull(saveTo);
-
-		//store vanilla game metadata, for compatibility with 'stats' json files
-		saveTo.addProperty("DataVersion", SharedConstants.getCurrentVersion().dataVersion().version());
-
-		//store 'stats' data
-		saveTo.add("stats", getStats().toJson());
-
-		//return the result
-		return saveTo;
+	public final void reloadFrom(@NotNull McbsFile mcbsFile) throws NullPointerException {
+		Objects.requireNonNull(mcbsFile);
+		if(mcbsFile == this) return;
+		getStats().clearAndAddAll(mcbsFile.getStats());
 	}
-	// --------------------------------------------------
+	// ================================================== ==================================================
+	//                                              Codec IMPLEMENTATION
+	// ================================================== ==================================================
 	/**
-	 * Deserializes a new {@link McbsFile} instance from the given {@link JsonObject}.
-	 * @param json The {@link JsonObject} to deserialize the data from.
-	 * @return A new {@link McbsFile} instance containing the deserialized data.
-	 * @throws NullPointerException If the argument is {@code null}.
+	 * {@link Codec} implementation for {@link McbsFile}.
 	 */
-	@Contract("_ -> new")
-	public static final McbsFile fromJson(@NotNull JsonObject json) throws NullPointerException {
-		Objects.requireNonNull(json);
-		final var file = new McbsFile();
-		file.loadFromJson(json);
-		return file;
-	}
-
-	/**
-	 * Deserializes data from the given {@link JsonObject} into this {@link McbsFile}
-	 * instance.
-	 * <p>
-	 * <b>This overrides existing {@link McbsFile} data!</b>
-	 * @param json The {@link JsonObject} to deserialize the data from.
-	 * @throws NullPointerException If the argument is {@code null}.
-	 */
-	public final void loadFromJson(@NotNull JsonObject json) throws NullPointerException
-	{
-		//not null check
-		Objects.requireNonNull(json);
-
-		//load 'stats' data
-		getStats().loadFromJson(getJsonObject(json, "stats"));
-	}
-	// ==================================================
-	/**
-	 * Helper method to get a {@link JsonObject} by key, returning an empty
-	 * {@link JsonObject} if the key does not exist or is not a {@link JsonObject}.
-	 * @param json The parent {@link JsonObject}.
-	 * @param key The key to look for.
-	 */
-	@ApiStatus.Internal
-	static final @NotNull JsonObject getJsonObject(@NotNull JsonObject json, @NotNull String key) {
-		if(!json.has(key)) return new JsonObject();
-		return (json.get(key) instanceof JsonObject jobj) ? jobj : new JsonObject();
-	}
-	// ==================================================
+	public static final Codec<McbsFile> CODEC = RecordCodecBuilder.create(instance ->
+			instance.group(
+					Codec.INT.fieldOf("DataVersion").forGetter(file -> SharedConstants.getCurrentVersion().dataVersion().version()),
+					McbsStats.CODEC.fieldOf("stats").forGetter(McbsFile::getStats)
+			).apply(instance, (dataVersion, stats) -> new McbsFile(stats))
+	);
+	// ================================================== ==================================================
 }
