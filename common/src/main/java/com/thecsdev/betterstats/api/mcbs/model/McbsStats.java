@@ -1,8 +1,11 @@
 package com.thecsdev.betterstats.api.mcbs.model;
 
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
-import net.minecraft.IdentifierException;
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -17,19 +20,23 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.thecsdev.betterstats.api.mcbs.model.McbsFile.getJsonObject;
-
 /**
  * Container for holding statistics values, used by {@link McbsFile}.
  */
+@UnstableApi
 public final class McbsStats implements IStatsProvider
 {
 	// ================================================== ==================================================
 	//                                          McbsStats IMPLEMENTATION
 	// ================================================== ==================================================
-	private final ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> intStats = new ConcurrentHashMap<>();
+	private @NotNull ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> intStats;
 	// ==================================================
-	McbsStats() {} //cannot be instantiated by outsiders. is bound to its corresponding file
+	//cannot be instantiated by outsiders. is bound to its corresponding file
+	McbsStats() { this(new ConcurrentHashMap<>()); }
+	private McbsStats(@NotNull ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> intStats) {
+		//the map must be truly independent and not associated with any other instances
+		this.intStats = Objects.requireNonNull(intStats);
+	}
 	// ==================================================
 	/**
 	 * Clears redundant statistic data like zero-value entries and empty maps.
@@ -237,34 +244,8 @@ public final class McbsStats implements IStatsProvider
 	 * @return The newly created {@link JsonObject} containing the serialized data.
 	 */
 	@Contract("-> new")
-	public final JsonObject toJson() { return saveToJson(new JsonObject()); }
-
-	/**
-	 * Serializes this {@link McbsStats} instance into a given {@link JsonObject}.
-	 * @param saveTo The {@link JsonObject} to save the data into.
-	 * @return The same {@link JsonObject} instance that was passed as argument.
-	 * @throws NullPointerException If the argument is {@code null}.
-	 */
-	@Contract("_ -> param1")
-	public final JsonObject saveToJson(@NotNull JsonObject saveTo) throws NullPointerException
-	{
-		//not null requirement
-		Objects.requireNonNull(saveTo);
-
-		//iterate stat-types and store statistics for each
-		for(final var statTypeEntry : getIntValues().entrySet())
-		{
-			//create the json object for a given stat-type
-			final var json_statType = new JsonObject();
-			saveTo.add(statTypeEntry.getKey().toString(), json_statType);
-
-			//iterate each stat, and store it in the stat-type's json
-			for(final var statEntry : statTypeEntry.getValue().entrySet()) {
-				if(statEntry.getValue() != 0) //do not waste storage with zeros
-					json_statType.addProperty(statEntry.getKey().toString(), statEntry.getValue());
-			}
-		}
-		return saveTo;
+	public final JsonObject toJson() {
+		return CODEC.encodeStart(JsonOps.INSTANCE, this).getOrThrow().getAsJsonObject();
 	}
 	// --------------------------------------------------
 	//can't have "#fromJson(JsonObject)" because the constructor is restricted
@@ -281,36 +262,8 @@ public final class McbsStats implements IStatsProvider
 		//not null requirement, and then clear existing data
 		Objects.requireNonNull(json);
 		clear();
-
-		//iterate stat-types and load statistics for each one
-		for(final var statTypeEntry : json.entrySet())
-		{
-			//obtain json-object
-			final @Nullable var json_statType = getJsonObject(json, statTypeEntry.getKey());
-			if(json_statType.isEmpty()) continue;
-
-			//construct stat-type id
-			@NotNull Identifier statTypeId;
-			try { statTypeId = Identifier.parse(statTypeEntry.getKey()); }
-			catch(IdentifierException e) { continue; }
-
-			//iterate all stat values
-			for(final var statEntry : json_statType.entrySet())
-			{
-				//ensure stat value is a number
-				if(!statEntry.getValue().isJsonPrimitive() ||
-						!statEntry.getValue().getAsJsonPrimitive().isNumber())
-					continue;
-
-				//construct stat id
-				@NotNull Identifier statId;
-				try { statId = Identifier.parse(statEntry.getKey()); }
-				catch(IdentifierException e) { continue; }
-
-				//finally, set the [stat-type / stat-subject] value in the mcbs file
-				setIntValue(statTypeId, statId, statEntry.getValue().getAsInt());
-			}
-		}
+		this.intStats = CODEC_INT_STATS.decode(JsonOps.INSTANCE, json).result()
+				.map(Pair::getFirst).orElseGet(ConcurrentHashMap::new);
 	}
 	// ================================================== ==================================================
 	//                                   IntEntryConsumer IMPLEMENTATION
@@ -331,5 +284,24 @@ public final class McbsStats implements IStatsProvider
 		 */
 		void accept(@NotNull Identifier statType, @NotNull Identifier statSubject, int value);
 	}
+	// ================================================== ==================================================
+	//                                           Codec<T> IMPLEMENTATIONS
+	// ================================================== ==================================================
+	/**
+	 * {@link Codec} implementation for {@link #intStats}.
+	 */
+	private static final Codec<ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>>> CODEC_INT_STATS =
+			Codec.unboundedMap(Identifier.CODEC, Codec.unboundedMap(Identifier.CODEC, Codec.INT))
+					.xmap(map -> {
+						final var root = new ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>>();
+						map.forEach((k, v) -> root.put(k, new ConcurrentHashMap<>(v)));
+						return root;
+					}, ConcurrentHashMap::new);
+
+	/**
+	 * {@link Codec} implementation for {@link McbsStats}.
+	 */
+	public static final Codec<McbsStats> CODEC =
+			CODEC_INT_STATS.xmap(McbsStats::new, McbsStats::getIntValues);
 	// ================================================== ==================================================
 }

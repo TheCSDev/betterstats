@@ -1,6 +1,7 @@
 package com.thecsdev.betterstats.api.mcbs.model;
 
 import com.google.gson.JsonObject;
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.SharedConstants;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -12,6 +13,7 @@ import java.util.Objects;
  * This {@link Class} serves as the main MVC data structure for storing and managing all
  * statistics associated with a specific player.
  */
+@UnstableApi
 public final class McbsFile
 {
 	// ==================================================
