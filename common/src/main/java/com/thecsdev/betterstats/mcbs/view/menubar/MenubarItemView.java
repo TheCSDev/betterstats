@@ -1,11 +1,8 @@
 package com.thecsdev.betterstats.mcbs.view.menubar;
 
-import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
-import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import net.fabricmc.api.EnvType;
@@ -60,10 +57,11 @@ public final class MenubarItemView extends MenubarItem
 		builder.addSeparator();
 
 		//home-page tab
-		builder.addButton(
+		//FIXME - Implement homepage soon
+		/*builder.addButton(
 				gui("icon/news").append(" ").append(BLanguage.gui_menubar_view_homepage()),
 				__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
-		);
+		);*/
 
 		//local-player statistics tab
 		builder.addButton(
@@ -72,31 +70,6 @@ public final class MenubarItemView extends MenubarItem
 		);
 
 		//build and return the context menu
-		return builder.build();
-	}
-	// ==================================================
-	/**
-	 * Creates a {@link TContextMenu} that allows switching between {@link StatsView}s
-	 * in a given {@link McbsEditorFileTab}.
-	 * @param client The {@link Minecraft} instance the GUI belongs to.
-	 * @param fileTab The target {@link McbsEditorFileTab}.
-	 * @throws NullPointerException If an argument is {@code null}.
-	 */
-	private static final @ApiStatus.Internal TContextMenu view_statsView(
-			@NotNull Minecraft client, @NotNull McbsEditorFileTab fileTab)
-			throws NullPointerException
-	{
-		//make sure arguments aren't null for some reason
-		Objects.requireNonNull(client);
-		Objects.requireNonNull(fileTab);
-
-		//create the builder
-		final var builder = new TContextMenu.Builder(Objects.requireNonNull(client));
-		//iterate all registered stats tabs and add a button for each
-		for(final var statsView : BClientRegistries.STATS_VIEW)
-			builder.addButton(statsView.getDisplayName(), __ -> fileTab.setCurrentView(statsView));
-
-		//build and return the built context menu
 		return builder.build();
 	}
 	// ==================================================
