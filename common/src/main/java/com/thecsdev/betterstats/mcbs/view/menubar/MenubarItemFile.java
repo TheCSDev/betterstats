@@ -48,11 +48,6 @@ public final class MenubarItemFile extends MenubarItem
 		//create new builder
 		final var builder = new TContextMenu.Builder(client);
 
-		//"New" option - useless
-		/*builder.addButton(
-				air().append(" ").append(BSSLang.gui_menubar_file_new()),
-				__ -> mcbsEditor.addTab(new McbsEditorFileTab(new McbsFile()), true));*/
-
 		//"Open" option
 		builder.addButton(
 				gui(TSprites.gui_icon_fsFolder()).append(" ").append(BLanguage.gui_menubar_file_open()),
@@ -98,7 +93,7 @@ public final class MenubarItemFile extends MenubarItem
 				.build((result, file) -> TUtils.uncheckedCall(() -> {
 					if(result != TFileChooserScreen.Result.APPROVE || file == null || !file.exists())
 						return;
-					mcbsEditor.addTab(new McbsEditorFileTab(file), true);
+					mcbsEditor.addTab(new McbsEditorFileTab(file.toPath()), true);
 				}));
 		client.setScreen(dialog.getAsScreen());
 	}
@@ -127,7 +122,7 @@ public final class MenubarItemFile extends MenubarItem
 				.build((result, file) -> TUtils.uncheckedCall(() -> {
 					if(result != TFileChooserScreen.Result.APPROVE || file == null)
 						return;
-					fileTab.saveAs(file);
+					fileTab.saveAs(file.toPath());
 				}));
 		client.setScreen(dialog.getAsScreen());
 	}

@@ -1,7 +1,7 @@
 package com.thecsdev.betterstats.api.mcbs.controller.tab;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
@@ -14,16 +14,15 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -58,12 +57,12 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	private final @NotNull  McbsFile          mcbsFile;
 	// --------------------------------------------------
 	private final @NotNull  StatsView.Filters _statFilters = new Filters();
-	private       @Nullable File              _lastSaveFile;
+	private       @Nullable Path              _lastSaveFile;
 	// ==================================================
 	public McbsEditorFileTab(@NotNull McbsFile mcbsFile) throws NullPointerException {
 		this.mcbsFile = Objects.requireNonNull(mcbsFile);
 	}
-	public McbsEditorFileTab(@NotNull File file) throws NullPointerException, IOException {
+	public McbsEditorFileTab(@NotNull Path file) throws NullPointerException, IOException {
 		this(new McbsFile());
 		loadFrom(Objects.requireNonNull(file));
 	}
@@ -81,7 +80,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		if(this == LOCALPLAYER)
 			return head("Steve").append(" ").append(BLanguage.gui_menubar_view_localPlayerStats());
 		else if(this._lastSaveFile != null)
-			return head("Steve").append(" ").append(literal(this._lastSaveFile.getName()));
+			return head("Steve").append(" ").append(literal(this._lastSaveFile.getFileName().toString()));
 		else
 			return head("Steve").append(" ").append(literal(getClass().getSimpleName() + "@" + hashCode()));
 	}
@@ -128,96 +127,133 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * Saves the {@link McbsFile} data of this {@link McbsEditorFileTab} to the
 	 * specified file.
 	 * @param file The file to save the data to.
-	 * @throws IOException If an I/O error occurs during {@link File} writing.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 * @throws IllegalArgumentException If the {@link File}'s extension-name is unsupported.
+	 * @throws IOException If an I/O error occurs during {@link File} writing.
 	 * @apiNote Supports {@code .json} and {@code .nbt} {@link File}s only.
 	 */
-	public final void saveAs(@NotNull File file) throws IOException, IllegalArgumentException
+	public final void saveAs(@NotNull Path file)
+			throws NullPointerException, IllegalArgumentException, IOException
 	{
 		//not null requirements
 		Objects.requireNonNull(file);
 
 		//save to file
-		final var fileExtname = getExtension(file.getPath()).toLowerCase(Locale.ROOT);
-		byte[] fileBytes;
-
-		try {
-			switch (fileExtname)
-			{
-				case "json": {
-					final var json = McbsFile.CODEC.encodeStart(JsonOps.INSTANCE, this.mcbsFile).getOrThrow();
-					fileBytes = new Gson().toJson(json).getBytes(StandardCharsets.UTF_8);
-					break;
-				}
-				case "nbt": {
-					final var nbt = McbsFile.CODEC.encodeStart(NbtOps.INSTANCE, this.mcbsFile)
-							.getOrThrow().asCompound().orElseThrow();
-					final var bos = new ByteArrayOutputStream();
-					final var dos = new DataOutputStream(bos);
-					NbtIo.write(nbt, dos);
-					fileBytes = bos.toByteArray();
-					dos.close();
-					break;
-				}
-				default:
-					throw new IllegalArgumentException("Unsupported File extension name: " + fileExtname);
-			}
-			FileUtils.writeByteArrayToFile(file, Objects.requireNonNull(fileBytes));
+		final var extname = getExtension(file.toString()).toLowerCase(Locale.ROOT);
+		switch (extname) {
+			case "json": saveAsJson(file); break;
+			case "nbt": saveAsNbt(file); break;
+			default: throw new IllegalArgumentException("Unsupported extname: " + extname);
 		}
-		catch (IllegalArgumentException | IOException e) { throw e; }
-		catch (Exception e) { throw new IOException("Failed to save statistics file", e); }
 
 		//if successful (no io-exceptions), set the last saved file
 		this._lastSaveFile = file;
 	}
 
+	@ApiStatus.Internal
+	private final void saveAsJson(@NotNull Path file) throws IOException
+	{
+		try
+		{
+			//create parent directories if needed
+			final var parent = file.getParent();
+			if(parent != null) Files.createDirectories(parent);
+
+			//encode the mcbs file to json
+			final var json = McbsFile.CODEC.encodeStart(JsonOps.INSTANCE, this.mcbsFile).getOrThrow();
+
+			//save to file
+			try (final var writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
+				new Gson().toJson(json, writer);
+			}
+		}
+		catch (IOException ioe) { throw ioe; }
+		catch (Exception e) { throw new IOException("Failed to save JSON file: " + file, e); }
+	}
+
+	@ApiStatus.Internal
+	private final void saveAsNbt(@NotNull Path file) throws IOException
+	{
+		try
+		{
+			//create parent directories if needed
+			final var parent = file.getParent();
+			if(parent != null) Files.createDirectories(parent);
+
+			//encode the mcbs file to nbt
+			final var nbt = McbsFile.CODEC.encodeStart(NbtOps.INSTANCE, this.mcbsFile)
+					.getOrThrow().asCompound().orElseThrow();
+
+			//save to file
+			try (final var out = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(file)))) {
+				NbtIo.write(nbt, out);
+			}
+		}
+		catch (IOException ioe) { throw ioe; }
+		catch (Exception e) { throw new IOException("Failed to save NBT file: " + file, e); }
+	}
+	// --------------------------------------------------
 	/**
 	 * Loads the {@link McbsFile} data from the specified file into this
 	 * {@link McbsEditorFileTab}'s {@link McbsFile} instance.
 	 * <p>
 	 * <b>This overrides existing {@link McbsFile} data!</b>
 	 * @param file The file to load the data from.
-	 * @throws IOException If an I/O error occurs during {@link File} reading.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 * @throws IllegalArgumentException If the {@link File}'s extension-name is unsupported.
+	 * @throws IOException If an I/O error occurs during {@link File} reading.
 	 * @apiNote Supports {@code .json} and {@code .nbt} {@link File}s only.
 	 */
-	public final void loadFrom(@NotNull File file) throws IOException, IllegalArgumentException
+	public final void loadFrom(@NotNull Path file)
+			throws NullPointerException, IllegalArgumentException, IOException
 	{
 		//not null requirements
 		Objects.requireNonNull(file);
 
 		//load from file
-		final var fileExtname = getExtension(file.getPath()).toLowerCase(Locale.ROOT);
-		try {
-			switch (fileExtname)
-			{
-				case "json": {
-					final var jsonStr = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-					final var json = new Gson().fromJson(jsonStr, JsonObject.class);
-					final var loaded = McbsFile.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
-					this.mcbsFile.reloadFrom(loaded);
-					break;
-				}
-				case "nbt": {
-					final var nbt = NbtIo.read(file.toPath());
-					final var loaded = McbsFile.CODEC.decode(NbtOps.INSTANCE, nbt).getOrThrow().getFirst();
-					this.mcbsFile.reloadFrom(loaded);
-					break;
-				}
-				default:
-					throw new IllegalArgumentException("Unsupported File extension name: " + fileExtname);
-			}
+		final var extname = getExtension(file.toString()).toLowerCase(Locale.ROOT);
+		switch (extname) {
+			case "json": loadFromJson(file); break;
+			case "nbt": loadFromNbt(file); break;
+			default: throw new IllegalArgumentException("Unsupported extname: " + extname);
 		}
-		catch (IllegalArgumentException | IOException e) { throw e; }
-		catch (Exception e) { throw new IOException("Failed to load statistics file", e); }
 
 		//if successful (no io-exceptions), add edit count and set the last saved file
 		addEditCount();
 		this._lastSaveFile = file;
 	}
 
+	@ApiStatus.Internal
+	private final void loadFromJson(@NotNull Path file) throws IOException
+	{
+		//check if file doesn't exist
+		if(!Files.exists(file))
+			throw new NoSuchFileException(file.toString());
+
+		//read and load from file
+		try (final var reader = Files.newBufferedReader(file, StandardCharsets.UTF_8))
+		{
+			final var json   = JsonParser.parseReader(reader);
+			final var loaded = McbsFile.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
+			this.mcbsFile.reloadFrom(loaded);
+		}
+		catch (IOException ioe) { throw ioe; }
+		catch (Exception e) { throw new IOException("Failed to load JSON file: " + file, e); }
+	}
+
+	@ApiStatus.Internal
+	private final void loadFromNbt(@NotNull Path file) throws IOException
+	{
+		try (final var in = new DataInputStream(new BufferedInputStream(Files.newInputStream(file))))
+		{
+			final var nbt    = NbtIo.read(in);
+			final var loaded = McbsFile.CODEC.decode(NbtOps.INSTANCE, nbt).getOrThrow().getFirst();
+			this.mcbsFile.reloadFrom(loaded);
+		}
+		catch (IOException ioe) { throw ioe; }
+		catch (Exception e) { throw new IOException("Failed to load NBT file: " + file, e); }
+	}
+	// --------------------------------------------------
 	/**
 	 * Loads the {@link McbsStats} data from the specified {@link IStatsProvider}
 	 * into this {@link McbsEditorFileTab}'s {@link McbsFile} instance.
