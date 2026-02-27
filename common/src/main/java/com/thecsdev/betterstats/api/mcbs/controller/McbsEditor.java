@@ -2,7 +2,6 @@ package com.thecsdev.betterstats.api.mcbs.controller;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorNullTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import org.jetbrains.annotations.NotNull;
@@ -32,14 +31,14 @@ public final class McbsEditor
 	// --------------------------------------------------
 	/**
 	 * This value increments each time a change is through this {@link McbsEditor},
-	 * allowing user-intervaces (aka 'views') to known when they need to refresh.
+	 * allowing user-interfaces (aka 'views') to known when they need to refresh.
 	 * @see #getEditCount()
 	 * @see #addEditCount()
 	 */
 	private long _editCount = Long.MIN_VALUE;
 	// ==================================================
 	public McbsEditor() {
-		//FIXME - Re-implement the 'Home' tab
+		//FIXME - Implement homepage soon
 		//addTab(McbsEditorHomepageTab.INSTANCE, true);
 		addTab(McbsEditorFileTab.LOCALPLAYER, true);
 	}

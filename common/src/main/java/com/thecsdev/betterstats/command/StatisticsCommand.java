@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.mixin.hooks.AccessorStatsCounter;
-import com.thecsdev.betterstats.resources.BSSLang;
+import com.thecsdev.betterstats.resource.BLanguage;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -185,7 +185,7 @@ public final class StatisticsCommand
 			}
 
 			//send feedback
-			context.getSource().sendSuccess(() -> BSSLang.cmd_stats_edit_out(
+			context.getSource().sendSuccess(() -> BLanguage.cmd_stats_edit_out(
 					Component.literal("[" + BuiltInRegistries.STAT_TYPE.getKey(arg_stat_type) + " / " + arg_stat + "]"),
 					affected.get()
 				), false);
@@ -222,12 +222,12 @@ public final class StatisticsCommand
 
 				//disconnect the player because that's the only way to update the client
 				target.connection.disconnect(Component.literal("")
-						.append(BSSLang.cmd_stats_clear_kick())
+						.append(BLanguage.cmd_stats_clear_kick())
 						.append("\n\n[EN]: Your statistics were cleared, which requires you to disconnect and re-join."));
 			}
 
 			//send feedback
-			context.getSource().sendSuccess(() -> BSSLang.cmd_stats_clear_out(affected.get()), false);
+			context.getSource().sendSuccess(() -> BLanguage.cmd_stats_clear_out(affected.get()), false);
 
 			//return affected count, so command blocks and data-packs can know it
 			return affected.get();
@@ -259,7 +259,7 @@ public final class StatisticsCommand
 			final int statValue = arg_target.getStats().getValue(stat);
 
 			//execute
-			context.getSource().sendSuccess(() -> BSSLang.cmd_stats_query_out(
+			context.getSource().sendSuccess(() -> BLanguage.cmd_stats_query_out(
 					arg_target.getDisplayName(),
 					Component.literal("[" + BuiltInRegistries.STAT_TYPE.getKey(arg_stat_type) + " / " + arg_stat + "]"),
 					statValue

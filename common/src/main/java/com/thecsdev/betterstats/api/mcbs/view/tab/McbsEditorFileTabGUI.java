@@ -3,7 +3,7 @@ package com.thecsdev.betterstats.api.mcbs.view.tab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
@@ -54,11 +54,11 @@ public final class McbsEditorFileTabGUI extends McbsEditorTabGUI<McbsEditorFileT
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_filtersBackground(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSprites.gui_editor_tab_statsFile_filtersBackground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_filtersForeground(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSprites.gui_editor_tab_statsFile_filtersForeground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {
@@ -111,11 +111,11 @@ public final class McbsEditorFileTabGUI extends McbsEditorTabGUI<McbsEditorFileT
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_statsBackground(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSprites.gui_editor_tab_statsFile_statsBackground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_statsFile_statsForeground(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSprites.gui_editor_tab_statsFile_statsForeground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback() {

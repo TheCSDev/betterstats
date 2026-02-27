@@ -5,7 +5,7 @@ import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorTabGUI;
 import com.thecsdev.betterstats.mcbs.view.editor.MenubarPanel;
 import com.thecsdev.betterstats.mcbs.view.editor.TabStripPanel;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import net.fabricmc.api.EnvType;
@@ -70,11 +70,11 @@ public final class McbsEditorGUI extends TElement
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_background(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSprites.gui_editor_tab_background(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		public final @Override void postRenderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(BSSSprites.gui_editor_tab_foreground(), bb.x, bb.y, bb.width, bb.height, -1);
+			pencil.drawGuiSprite(BSprites.gui_editor_tab_foreground(), bb.x, bb.y, bb.width, bb.height, -1);
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback()

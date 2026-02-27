@@ -4,8 +4,8 @@ import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
 import com.thecsdev.betterstats.client.gui.panel.StatsSummaryPanel;
-import com.thecsdev.betterstats.resources.BSSLang;
-import com.thecsdev.betterstats.resources.BSSSprites;
+import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.commonmc.api.world.item.TItemUtils.getCreativeModeTab;
-import static com.thecsdev.commonmc.resources.TComponent.*;
+import static com.thecsdev.commonmc.resource.TComponent.*;
 import static java.util.Comparator.comparing;
 import static net.minecraft.network.chat.Component.translatable;
 import static net.minecraft.resources.Identifier.DEFAULT_NAMESPACE;
@@ -138,13 +138,13 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(
-					gui(BSSSprites.gui_icon_faviconWiki()).append(" ").append(BSSLang.gui_statsview_stats_ctxMenu_viewOnWiki()),
+					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
 					__ -> Util.getPlatform().openUri(url_wiki));
 		}
 
 		//close button, and then build and return a new context menu
 		builder.addButton(
-			gui(BSSSprites.gui_icon_close()).append(" ").append(BSSLang.gui_menubar_file_close()),
+			gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
 			__ -> {});
 		return builder.build();
 	};
@@ -214,14 +214,14 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var panel = context.getPanel();
 			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
 
-			final var icon = new TTextureElement(BSSSprites.gui_icon_filterSort());
+			final var icon = new TTextureElement(BSprites.gui_icon_filterSort());
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
 			final var dropdown = new TDropdownWidget<SortBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			dropdown.getEntries().addAll(values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_sortBy()), SortBy.class);
+			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
@@ -263,12 +263,12 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 	public static enum GroupBy implements TDropdownWidget.Entry
 	{
 		// ==================================================
-		ALL(BSSLang.gui_statsview_filter_groupBy_all(), stats -> {
+		ALL(BLanguage.gui_statsview_filter_groupBy_all(), stats -> {
 			final var map = new LinkedHashMap<Component, Iterable<ItemStats>>();
 			map.put(Component.literal("*"), stats);
 			return map;
 		}),
-		MOD(BSSLang.gui_statsview_filter_groupBy_mod(), stats -> {
+		MOD(BLanguage.gui_statsview_filter_groupBy_mod(), stats -> {
 			//create a new map to group stats based on mod id-s
 			final var map = new LinkedHashMap<String, ArrayList<ItemStats>>();
 			//group the stats
@@ -286,7 +286,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 					LinkedHashMap::new
 			));
 		}),
-		TAB(BSSLang.gui_statsview_filter_groupBy_createiveModeTab(), stats -> {
+		TAB(BLanguage.gui_statsview_filter_groupBy_createiveModeTab(), stats -> {
 			//create a new map to group stats based on creative mode tabs
 			final var map = new LinkedHashMap<CreativeModeTab, ArrayList<ItemStats>>();
 			//group the stats
@@ -330,14 +330,14 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var panel = context.getPanel();
 			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
 
-			final var icon = new TTextureElement(BSSSprites.gui_icon_filterGroup());
+			final var icon = new TTextureElement(BSprites.gui_icon_filterGroup());
 			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
 			panel.add(icon);
 
 			final var dropdown = new TDropdownWidget<StatsViewItems.GroupBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), StatsViewItems.GroupBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_groupBy()), GroupBy.class);
+			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update

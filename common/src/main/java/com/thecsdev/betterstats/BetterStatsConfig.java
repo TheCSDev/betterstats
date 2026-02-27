@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.thecsdev.commonmc.api.config.ModConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.net.URI;
 import java.util.Objects;
@@ -83,9 +84,9 @@ public final class BetterStatsConfig extends ModConfig
 	 */
 	public final void setAllowChatPsaMessages(boolean value) { this.allowChatPsa = value; }
 	// ==================================================
-	protected final @Override void onLoad(JsonObject from)
+	protected final @Override void onLoad(@NonNull JsonObject from)
 	{
-		//attenot to parse the api endpoint URI instance
+		//attempt to parse the api endpoint URI instance
 		//(use default value if parsing fails)
 		try {
 			this.apiEndpoint = URI.create(this.apiEndpointStr);

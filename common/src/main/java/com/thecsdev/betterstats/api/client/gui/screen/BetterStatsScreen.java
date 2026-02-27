@@ -7,6 +7,7 @@ import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;
 import com.thecsdev.commonmc.api.client.gui.screen.IStatsListener;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreenPlus;
+import com.thecsdev.commonmc.api.client.gui.screen.TScreenWrapper;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,6 +50,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 	 */
 	public final @NotNull McbsEditor getMcbsEditor() { return this.mcbsEditor; }
 	// ==================================================
+	protected final @Override @NotNull TScreenWrapper<?> createWrapperScreen() { return new BetterStatsScreenWrapper(this); }
 	public final @Override @Nullable Screen getLastScreen() { return this.lastScreen; }
 	public final @Override boolean isAllowingInGameHud() { return false; }
 	// --------------------------------------------------
@@ -67,7 +69,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 	{
 		//if already received stats before, do nothing. the reason for this is
 		//that some servers love to spam statistics packets, resulting in client's
-		//screen refreshing englessly - 'bricking' the user's ability to interface.
+		//screen refreshing endlessly - 'bricking' the user's ability to interface.
 		//tldr - don't trust the server. rate-limit it.
 		if(this.receivedLocalPlayerStatsFlag) return;
 		this.receivedLocalPlayerStatsFlag = true;

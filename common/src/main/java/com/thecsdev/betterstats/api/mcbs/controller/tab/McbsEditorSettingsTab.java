@@ -1,9 +1,12 @@
 package com.thecsdev.betterstats.api.mcbs.controller.tab;
 
-import com.thecsdev.betterstats.resources.BSSLang;
+import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BSprites;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.thecsdev.commonmc.resource.TComponent.gui;
 
 /**
  * {@link McbsEditorTab} implementation for displaying the "Settings" GUI for
@@ -23,7 +26,7 @@ public final class McbsEditorSettingsTab extends McbsEditorTab
 	public final @Override boolean equals(@Nullable Object obj) { return this == obj; }
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() {
-		return BSSLang.gui_menubar_file_settings();
+		return gui(BSprites.gui_icon_settings()).append(" ").append(BLanguage.gui_menubar_file_settings());
 	}
 	// ==================================================
 }

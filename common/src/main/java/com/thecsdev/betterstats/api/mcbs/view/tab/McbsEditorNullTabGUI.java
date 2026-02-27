@@ -1,8 +1,8 @@
 package com.thecsdev.betterstats.api.mcbs.view.tab;
 
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorNullTab;
-import com.thecsdev.betterstats.resources.BSSLang;
-import com.thecsdev.betterstats.resources.BSSTex;
+import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BTextures;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
@@ -36,16 +36,16 @@ public final class McbsEditorNullTabGUI extends McbsEditorTabGUI<McbsEditorNullT
 		final int w3 = bb.width / 3;
 
 		//create and add a texture element, for the silhouette
-		final var tex_silhouette = new TTextureElement(BSSTex.gui_images_nostatsSilhouette());
+		final var tex_silhouette = new TTextureElement(BTextures.gui_images_nostatsSilhouette());
 		add(tex_silhouette);
 		tex_silhouette.setBounds(new UDim2(0.5, 0, 0.5, 0), new UDim2(0, w3, 0, w3));
 		tex_silhouette.move(-w3 / 2, -w3 / 2);
 		tex_silhouette.colorProperty().set(0xFFFFFFFF, McbsEditorNullTabGUI.class);
 
 		//initialize a single hint label, for what the user could do
-		final var lbl_hint = new TLabelElement(BSSLang.gui_menubar_view()
+		final var lbl_hint = new TLabelElement(BLanguage.gui_menubar_view()
 				.append(Component.literal(" > ").withStyle(ChatFormatting.DARK_GRAY))
-				.append(BSSLang.gui_menubar_view_localPlayerStats()));
+				.append(BLanguage.gui_menubar_view_localPlayerStats()));
 		lbl_hint.setBounds(getBounds());
 		lbl_hint.wrapTextProperty().set(true, McbsEditorNullTabGUI.class);
 		lbl_hint.textAlignmentProperty().set(CompassDirection.CENTER, McbsEditorNullTabGUI.class);
@@ -67,14 +67,14 @@ public final class McbsEditorNullTabGUI extends McbsEditorTabGUI<McbsEditorNullT
 		final int w3 = bb.width / 3;
 
 		//create and add a texture element, for the silhouette
-		final var tex_silhouette = new TTextureElement(BSSTex.gui_images_nostatsSilhouette());
+		final var tex_silhouette = new TTextureElement(BTextures.gui_images_nostatsSilhouette());
 		target.add(tex_silhouette);
 		tex_silhouette.setBounds(new UDim2(0.5, 0, 0.5, 0), new UDim2(0, w3, 0, w3));
 		tex_silhouette.move(-w3 / 2, -w3 / 2);
 		tex_silhouette.colorProperty().set(0xFFFFFFFF, McbsEditorNullTabGUI.class);
 
 		//create and add a label, indicating no stats can be shown
-		final var lbl = new TLabelElement(BSSLang.gui_statsview_stats_noStats());
+		final var lbl = new TLabelElement(BLanguage.gui_statsview_stats_noStats());
 		lbl.setBounds(bb.x, bb.y + (bb.height / 2) - 7, bb.width, 14);
 		lbl.textAlignmentProperty().set(CompassDirection.CENTER, McbsEditorNullTabGUI.class);
 		lbl.textColorProperty().set(0xFFFFFFFF, McbsEditorNullTabGUI.class);

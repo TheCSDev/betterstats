@@ -6,6 +6,8 @@ import com.thecsdev.commonmc.api.client.gui.widget.stats.TTextualStatWidget;
 import com.thecsdev.commonmc.api.stats.util.EntityStats;
 import com.thecsdev.commonmc.api.stats.util.ItemStats;
 import com.thecsdev.commonmc.api.stats.util.SubjectStats;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -24,6 +26,7 @@ import static net.minecraft.network.chat.Component.literal;
  * that aim to summarize the statistics on a given {@link StatsView}.
  */
 @ApiStatus.Internal
+@Environment(EnvType.CLIENT)
 public final class StatsSummaryPanel extends TPanelElement.Paintable
 {
 	// ==================================================

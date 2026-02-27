@@ -1,12 +1,9 @@
 package com.thecsdev.betterstats.mcbs.view.menubar;
 
-import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
-import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
-import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
-import com.thecsdev.betterstats.resources.BSSLang;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static com.thecsdev.commonmc.resources.TComponent.*;
+import static com.thecsdev.commonmc.resource.TComponent.*;
 
 /**
  * {@link MenubarItem} implementation for "View".
@@ -31,7 +28,7 @@ public final class MenubarItemView extends MenubarItem
 	// ==================================================
 	public static final MenubarItemView INSTANCE = new MenubarItemView();
 	// ==================================================
-	public final @Override @NotNull Component getDisplayName() { return BSSLang.gui_menubar_view(); }
+	public final @Override @NotNull Component getDisplayName() { return BLanguage.gui_menubar_view(); }
 	// --------------------------------------------------
 	@SuppressWarnings("DataFlowIssue")
 	public final @Override @NotNull TContextMenu createContextMenu(
@@ -51,64 +48,28 @@ public final class MenubarItemView extends MenubarItem
 
 		//the vanilla screen button opens the vanilla stats screen
 		builder.addButton(
-				gui("statistics/item_picked_up").append(" ").append(BSSLang.gui_menubar_view_vanillaScreen()),
+				gui("statistics/item_picked_up").append(" ").append(BLanguage.gui_menubar_view_vanillaScreen()),
 				__ -> {
 					final var player = Objects.requireNonNull(client.player, "Missing 'local player' instance");
 					final var screen = new StatsScreen(client.screen, player.getStats());
 					client.setScreen(screen);
 				});
+		builder.addSeparator();
 
 		//home-page tab
-		//FIXME - Re-implement the 'Home' tab
-		/*if(mcbsEditor.getCurrentTab() != McbsEditorHomepageTab.INSTANCE)
-			builder.addButton(
-					gui("icon/news").append(" ").append(BSSLang.gui_menubar_view_homepage()),
-					__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
-			);*/
+		//FIXME - Implement homepage soon
+		/*builder.addButton(
+				gui("icon/news").append(" ").append(BLanguage.gui_menubar_view_homepage()),
+				__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
+		);*/
 
 		//local-player statistics tab
-		if(mcbsEditor.getCurrentTab() != McbsEditorFileTab.LOCALPLAYER)
-			builder.addButton(
-					localPlayerComponent.append(" ").append(BSSLang.gui_menubar_view_localPlayerStats()),
-					__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
-			);
-
-		//the stats tab submenu allows switching between stats tabs
-		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab meft) {
-			builder.addSeparator();
-			builder.addContextMenu(
-					gui("statistics/item_used").append(" ").append(BSSLang.gui_menubar_view_statsView()),
-					view_statsView(client, meft));
-		}
+		builder.addButton(
+				localPlayerComponent.append(" ").append(BLanguage.gui_menubar_view_localPlayerStats()),
+				__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
+		);
 
 		//build and return the context menu
-		return builder.build();
-	}
-	// ==================================================
-	/**
-	 * Creates a {@link TContextMenu} that allows switching between {@link StatsView}s
-	 * in a given {@link McbsEditorFileTab}.
-	 * @param client The {@link Minecraft} instance the GUI belongs to.
-	 * @param fileTab The target {@link McbsEditorFileTab}.
-	 * @throws NullPointerException If an argument is {@code null}.
-	 */
-	private static final @ApiStatus.Internal TContextMenu view_statsView(
-			@NotNull Minecraft client, @NotNull McbsEditorFileTab fileTab)
-			throws NullPointerException
-	{
-		//make sure arguments aren't null for some reason
-		Objects.requireNonNull(client);
-		Objects.requireNonNull(fileTab);
-
-		//create the builder
-		final var builder = new TContextMenu.Builder(Objects.requireNonNull(client));
-		//iterate all registered stats tabs and add a button for each
-		for(final var statsViewEntry : BClientRegistries.STATS_VIEW.entrySet()) {
-			final var statsView = statsViewEntry.getValue();
-			builder.addButton(statsView.getDisplayName(), __ -> fileTab.setCurrentView(statsView));
-		}
-
-		//build and return the built context menu
 		return builder.build();
 	}
 	// ==================================================

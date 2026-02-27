@@ -3,20 +3,31 @@ package com.thecsdev.betterstats.api.client.registry;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout;
+import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemFile;
+import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemView;
+import com.thecsdev.betterstats.mcbs.view.statsview.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import static com.mojang.serialization.Lifecycle.stable;
+import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
+import static net.minecraft.resources.ResourceKey.createRegistryKey;
 
 /**
  * {@link BetterStats}'s client-sided registries for adding features to the mod.
  * <p>
- * Note that this does not use the game's native {@link Registry} system, instead
- * relying on {@link Map}s for simplicity.
+ * <b>Important note:</b><br>
+ * These {@link Registry}s are <b>NOT</b> registered in the game's <b>ROOT</b>
+ * {@link BuiltInRegistries#REGISTRY}! Avoid any and all operations that involve
+ * the game's <b>ROOT</b> registry!
  */
 @Environment(EnvType.CLIENT)
 public class BClientRegistries
@@ -24,20 +35,32 @@ public class BClientRegistries
 	// ==================================================
 	private BClientRegistries() {}
 	// ==================================================
-	/**
-	 * {@link Map} of registered {@link StatsView}s.
-	 * <p>
-	 * {@link Map.Entry#getKey()} = ID of registered feature<br>
-	 * {@link Map.Entry#getValue()} = Registered {@link NotNull} {@link StatsView}
-	 */
-	public static final Map<@NotNull Identifier, @NotNull StatsView> STATS_VIEW = new LinkedHashMap<>();
+	public static final Registry<MenubarItem> MENUBAR_ITEM;
+	public static final Registry<StatsView>   STATS_VIEW;
+	// ==================================================
+	public static final void bootstrap() { /*invokes <clinit>*/ }
+	static
+	{
+		//create registry instances
+		STATS_VIEW   = new MappedRegistry<>(createRegistryKey(id("stats_view")), stable());
+		MENUBAR_ITEM = new MappedRegistry<>(createRegistryKey(id("menubar_item")), stable());
 
-	/**
-	 * {@link Map} of registered {@link MenubarItem}s.
-	 * <p>
-	 * {@link Map.Entry#getKey()} = ID of registered feature<br>
-	 * {@link Map.Entry#getValue()} = Registered {@link NotNull} {@link MenubarItem}
-	 */
-	public static final Map<@NotNull Identifier, @NotNull MenubarItem> MENUBAR_ITEM = new LinkedHashMap<>();
+		//register menubar items
+		Registry.register(MENUBAR_ITEM, id("file"),  MenubarItemFile.INSTANCE);
+		Registry.register(MENUBAR_ITEM, id("view"),  MenubarItemView.INSTANCE);
+		Registry.register(MENUBAR_ITEM, id("about"), MenubarItemAbout.INSTANCE);
+
+		//register stats views
+		Registry.register(STATS_VIEW, id("general"), StatsViewGeneral.INSTANCE);
+		Registry.register(STATS_VIEW, id("items"),   StatsViewItems.INSTANCE);
+		Registry.register(STATS_VIEW, id("blocks"),  StatsViewBlocks.INSTANCE);
+		Registry.register(STATS_VIEW, id("mobs"),    StatsViewMobs.INSTANCE);
+		Registry.register(STATS_VIEW, id("food"),    StatsViewFood.INSTANCE);
+		Registry.register(STATS_VIEW, id("hunter"),  StatsViewHunter.INSTANCE);
+	}
+	// --------------------------------------------------
+	private static final @ApiStatus.Internal Identifier id(@NotNull String id) {
+		return fromNamespaceAndPath(MOD_ID, id);
+	}
 	// ==================================================
 }

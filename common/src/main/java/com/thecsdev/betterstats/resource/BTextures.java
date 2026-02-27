@@ -1,4 +1,4 @@
-package com.thecsdev.betterstats.resources;
+package com.thecsdev.betterstats.resource;
 
 import com.thecsdev.betterstats.BetterStats;
 import net.minecraft.resources.Identifier;
@@ -9,10 +9,10 @@ import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 /**
  * {@link BetterStats}'s {@link Identifier}s for resource-pack textures.
  */
-public final class BSSTex
+public final class BTextures
 {
 	// ==================================================
-	private BSSTex() {}
+	private BTextures() {}
 	// ==================================================
 	public static final Identifier gui_images_nostatsSilhouette() { return fromNamespaceAndPath(MOD_ID, "textures/gui/images/nostats_silhouette.png"); }
 	// ==================================================

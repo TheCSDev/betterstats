@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.FID_SEARCH;
-import static com.thecsdev.commonmc.resources.TComponent.head;
+import static com.thecsdev.commonmc.resource.TComponent.head;
 import static net.minecraft.network.chat.Component.translatable;
 
 /**

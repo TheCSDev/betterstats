@@ -2,7 +2,7 @@ package com.thecsdev.betterstats.api.mcbs.view.statsview;
 
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
-import com.thecsdev.betterstats.resources.BSSLang;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
@@ -105,7 +105,7 @@ public final class StatsViewUtils
 		//obtain the panel
 		final var panel = context.getPanel();
 		//create the "Filters" group label
-		final var lbl_group = initGroupLabel(panel, BSSLang.gui_statsview_filters());
+		final var lbl_group = initGroupLabel(panel, BLanguage.gui_statsview_filters());
 		lbl_group.setBounds(lbl_group.getBounds().add(0, 0, 0, 8));
 		lbl_group.textColorProperty().set(-1, StatsViewUtils.class);
 		lbl_group.textAlignmentProperty().set(CompassDirection.CENTER, StatsViewUtils.class);
@@ -124,13 +124,13 @@ public final class StatsViewUtils
 		final var panel = context.getPanel();
 		final var widget = new TDropdownWidget<StatsView>();
 		widget.setBounds(panel.computeNextYBounds(20, GAP));
-		widget.tooltipProperty().set(__ -> TTooltip.of(BSSLang.gui_statsview_filter_selectedView()), StatsViewUtils.class);
+		widget.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_selectedView()), StatsViewUtils.class);
 		panel.add(widget);
 
 		//add entries to the widget
 		final var entries = widget.getEntries();
-		for(final var st : BClientRegistries.STATS_VIEW.entrySet())
-			entries.add(st.getValue());
+		for(final var st : BClientRegistries.STATS_VIEW)
+			entries.add(st);
 
 		//set currently selected tab, and then add change listener
 		widget.selectedEntryProperty().set(context.getStatsView(), StatsViewUtils.class);
@@ -150,7 +150,7 @@ public final class StatsViewUtils
 		final var panel = context.getPanel();
 		final var widget = new TSimpleTextFieldWidget();
 		widget.setBounds(panel.computeNextYBounds(20, GAP));
-		widget.placeholderProperty().set(BSSLang.gui_statsview_filter_search(), StatsViewUtils.class);
+		widget.placeholderProperty().set(BLanguage.gui_statsview_filter_search(), StatsViewUtils.class);
 		panel.add(widget);
 
 		//set up initial value and change listeners
@@ -181,7 +181,7 @@ public final class StatsViewUtils
 		//create and add the label
 		final var label    = new TLabelElement();
 		label.setBounds(nextRect.x + 25, nextRect.y, nextRect.width - 25, nextRect.height);
-		label.setText(BSSLang.gui_statsview_filter_showAllStats());
+		label.setText(BLanguage.gui_statsview_filter_showAllStats());
 		panel.add(label);
 
 		//set up initial value and change listeners
