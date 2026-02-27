@@ -7,6 +7,7 @@ import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;
 import com.thecsdev.commonmc.api.client.gui.screen.IStatsListener;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreenPlus;
+import com.thecsdev.commonmc.api.client.gui.screen.TScreenWrapper;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,6 +50,7 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 	 */
 	public final @NotNull McbsEditor getMcbsEditor() { return this.mcbsEditor; }
 	// ==================================================
+	protected final @Override @NotNull TScreenWrapper<?> createWrapperScreen() { return new BetterStatsScreenWrapper(this); }
 	public final @Override @Nullable Screen getLastScreen() { return this.lastScreen; }
 	public final @Override boolean isAllowingInGameHud() { return false; }
 	// --------------------------------------------------
