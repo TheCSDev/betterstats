@@ -4,9 +4,9 @@ import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorHomepageTabGUI;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
+import com.thecsdev.commonmc.resource.TLanguage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -27,7 +27,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 	protected final @Override void initCallback()
 	{
 		//FIXME - Implement feature:
-		final var lbl = new TLabelElement(Component.literal("Coming soon..."));
+		final var lbl = new TLabelElement(TLanguage.misc_comingSoon());
 		lbl.setBounds(getBounds());
 		lbl.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
 		add(lbl);

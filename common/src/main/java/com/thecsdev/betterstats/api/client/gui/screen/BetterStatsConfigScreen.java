@@ -31,7 +31,6 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resource.TComponent.gui;
@@ -97,16 +96,17 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				TTooltip.of(BLanguage.config_common_registerCommands_tooltip()),
 				bss_config.canRegisterCommands(),
 				(p, o, n) -> bss_config.setRegisterCommands(n));
-		initStringProperty(
+		//FIXME - Reimplement
+		/*initStringProperty(
 				panel,
 				BLanguage.config_common_apiEndpoint(),
 				TTooltip.of(BLanguage.config_common_apiEndpoint_tooltip()),
 				bss_config.getApiEndpoint().toString(),
 				(p, o, n) -> {
 					try { bss_config.setApiEndpoint(URI.create(n));}
-					catch(RuntimeException __) { /*ignored*/ }
+					catch(RuntimeException ignored) {}
 				}
-		);
+		);*/
 
 		//[betterstats] initialize client-sided settings
 		initTableHead(panel, TLanguage.config_client(), TLanguage.config_propertyValue());

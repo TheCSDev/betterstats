@@ -7,6 +7,12 @@
 			"entries":
 			[
 				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/110760354?v=4",
+					"name": "WForst-Breeze",
+					"summary": "Translated this mod to 'Simplified Chinese'.",
+					"homepage_uri": "https://github.com/WForst-Breeze"
+				},
+				{
 					"avatar_uri": null,
 					"name": { "translate": "betterstats.credits.section.contributors.entry.contribute" },
 					"summary": { "translate": "betterstats.credits.section.contributors.entry.contribute.summary" },

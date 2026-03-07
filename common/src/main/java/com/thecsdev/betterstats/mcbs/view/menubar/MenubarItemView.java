@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.mcbs.view.menubar;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
@@ -57,11 +58,10 @@ public final class MenubarItemView extends MenubarItem
 		builder.addSeparator();
 
 		//home-page tab
-		//FIXME - Implement homepage soon
-		/*builder.addButton(
+		builder.addButton(
 				gui("icon/news").append(" ").append(BLanguage.gui_menubar_view_homepage()),
 				__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
-		);*/
+		);
 
 		//local-player statistics tab
 		builder.addButton(
