@@ -62,9 +62,9 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	public McbsEditorFileTab(@NotNull McbsFile mcbsFile) throws NullPointerException {
 		this.mcbsFile = Objects.requireNonNull(mcbsFile);
 	}
-	public McbsEditorFileTab(@NotNull Path file) throws NullPointerException, IOException {
+	public McbsEditorFileTab(@NotNull Path path) throws NullPointerException, IOException {
 		this(new McbsFile());
-		loadFrom(Objects.requireNonNull(file));
+		loadFrom(Objects.requireNonNull(path));
 	}
 	// ==================================================
 	//this prevents duplicate tab instances targeting the same file:

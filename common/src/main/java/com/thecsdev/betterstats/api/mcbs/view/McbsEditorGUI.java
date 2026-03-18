@@ -26,7 +26,7 @@ public final class McbsEditorGUI extends TElement
 	// ================================================== ==================================================
 	private final @NotNull McbsEditor mcbsEditor;
 	// --------------------------------------------------
-	private long lastSeenEditCount; //for keeping up to date with controller's changes
+	private long lastSeenEditCount = Long.MIN_VALUE; //for keeping up to date with controller's changes
 	// ==================================================
 	public McbsEditorGUI(@NotNull McbsEditor mcbsEditor) throws NullPointerException {
 		this.mcbsEditor = requireNonNull(mcbsEditor);
