@@ -49,11 +49,12 @@ public final class MenubarItemView extends MenubarItem
 
 		//the vanilla screen button opens the vanilla stats screen
 		builder.addButton(
-				gui("statistics/item_picked_up").append(" ").append(BLanguage.gui_menubar_view_vanillaScreen()),
+				gui("statistics/item_used").append(" ").append(BLanguage.gui_menubar_view_vanillaScreen()),
 				__ -> {
-					final var player = Objects.requireNonNull(client.player, "Missing 'local player' instance");
-					final var screen = new StatsScreen(client.screen, player.getStats());
-					client.setScreen(screen);
+					final @Nullable var player     = client.player;
+					final @Nullable var lastScreen = client.screen;
+					if(player == null || lastScreen == null) return; //safety - shouldn't happen
+					client.setScreen(new StatsScreen(lastScreen, player.getStats()));
 				});
 		builder.addSeparator();
 

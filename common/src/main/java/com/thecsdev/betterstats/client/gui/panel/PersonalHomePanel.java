@@ -29,16 +29,20 @@ import com.thecsdev.commonmc.api.stats.util.CustomStat;
 import com.thecsdev.commonmc.api.stats.util.EntityStats;
 import com.thecsdev.commonmc.api.stats.util.ItemStats;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
+import com.thecsdev.commonmc.resource.TComponent;
 import com.thecsdev.commonmc.resource.TLanguage;
 import com.thecsdev.commonmc.resource.TSprites;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.achievement.StatsScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -105,7 +109,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 
 		//main panel
 		final var quickAccess = new QuickAccessPanel();
-		quickAccess.setBounds(computeNextYBounds(55, GAP));
+		quickAccess.setBounds(computeNextYBounds(40, GAP));
 		add(quickAccess);
 		final var ebb = quickAccess.getBounds();
 
@@ -193,6 +197,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 
 		//featured mob statistics
 		final var entities = EntityStats.getEntityStats(lpStats, null, null).stream()
+				.filter(es -> es.getSubject().getCategory() != MobCategory.MISC)
 				.sorted(Comparator.comparingDouble(
 						(EntityStats obj) -> obj.getValues().values().stream()
 						.mapToInt(Integer::intValue)
@@ -347,21 +352,30 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			}
 
 			//initialize buttons
-			initButton(
-					Identifier.parse("gui/sprites/item_used"),
+			final var btn_myStats = initButton(
+					null,
 					BLanguage.gui_menubar_view_localPlayerStats(),
-					__ -> editor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
-			);
+					__ -> editor.addTab(McbsEditorFileTab.LOCALPLAYER, true));
+			btn_myStats.getLabel().setText(TComponent.head("Steve"));
+			btn_myStats.getLabel().textAlignmentProperty().set(CompassDirection.CENTER, QuickAccessPanel.class);
+			btn_myStats.getLabel().textScaleProperty().set(1.5d, QuickAccessPanel.class);
+			initButton(
+					Identifier.parse("statistics/item_used"),
+					BLanguage.gui_menubar_view_vanillaScreen(),
+					__ -> {
+						final @Nullable var player     = client.player;
+						final @Nullable var lastScreen = client.screen;
+						if(player == null || lastScreen == null) return; //safety - shouldn't happen
+						client.setScreen(new StatsScreen(lastScreen, player.getStats()));
+					});
 			initButton(
 					TSprites.gui_icon_fsFolder(),
 					BLanguage.gui_menubar_file_open(),
-					__ -> MenubarItemFile.showOpenFileDialog(client, editor)
-			);
+					__ -> MenubarItemFile.showOpenFileDialog(client, editor));
 			initButton(
 					BSprites.gui_icon_settings(),
 					BLanguage.gui_menubar_file_settings(),
-					__ -> editor.addTab(McbsEditorSettingsTab.INSTANCE, true)
-			);
+					__ -> editor.addTab(McbsEditorSettingsTab.INSTANCE, true));
 		}
 		// ==================================================
 		/**
@@ -370,15 +384,14 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		 * @param icon The identifier for the button's icon texture.
 		 * @param tooltip The tooltip text to display when hovering over the button.
 		 * @param onClick The action to perform when the button is clicked.
-		 * @throws NullPointerException If an argument is {@code null}.
+		 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
 		 */
-		private final void initButton(
-				@NotNull Identifier icon,
+		private final TButtonWidget initButton(
+				@Nullable Identifier icon,
 				@NotNull Component tooltip,
 				@NotNull Consumer<TClickableWidget> onClick) throws NullPointerException
 		{
 			//not null requirements
-			Objects.requireNonNull(icon);
 			Objects.requireNonNull(tooltip);
 			Objects.requireNonNull(onClick);
 
@@ -391,10 +404,15 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			add(btn);
 
 			//create and add icon
-			final var ico = new TTextureElement(icon);
-			ico.hoverableProperty().set(false, QuickAccessPanel.class);
-			ico.setBounds(btn.getBounds().add(5, 5, -10, -10));
-			add(ico);
+			if(icon != null) {
+				final var ico = new TTextureElement(icon);
+				ico.hoverableProperty().set(false, QuickAccessPanel.class);
+				ico.setBounds(btn.getBounds().add(6, 6, -12, -12));
+				add(ico);
+			}
+
+			//return the button
+			return btn;
 		}
 		// ==================================================
 	}
