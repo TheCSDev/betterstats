@@ -201,7 +201,7 @@ public final class StatsViewUtils
 	 */
 	public static final void initGeneralStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<CustomStat> customStats) throws NullPointerException {
 		initGeneralStats(panel, groupLabel, customStats, null);
 	}
@@ -216,13 +216,12 @@ public final class StatsViewUtils
 	 */
 	public static final void initGeneralStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<CustomStat> customStats,
 			@Nullable Consumer<TCustomStatWidget> widgetPostProcessor) throws NullPointerException
 	{
 		//not null requirements
 		Objects.requireNonNull(panel);
-		Objects.requireNonNull(groupLabel);
 		Objects.requireNonNull(customStats);
 
 		//obtain iterator instance, cancel if there are no entries
@@ -230,7 +229,7 @@ public final class StatsViewUtils
 		if(!iterator.hasNext()) return;
 
 		//initialize group label
-		initGroupLabel(panel, groupLabel);
+		if(groupLabel != null) initGroupLabel(panel, groupLabel);
 
 		//initialize stats
 		var nextBounds = panel.computeNextYBounds(18, GAP);
@@ -253,7 +252,7 @@ public final class StatsViewUtils
 	 */
 	public static final void initItemStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<ItemStats> itemStats) throws NullPointerException {
 		initItemStats(panel, groupLabel, itemStats, null);
 	}
@@ -268,13 +267,12 @@ public final class StatsViewUtils
 	 */
 	public static final void initItemStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<ItemStats> itemStats,
 			@Nullable Consumer<TItemStatsWidget> widgetPostProcessor) throws NullPointerException
 	{
 		//not null requirements
 		Objects.requireNonNull(panel);
-		Objects.requireNonNull(groupLabel);
 		Objects.requireNonNull(itemStats);
 
 		//obtain iterator instance, cancel if there are no entries
@@ -282,7 +280,7 @@ public final class StatsViewUtils
 		if(!iterator.hasNext()) return;
 
 		//initialize group label
-		initGroupLabel(panel, groupLabel);
+		if(groupLabel != null) initGroupLabel(panel, groupLabel);
 
 		//prepare maths to initialize stats
 		int size = 20; //widget width and height
@@ -317,7 +315,7 @@ public final class StatsViewUtils
 	 */
 	public static final void initBlockStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<BlockStats> blockStats) throws NullPointerException {
 		initBlockStats(panel, groupLabel, blockStats, null);
 	}
@@ -332,13 +330,12 @@ public final class StatsViewUtils
 	 */
 	public static final void initBlockStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<BlockStats> blockStats,
 			@Nullable Consumer<TBlockStatsWidget> widgetPostProcessor) throws NullPointerException
 	{
 		//not null requirements
 		Objects.requireNonNull(panel);
-		Objects.requireNonNull(groupLabel);
 		Objects.requireNonNull(blockStats);
 
 		//obtain iterator instance, cancel if there are no entries
@@ -346,7 +343,7 @@ public final class StatsViewUtils
 		if(!iterator.hasNext()) return;
 
 		//initialize group label
-		initGroupLabel(panel, groupLabel);
+		if(groupLabel != null) initGroupLabel(panel, groupLabel);
 
 		//prepare maths to initialize stats
 		int size = 20; //widget width and height
@@ -381,7 +378,7 @@ public final class StatsViewUtils
 	 */
 	public static final void initMobStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<EntityStats> mobStats) throws NullPointerException {
 		initMobStats(panel, groupLabel, mobStats, null);
 	}
@@ -396,13 +393,12 @@ public final class StatsViewUtils
 	 */
 	public static final void initMobStats(
 			@NotNull TPanelElement panel,
-			@NotNull Component groupLabel,
+			@Nullable Component groupLabel,
 			@NotNull Iterable<EntityStats> mobStats,
 			@Nullable Consumer<TEntityStatsWidget> widgetPostProcessor) throws NullPointerException
 	{
 		//not null requirements
 		Objects.requireNonNull(panel);
-		Objects.requireNonNull(groupLabel);
 		Objects.requireNonNull(mobStats);
 
 		//obtain iterator instance, cancel if there are no entries
@@ -410,7 +406,7 @@ public final class StatsViewUtils
 		if(!iterator.hasNext()) return;
 
 		//initialize group label
-		initGroupLabel(panel, groupLabel);
+		if(groupLabel != null) initGroupLabel(panel, groupLabel);
 
 		//prepare maths to initialize stats
 		int size = 30; //widget width and height

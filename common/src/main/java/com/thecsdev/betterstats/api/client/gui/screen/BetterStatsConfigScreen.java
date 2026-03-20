@@ -31,10 +31,10 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resource.TComponent.gui;
-import static net.minecraft.network.chat.Component.translatable;
 
 /**
  * {@link TScreen} implementation featuring GUI for configuring this mod.
@@ -48,7 +48,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	private final @Nullable Screen lastScreen;
 	// ==================================================
 	public BetterStatsConfigScreen(@Nullable Screen lastScreen) {
-		super(BLanguage.betterstats().append(" - ").append(BLanguage.gui_menubar_file_settings()));
+		super(BLanguage.mmName_betterstats().append(" - ").append(BLanguage.gui_menubar_file_settings()));
 		this.lastScreen = lastScreen;
 	}
 	// ==================================================
@@ -85,7 +85,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		final @NotNull var tcd_config = TCDCommons.getConfig();
 
 		// ---------- better statistics screen
-		StatsViewUtils.initGroupLabel(panel, translatable(BetterStats.MOD_ID))
+		StatsViewUtils.initGroupLabel(panel, BLanguage.mmName_betterstats())
 				.textAlignmentProperty().set(CompassDirection.CENTER, BetterStatsConfigScreen.class);
 
 		//[betterstats] initialize common-sided settings
@@ -96,8 +96,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				TTooltip.of(BLanguage.config_common_registerCommands_tooltip()),
 				bss_config.canRegisterCommands(),
 				(p, o, n) -> bss_config.setRegisterCommands(n));
-		//FIXME - Reimplement
-		/*initStringProperty(
+		initStringProperty(
 				panel,
 				BLanguage.config_common_apiEndpoint(),
 				TTooltip.of(BLanguage.config_common_apiEndpoint_tooltip()),
@@ -106,7 +105,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 					try { bss_config.setApiEndpoint(URI.create(n));}
 					catch(RuntimeException ignored) {}
 				}
-		);*/
+		);
 
 		//[betterstats] initialize client-sided settings
 		initTableHead(panel, TLanguage.config_client(), TLanguage.config_propertyValue());
@@ -128,7 +127,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		initNothingSetting(panel);
 
 		// ---------- tcd-commons api
-		StatsViewUtils.initGroupLabel(panel, translatable(TCDCommons.MOD_ID))
+		StatsViewUtils.initGroupLabel(panel, TLanguage.mmName_tcdcommons())
 				.textAlignmentProperty().set(CompassDirection.CENTER, BetterStatsConfigScreen.class);
 
 		//[tcdcommons] initialize common-sided settings

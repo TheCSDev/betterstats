@@ -103,7 +103,7 @@ public final class MenubarItemFile extends MenubarItem
 			final var tit  = TLanguage.misc_somethingWentWrong();
 			final var txt  = Component.literal(getStackTrace(throwable).replace("\r\n", "\n").replace("\t", "    "));
 			final var edia = new TTextDialogScreen(client.screen, tit, txt);
-			edia.getMessageLabel().wrapTextProperty().toggle();
+			edia.getMessageLabel().wrapTextProperty().set(true, MenubarItemFile.class);
 			client.setScreen(edia.getAsScreen());
 			return null;
 		});
@@ -141,7 +141,7 @@ public final class MenubarItemFile extends MenubarItem
 			final var tit  = TLanguage.misc_somethingWentWrong();
 			final var txt  = Component.literal(getStackTrace(throwable).replace("\r\n", "\n").replace("\t", "    "));
 			final var edia = new TTextDialogScreen(client.screen, tit, txt);
-			edia.getMessageLabel().wrapTextProperty().toggle();
+			edia.getMessageLabel().wrapTextProperty().set(true, MenubarItemFile.class);
 			client.setScreen(edia.getAsScreen());
 			return null;
 		});

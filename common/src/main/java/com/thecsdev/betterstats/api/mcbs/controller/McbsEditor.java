@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.api.mcbs.controller;
 
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorNullTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import org.jetbrains.annotations.NotNull;
@@ -38,9 +39,8 @@ public final class McbsEditor
 	private long _editCount = Long.MIN_VALUE;
 	// ==================================================
 	public McbsEditor() {
-		//FIXME - Implement homepage soon
-		//addTab(McbsEditorHomepageTab.INSTANCE, true);
-		addTab(McbsEditorFileTab.LOCALPLAYER, true);
+		addTab(McbsEditorHomepageTab.INSTANCE, true);
+		addTab(McbsEditorFileTab.LOCALPLAYER, false);
 	}
 	// ==================================================
 	public final @Override int hashCode() { return super.hashCode(); }

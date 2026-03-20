@@ -9,7 +9,6 @@ import com.thecsdev.betterstats.resource.dto.credits.CreditsSection;
 import com.thecsdev.common.resource.ResourceRequest;
 import com.thecsdev.common.resource.ResourceResolver;
 import com.thecsdev.common.resource.protocol.HttpProtocolHandler;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -149,8 +148,7 @@ public final @ApiStatus.Experimental class BetterStatsRestAPI
 		final var apiEndpoint = BetterStats.getConfig().getApiEndpoint();
 		//if there's an existing main instance whose api-endpoint is outdated, update it
 		if(INSTANCE == null || (INSTANCE.state() == Future.State.SUCCESS && !INSTANCE.resultNow().getEndpointURI().equals(apiEndpoint)))
-			//return (INSTANCE = fetchAsync(apiEndpoint)); -- FIXME - reimplement
-			return (INSTANCE = CompletableFuture.failedFuture(new NotImplementedException()));
+			return (INSTANCE = fetchAsync(apiEndpoint));
 		//return the main instance
 		return INSTANCE;
 	}

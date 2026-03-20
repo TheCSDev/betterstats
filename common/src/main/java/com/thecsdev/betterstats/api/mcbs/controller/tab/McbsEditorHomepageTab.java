@@ -27,7 +27,7 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 	// --------------------------------------------------
 	private @NotNull CompletableFuture<List<CreditsSection>> credits;
 	// ==================================================
-	private McbsEditorHomepageTab() { refresh(); }
+	private McbsEditorHomepageTab() { refetch(); }
 	// ==================================================
 	public final @Override int hashCode() { return System.identityHashCode(this); }
 	public final @Override boolean equals(@Nullable Object obj) { return this == obj; }
@@ -46,7 +46,7 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 	 * Refreshes the news and credits information by (re/)fetching from the
 	 * REST-ful APIs.
 	 */
-	public final @ApiStatus.Internal void refresh()
+	public final @ApiStatus.Internal void refetch()
 	{
 		//fetch the REST-ful API
 		final var api = BetterStatsRestAPI.fetchAsync();

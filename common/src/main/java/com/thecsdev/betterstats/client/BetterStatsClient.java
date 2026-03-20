@@ -5,6 +5,7 @@ import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorTabGUI;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
+import dev.architectury.event.events.client.ClientPlayerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 
@@ -17,6 +18,8 @@ import static net.minecraft.network.chat.Component.translatable;
  */
 public class BetterStatsClient extends BetterStats
 {
+	// ==================================================
+	private static long LAST_LOGIN_TIME = System.currentTimeMillis();
 	// ==================================================
 	public BetterStatsClient()
 	{
@@ -34,6 +37,16 @@ public class BetterStatsClient extends BetterStats
 				client.setScreen(new BetterStatsScreen(client.screen).getAsScreen());
 			}
 		});
+
+		//keep track of last login time
+		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+		ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
 	}
+	// ==================================================
+	/**
+	 * The last time the player logged in, in milliseconds since the epoch.
+	 * This is updated whenever the player joins or leaves a world.
+	 */
+	public static final long getLastLoginTime() { return LAST_LOGIN_TIME; }
 	// ==================================================
 }
