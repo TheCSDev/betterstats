@@ -3,8 +3,11 @@ package com.thecsdev.betterstats.client.gui.panel;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorSettingsTab;
+import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorHomepageTabGUI;
+import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemFile;
 import com.thecsdev.betterstats.mcbs.view.statsview.StatsViewGeneral;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
@@ -17,7 +20,9 @@ import com.thecsdev.commonmc.api.client.gui.misc.TFillColorElement;
 import com.thecsdev.commonmc.api.client.gui.misc.THoverScrollElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
+import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
+import com.thecsdev.commonmc.api.client.gui.widget.TClickableWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TTextualStatWidget;
 import com.thecsdev.commonmc.api.stats.util.BlockStats;
 import com.thecsdev.commonmc.api.stats.util.CustomStat;
@@ -25,9 +30,11 @@ import com.thecsdev.commonmc.api.stats.util.EntityStats;
 import com.thecsdev.commonmc.api.stats.util.ItemStats;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
 import com.thecsdev.commonmc.resource.TLanguage;
+import com.thecsdev.commonmc.resource.TSprites;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import org.jetbrains.annotations.ApiStatus;
@@ -36,6 +43,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.GAP;
@@ -312,11 +321,80 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 	private static final @ApiStatus.Internal class QuickAccessPanel extends TPanelElement.Paintable
 	{
 		// ==================================================
-		public QuickAccessPanel() { super(0x22000000, 0, 0x33FFFFFF); }
+		public QuickAccessPanel() {
+			super(0x22000000, 0, 0x33FFFFFF);
+			scrollPaddingProperty().set(5, QuickAccessPanel.class);
+		}
 		// ==================================================
 		protected void initCallback()
 		{
-			//TODO - PLACE BUTTONS LIKE "My statistics", "Open file", etc...
+			//use unrecommended hacky ways to obtain the mcbs-editor instance
+			final var client = Objects.requireNonNull(getClient(), "Missing 'client' instance");
+			final var editor = Optional.ofNullable(screenProperty().get())
+					.flatMap(s -> s.findChild(c -> c instanceof McbsEditorGUI, true))
+					.map(gui -> (McbsEditorGUI) gui)
+					.map(McbsEditorGUI::getMcbsEditor)
+					.orElse(null);
+
+			//this shouldn't happen, but handle it just in case
+			if(editor == null) {
+				final int pad       = scrollPaddingProperty().getI();
+				final var lbl_error = new TLabelElement(TLanguage.misc_somethingWentWrong());
+				lbl_error.textAlignmentProperty().set(CompassDirection.CENTER, QuickAccessPanel.class);
+				lbl_error.setBounds(getBounds().add(pad, pad, -pad * 2, -pad * 2));
+				add(lbl_error);
+				return;
+			}
+
+			//initialize buttons
+			initButton(
+					Identifier.parse("gui/sprites/item_used"),
+					BLanguage.gui_menubar_view_localPlayerStats(),
+					__ -> editor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
+			);
+			initButton(
+					TSprites.gui_icon_fsFolder(),
+					BLanguage.gui_menubar_file_open(),
+					__ -> MenubarItemFile.showOpenFileDialog(client, editor)
+			);
+			initButton(
+					BSprites.gui_icon_settings(),
+					BLanguage.gui_menubar_file_settings(),
+					__ -> editor.addTab(McbsEditorSettingsTab.INSTANCE, true)
+			);
+		}
+		// ==================================================
+		/**
+		 * Helper method to initialize a button in the quick access panel with the specified
+		 * icon, tooltip, and click action.
+		 * @param icon The identifier for the button's icon texture.
+		 * @param tooltip The tooltip text to display when hovering over the button.
+		 * @param onClick The action to perform when the button is clicked.
+		 * @throws NullPointerException If an argument is {@code null}.
+		 */
+		private final void initButton(
+				@NotNull Identifier icon,
+				@NotNull Component tooltip,
+				@NotNull Consumer<TClickableWidget> onClick) throws NullPointerException
+		{
+			//not null requirements
+			Objects.requireNonNull(icon);
+			Objects.requireNonNull(tooltip);
+			Objects.requireNonNull(onClick);
+
+			//create and add button
+			final int pad = scrollPaddingProperty().getI();
+			final var btn = new TButtonWidget.Flat();
+			btn.setBounds(computeNextXBounds(getBounds().height - (pad * 2), GAP));
+			btn.eClicked.register(onClick);
+			btn.tooltipProperty().set(__ -> TTooltip.of(tooltip), QuickAccessPanel.class);
+			add(btn);
+
+			//create and add icon
+			final var ico = new TTextureElement(icon);
+			ico.hoverableProperty().set(false, QuickAccessPanel.class);
+			ico.setBounds(btn.getBounds().add(5, 5, -10, -10));
+			add(ico);
 		}
 		// ==================================================
 	}

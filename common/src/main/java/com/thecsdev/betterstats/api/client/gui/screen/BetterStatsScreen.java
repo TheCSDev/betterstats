@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.api.client.gui.screen;
 
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;
@@ -72,10 +73,12 @@ public final class BetterStatsScreen extends TScreenPlus implements ILastScreenP
 		//screen refreshing endlessly - 'bricking' the user's ability to interface.
 		//tldr - don't trust the server. rate-limit it.
 		if(this.receivedLocalPlayerStatsFlag) return;
-		this.receivedLocalPlayerStatsFlag = true;
+		else this.receivedLocalPlayerStatsFlag = true;
 
 		//update the local player statistics tab's stats data
 		McbsEditorFileTab.LOCALPLAYER.loadStatsFrom(LocalPlayerStatsProvider.ofCurrentLocalPlayer());
+		if(getMcbsEditor().getCurrentTab() instanceof McbsEditorHomepageTab tab)
+			tab.addEditCount(); //home-page requires refreshing as well
 	}
 	// --------------------------------------------------
 	protected final @Override void initCallback() {

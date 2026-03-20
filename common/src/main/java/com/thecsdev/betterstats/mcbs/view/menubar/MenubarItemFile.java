@@ -84,7 +84,7 @@ public final class MenubarItemFile extends MenubarItem
 	 * @param mcbsEditor The {@link McbsEditor} instance to add the new tab to.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 */
-	private static final @ApiStatus.Internal void showOpenFileDialog(
+	public static final @ApiStatus.Internal void showOpenFileDialog(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 			throws NullPointerException
 	{
