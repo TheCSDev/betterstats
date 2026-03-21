@@ -84,8 +84,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		initModSummary();
 		initQuickAccess();
 		initFeaturedStats();
-		initComingSoon();
-		StatsViewUtils.initGroupLabel(this, Component.empty()); //a bit of offset
+		initNewsAsync();
 	}
 	// --------------------------------------------------
 	/**
@@ -211,6 +210,31 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		ibmPanel.setBounds(ibmPanel.getContentBounds());
 		ibmPanel.move((bb.width - (pad * 2) - ibmPanel.getBounds().width) / 2, 0);
 		add(ibmPanel);
+	}
+	// --------------------------------------------------
+	/**
+	 * Initializes the "news" section of the panel, which displays the latest news.
+	 * This section is populated asynchronously, fetching data from REST-ful APIs and
+	 * updating the GUI once the data is available.
+	 */
+	private final void initNewsAsync()
+	{
+		final var client = Objects.requireNonNull(getClient(), "Misisng 'client' instance");
+		this.tab.getNewsAsync().thenApply(news ->
+		{
+			client.execute(() ->
+			{
+				//group label
+				final var lbl_group = StatsViewUtils.initGroupLabel(this, translatable("createWorld.tab.more.title"));
+				lbl_group.setBounds(lbl_group.getBounds().add(0, 5, 0, 10));
+				lbl_group.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
+				lbl_group.textScaleProperty().set(1.1d, PersonalHomePanel.class);
+
+				//sections
+				news.forEach(section -> CreditsPanel.initSection(this, section));
+			});
+			return news;
+		});
 	}
 	// --------------------------------------------------
 	/**

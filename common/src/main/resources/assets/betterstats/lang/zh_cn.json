@@ -57,6 +57,7 @@
 	"betterstats.gui.statsview.filter.distance_unit": "距离单位",
 	"betterstats.gui.statsview.filter.time_unit": "时间单位",
 	"betterstats.gui.statsview.stats.no_stats": "暂无可显示的统计信息……",
+	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "View error info",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "在 Wiki 上查看",
 
 	"betterstats.gui.home_tab.featured_stats": "Featured statistics",

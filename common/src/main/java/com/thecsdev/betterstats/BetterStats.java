@@ -2,6 +2,7 @@ package com.thecsdev.betterstats;
 
 import com.thecsdev.betterstats.client.BetterStatsClient;
 import com.thecsdev.betterstats.command.StatisticsCommand;
+import com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI;
 import com.thecsdev.betterstats.server.BetterStatsServer;
 import com.thecsdev.common.util.TUtils;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
@@ -79,6 +80,9 @@ public class BetterStats
 
 		//load the config
 		TUtils.uncheckedCall(CONFIG::loadFromFile);
+
+		//pre-load classes
+		BetterStatsRestAPI.Info.init();
 
 		//command registration
 		CommandRegistrationEvent.EVENT.register((dispatcher, commandBuildContext, commandSelection) -> {
