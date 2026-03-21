@@ -252,10 +252,10 @@ public final @ApiStatus.Internal class BetterStatsRestAPI
 		//telemetry data for security and rate-limit/ban enforcement
 		//(refusal of service may take place if these are absent)
 		//(hashed to protect user's privacy)
-		if(Info.getNicMacHash() instanceof String nic_mac)
-			builder.add("x-betterstats-device-mac", nic_mac);
-		if(Info.getMachineGuidHash() instanceof String machine_guid)
-			builder.add("x-betterstats-device-guid", machine_guid);
+		if(RateLimitingInfo.getNicMacHash() instanceof String nicMacHash)
+			builder.add("x-betterstats-device-mac", nicMacHash);
+		if(RateLimitingInfo.getMachineGuidHash() instanceof String machineGuidHash)
+			builder.add("x-betterstats-device-guid", machineGuidHash);
 
 		//return the builder
 		return builder;
@@ -272,12 +272,12 @@ public final @ApiStatus.Internal class BetterStatsRestAPI
 		try { return URI.create(json.getAsString()); } catch(Exception e) { return null; }
 	}
 	// ================================================== ==================================================
-	//                                          Telemetry IMPLEMENTATION
+	//                                   RateLimitingInfo IMPLEMENTATION
 	// ================================================== ==================================================
 	/**
 	 * Provides telemetry information used by the REST-ful API.
 	 */
-	public static final @ApiStatus.Internal class Info
+	public static final @ApiStatus.Internal class RateLimitingInfo
 	{
 		// ==================================================
 		/**
@@ -302,7 +302,7 @@ public final @ApiStatus.Internal class BetterStatsRestAPI
 			return TUtils.str2pbkdf2(guid, salt, 1000); //for user privacy
 		});
 		// ==================================================
-		private Info() {}
+		private RateLimitingInfo() {}
 		public static final void init() {/*triggers class loading*/}
 		// ==================================================
 		/**

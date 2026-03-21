@@ -82,7 +82,7 @@ public class BetterStats
 		TUtils.uncheckedCall(CONFIG::loadFromFile);
 
 		//pre-load classes
-		BetterStatsRestAPI.Info.init();
+		BetterStatsRestAPI.RateLimitingInfo.init();
 
 		//command registration
 		CommandRegistrationEvent.EVENT.register((dispatcher, commandBuildContext, commandSelection) -> {

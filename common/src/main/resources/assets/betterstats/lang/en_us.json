@@ -64,9 +64,9 @@
 
 	"betterstats.credits": "Credits",
 	"betterstats.credits.section.top_sponsors": "Top sponsors",
-	"betterstats.credits.section.top_sponsors.summary": "Top funding contributions to this project. Entries may be shown in random order.",
+	"betterstats.credits.section.top_sponsors.summary": "Top funding contributions to this project.",
 	"betterstats.credits.section.recent_sponsors": "Recent sponsors",
-	"betterstats.credits.section.recent_sponsors.summary": "Recent funding contributions to this project. Entries may be shown in random order.",
+	"betterstats.credits.section.recent_sponsors.summary": "Recent funding contributions to this project.",
 	"betterstats.credits.section.recent_sponsors.entry.sponsor": "[+] [Sponsor]",
 	"betterstats.credits.section.recent_sponsors.entry.sponsor.summary": "Contribute to this mod and its development by becoming a sponsor.",
 	"betterstats.credits.section.special_thanks": "Special thanks",

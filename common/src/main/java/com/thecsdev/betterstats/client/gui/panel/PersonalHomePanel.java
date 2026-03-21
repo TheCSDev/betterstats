@@ -17,7 +17,6 @@ import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TFillColorElement;
-import com.thecsdev.commonmc.api.client.gui.misc.THoverScrollElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
@@ -48,6 +47,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
@@ -110,6 +110,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		final var quickAccess = new QuickAccessPanel();
 		quickAccess.setBounds(computeNextYBounds(40, GAP));
 		add(quickAccess);
+		/* - Not needed yet
 		final var ebb = quickAccess.getBounds();
 
 		//hover-scroll elements for the entries panel
@@ -130,6 +131,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		lbl_right.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
 		lbl_right.setBounds(scroll_right.getBounds());
 		scroll_right.add(lbl_right);
+		*/
 	}
 	// --------------------------------------------------
 	/**
@@ -219,22 +221,22 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 	 */
 	private final void initNewsAsync()
 	{
-		final var client = Objects.requireNonNull(getClient(), "Misisng 'client' instance");
-		this.tab.getNewsAsync().thenApply(news ->
-		{
-			client.execute(() ->
-			{
-				//group label
-				final var lbl_group = StatsViewUtils.initGroupLabel(this, translatable("createWorld.tab.more.title"));
-				lbl_group.setBounds(lbl_group.getBounds().add(0, 5, 0, 10));
-				lbl_group.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
-				lbl_group.textScaleProperty().set(1.1d, PersonalHomePanel.class);
+		//wait for news to be obtained
+		final var client = Objects.requireNonNull(getClient(), "Missing 'client' instance");
+		final var newsCf = this.tab.getNewsAsync();
+		if(!newsCf.isDone()) { newsCf.thenRun(() -> client.schedule(this.tab::addEditCount)); return; }
+		else if(newsCf.state() != Future.State.SUCCESS) return;
 
-				//sections
-				news.forEach(section -> CreditsPanel.initSection(this, section));
-			});
-			return news;
-		});
+		//ensure there are any news to begin with
+		final var news = newsCf.resultNow();
+		if(news == null || news.isEmpty()) return;
+
+		//group label and sections
+		final var lbl_group = StatsViewUtils.initGroupLabel(this, translatable("createWorld.tab.more.title"));
+		lbl_group.setBounds(lbl_group.getBounds().add(0, 5, 0, 10));
+		lbl_group.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
+		lbl_group.textScaleProperty().set(1.1d, PersonalHomePanel.class);
+		news.forEach(section -> CreditsPanel.initSection(this, section));
 	}
 	// --------------------------------------------------
 	/**

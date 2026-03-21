@@ -64,9 +64,9 @@
 
 	"betterstats.credits": "鸣谢",
 	"betterstats.credits.section.top_sponsors": "顶级赞助者",
-	"betterstats.credits.section.top_sponsors.summary": "对本项目贡献最大的资金支持者。条目可能按随机顺序显示。",
+	"betterstats.credits.section.top_sponsors.summary": "对本项目贡献最大的资金支持者。",
 	"betterstats.credits.section.recent_sponsors": "近期赞助者",
-	"betterstats.credits.section.recent_sponsors.summary": "对本项目最近的资金支持者。条目可能按随机顺序显示。",
+	"betterstats.credits.section.recent_sponsors.summary": "对本项目最近的资金支持者。",
 	"betterstats.credits.section.recent_sponsors.entry.sponsor": "[+] [Sponsor]",
 	"betterstats.credits.section.recent_sponsors.entry.sponsor.summary": "Contribute to this mod and its development by becoming a sponsor.",
 	"betterstats.credits.section.special_thanks": "特别鸣谢",

@@ -15,7 +15,7 @@ public abstract class McbsEditorTab
 	// ==================================================
 	/**
 	 * This value increments each time a change is made through this {@link McbsEditorTab},
-	 * allowing user-intervaces (aka 'views') to known when they need to refresh.
+	 * allowing user-interfaces (aka 'views') to known when they need to refresh.
 	 * @see #getEditCount()
 	 * @see #addEditCount()
 	 */
