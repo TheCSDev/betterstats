@@ -62,9 +62,9 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	public McbsEditorFileTab(@NotNull McbsFile mcbsFile) throws NullPointerException {
 		this.mcbsFile = Objects.requireNonNull(mcbsFile);
 	}
-	public McbsEditorFileTab(@NotNull Path file) throws NullPointerException, IOException {
+	public McbsEditorFileTab(@NotNull Path path) throws NullPointerException, IOException {
 		this(new McbsFile());
-		loadFrom(Objects.requireNonNull(file));
+		loadFrom(Objects.requireNonNull(path));
 	}
 	// ==================================================
 	//this prevents duplicate tab instances targeting the same file:
@@ -237,6 +237,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 			final var loaded = McbsFile.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
 			this.mcbsFile.reloadFrom(loaded);
 		}
+		catch (IllegalStateException ignored) { throw new IOException("Failed to parse JSON file: " + file); }
 		catch (IOException ioe) { throw ioe; }
 		catch (Exception e) { throw new IOException("Failed to load JSON file: " + file, e); }
 	}
@@ -250,6 +251,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 			final var loaded = McbsFile.CODEC.decode(NbtOps.INSTANCE, nbt).getOrThrow().getFirst();
 			this.mcbsFile.reloadFrom(loaded);
 		}
+		catch (IllegalStateException ignored) { throw new IOException("Failed to parse NBT file: " + file); }
 		catch (IOException ioe) { throw ioe; }
 		catch (Exception e) { throw new IOException("Failed to load NBT file: " + file, e); }
 	}

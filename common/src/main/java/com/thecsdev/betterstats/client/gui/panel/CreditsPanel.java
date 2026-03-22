@@ -92,22 +92,24 @@ public final class CreditsPanel extends TPanelElement.Paintable
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
 	private final void initCredits(@NotNull List<CreditsSection> credits) throws NullPointerException {
-		credits.forEach(this::initSection);
+		credits.forEach(section -> initSection(this, section));
 	}
 	// ==================================================
 	/**
 	 * Initializes a credits section GUI inside this panel.
+	 * @param panel The {@link TPanelElement} onto which the credits section will be initialized.
 	 * @param section The credits section to initialize.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	public final void initSection(@NotNull CreditsSection section)
-			throws NullPointerException
+	public static final void initSection(
+			@NotNull TPanelElement panel,
+			@NotNull CreditsSection section) throws NullPointerException
 	{
 		//section name label
 		final var lbl_name = new TLabelElement(section.getName());
 		lbl_name.textColorProperty().set(0xFFFFFF66, CreditsPanel.class);
-		lbl_name.setBounds(computeNextYBounds(15, 5));
-		add(lbl_name);
+		lbl_name.setBounds(panel.computeNextYBounds(15, 5));
+		panel.add(lbl_name);
 
 		//section summary text label
 		final var lbl_summary = new TLabelElement(section.getSummary() != null ?
@@ -116,12 +118,12 @@ public final class CreditsPanel extends TPanelElement.Paintable
 		lbl_summary.wrapTextProperty().set(true, CreditsPanel.class);
 		lbl_summary.textScaleProperty().set(0.85, CreditsPanel.class);
 		lbl_summary.textColorProperty().set(0xFFAAAAAA, CreditsPanel.class);
-		lbl_summary.setBounds(computeNextYBounds(0, 3));
+		lbl_summary.setBounds(panel.computeNextYBounds(0, 3));
 		if(section.getSummary() != null) {
 			lbl_summary.setBoundsToFitText(lbl_summary.getBounds().width);
 			lbl_summary.setBounds(lbl_summary.getBounds().add(0, 0, 0, 5));
 		}
-		add(lbl_summary);
+		panel.add(lbl_summary);
 
 		//section entries
 		for(final var entry : section.getEntries())
@@ -134,8 +136,9 @@ public final class CreditsPanel extends TPanelElement.Paintable
 				el_entry.tooltipProperty().set(__ -> TTooltip.of(entry.getSummary()), CreditsPanel.class);
 			if(entry.getHomepageURI() != null)
 				el_entry.eClicked.register(__ -> showUriScreen(entry.getHomepageURI().toString(), false));
-			el_entry.setBounds(computeNextYBounds(15, 0));
-			add(el_entry);
+			el_entry.setBounds(panel.computeNextYBounds(15, 0));
+			panel.add(el_entry);
+			el_entry.clearAndInit(); //TODO - figure out what to do with this
 		}
 	}
 	// ==================================================

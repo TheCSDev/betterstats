@@ -16,28 +16,28 @@ import org.jetbrains.annotations.NotNull;
 public final class McbsEditorHomepageTabGUI extends McbsEditorTabGUI<McbsEditorHomepageTab>
 {
 	// ==================================================
-	private static long LAST_REFRESH = System.currentTimeMillis();
+	private static volatile long LAST_FETCH = System.currentTimeMillis();
 	// ==================================================
 	public McbsEditorHomepageTabGUI(@NotNull McbsEditorHomepageTab editorTab) throws NullPointerException {
 		super(editorTab);
 	}
 	// ==================================================
-	protected final @Override void initTabGuiCallback()
+	protected final synchronized @Override void initTabGuiCallback()
 	{
 		//refresh if last refresh was a while ago
-		if(Math.abs(System.currentTimeMillis() - LAST_REFRESH) > (1000 * 60 * 5)) {
-			LAST_REFRESH = System.currentTimeMillis();
-			getEditorTab().refresh();
+		if(Math.abs(System.currentTimeMillis() - LAST_FETCH) > (1000 * 60 * 5)) {
+			LAST_FETCH = System.currentTimeMillis();
+			getEditorTab().refetch();
 		}
 
-		//nothing panel
-		final var nothing = new PersonalHomePanel();
-		nothing.outlineColorProperty().set(0xFF000000, McbsEditorHomepageTabGUI.class);
-		add(nothing);
-		nothing.setBounds(new UDim2(0, 10, 0, 10), new UDim2(0.7, -38, 1, -20));
+		//personal home panel
+		final var home = new PersonalHomePanel(getEditorTab());
+		home.outlineColorProperty().set(0xFF000000, McbsEditorHomepageTabGUI.class);
+		add(home);
+		home.setBounds(new UDim2(0, 10, 0, 10), new UDim2(0.7, -38, 1, -20));
 
-		final var newsBB      = nothing.getBounds();
-		final var scroll_news = new TScrollBarWidget.Flat(nothing);
+		final var newsBB      = home.getBounds();
+		final var scroll_news = new TScrollBarWidget.Flat(home);
 		scroll_news.setBounds(newsBB.endX - 1, newsBB.y, 8, newsBB.height);
 		add(scroll_news);
 

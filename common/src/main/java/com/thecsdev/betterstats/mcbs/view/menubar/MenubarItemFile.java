@@ -10,7 +10,9 @@ import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.util.TUtils;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
-import com.thecsdev.commonmc.api.client.gui.screen.TFileChooserScreen;
+import com.thecsdev.commonmc.api.client.gui.screen.TTextDialogScreen;
+import com.thecsdev.commonmc.api.client.gui.screen.promise.TFileChooserScreen;
+import com.thecsdev.commonmc.resource.TLanguage;
 import com.thecsdev.commonmc.resource.TSprites;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,6 +27,7 @@ import java.util.Optional;
 
 import static com.thecsdev.commonmc.resource.TComponent.air;
 import static com.thecsdev.commonmc.resource.TComponent.gui;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 /**
  * {@link MenubarItem} implementation for "File".
@@ -81,20 +84,29 @@ public final class MenubarItemFile extends MenubarItem
 	 * @param mcbsEditor The {@link McbsEditor} instance to add the new tab to.
 	 * @throws NullPointerException If an argument is {@code null}.
 	 */
-	private static final @ApiStatus.Internal void showOpenFileDialog(
+	public static final @ApiStatus.Internal void showOpenFileDialog(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 			throws NullPointerException
 	{
 		final var lastScreen = client.screen;
 		final var dialog     = new TFileChooserScreen.Builder(TFileChooserScreen.Mode.CHOOSE_FILE)
 				.setLastScreen(lastScreen)
-				.setFileFilter(TFileChooserScreen.FileFilter.extname("json"))
-				.addFileFilter(TFileChooserScreen.FileFilter.extname("nbt"))
-				.build((result, file) -> TUtils.uncheckedCall(() -> {
-					if(result != TFileChooserScreen.Result.APPROVE || file == null || !file.exists())
-						return;
-					mcbsEditor.addTab(new McbsEditorFileTab(file.toPath()), true);
-				}));
+				.setPathFilter(TFileChooserScreen.PathFilter.extname("json"))
+				.addPathFilter(TFileChooserScreen.PathFilter.extname("nbt"))
+				.build();
+		dialog.getResult().thenApply(paths -> TUtils.uncheckedSupply(() -> {
+			mcbsEditor.addTab(new McbsEditorFileTab(paths.getFirst()), true);
+			return paths;
+		}))
+		.exceptionally(throwable -> {
+			if(dialog.getResult().isCancelled()) return null;
+			final var tit  = TLanguage.misc_somethingWentWrong();
+			final var txt  = Component.literal(getStackTrace(throwable).replace("\r\n", "\n").replace("\t", "    "));
+			final var edia = new TTextDialogScreen(client.screen, tit, txt);
+			edia.getMessageLabel().wrapTextProperty().set(true, MenubarItemFile.class);
+			client.setScreen(edia.getAsScreen());
+			return null;
+		});
 		client.setScreen(dialog.getAsScreen());
 	}
 
@@ -117,13 +129,22 @@ public final class MenubarItemFile extends MenubarItem
 		final var lastScreen = client.screen;
 		final var dialog     = new TFileChooserScreen.Builder(TFileChooserScreen.Mode.CREATE_FILE)
 				.setLastScreen(lastScreen)
-				.setFileFilter(TFileChooserScreen.FileFilter.extname("json"))
-				.addFileFilter(TFileChooserScreen.FileFilter.extname("nbt"))
-				.build((result, file) -> TUtils.uncheckedCall(() -> {
-					if(result != TFileChooserScreen.Result.APPROVE || file == null)
-						return;
-					fileTab.saveAs(file.toPath());
-				}));
+				.setPathFilter(TFileChooserScreen.PathFilter.extname("json"))
+				.addPathFilter(TFileChooserScreen.PathFilter.extname("nbt"))
+				.build();
+		dialog.getResult().thenApply(paths -> TUtils.uncheckedSupply(() -> {
+			fileTab.saveAs(paths.getFirst());
+			return paths;
+		}))
+		.exceptionally(throwable -> {
+			if(dialog.getResult().isCancelled()) return null;
+			final var tit  = TLanguage.misc_somethingWentWrong();
+			final var txt  = Component.literal(getStackTrace(throwable).replace("\r\n", "\n").replace("\t", "    "));
+			final var edia = new TTextDialogScreen(client.screen, tit, txt);
+			edia.getMessageLabel().wrapTextProperty().set(true, MenubarItemFile.class);
+			client.setScreen(edia.getAsScreen());
+			return null;
+		});
 		client.setScreen(dialog.getAsScreen());
 	}
 	// ==================================================

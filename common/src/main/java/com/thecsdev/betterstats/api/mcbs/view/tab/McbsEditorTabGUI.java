@@ -31,7 +31,7 @@ public abstract class McbsEditorTabGUI<T extends McbsEditorTab> extends TElement
 	// ================================================== ==================================================
 	private final @NotNull T editorTab;
 	// --------------------------------------------------
-	private long lastSeenTabEditCount; //for keeping up-to-date with tab's changes
+	private long lastSeenTabEditCount = Long.MIN_VALUE; //for keeping up-to-date with tab's changes
 	// ==================================================
 	public McbsEditorTabGUI(@NotNull T editorTab) throws NullPointerException {
 		this.editorTab = Objects.requireNonNull(editorTab);

@@ -11,12 +11,14 @@ import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
+import com.thecsdev.commonmc.api.client.gui.screen.TTextDialogScreen;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TEntityStatsWidget;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import com.thecsdev.commonmc.api.stats.util.EntityStats;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
+import com.thecsdev.commonmc.resource.TLanguage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -25,18 +27,20 @@ import net.minecraft.util.Util;
 import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
-import static com.thecsdev.commonmc.resource.TComponent.gui;
-import static com.thecsdev.commonmc.resource.TComponent.head;
+import static com.thecsdev.commonmc.resource.TComponent.*;
 import static java.util.Comparator.comparing;
+import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 import static net.minecraft.resources.Identifier.DEFAULT_NAMESPACE;
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 
 /**
  * {@link StatsView} that displays "Mobs" statistics.
@@ -114,7 +118,21 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		assert stats != null;
 
 		//create the context menu builder
-		final var builder = new TContextMenu.Builder(Objects.requireNonNull(widget.getClient()));
+		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
+		final var builder = new TContextMenu.Builder(client);
+
+		//error information
+		final @Nullable var displayError = widget.getDisplayError();
+		if(displayError != null)
+			builder.addButton(
+					missingNo().append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewErrorInfo()),
+					__ -> {
+						final var parent = client.screen;
+						final var title  = missingNo().append(" ").append(TLanguage.misc_somethingWentWrong());
+						final var text   = literal(getStackTrace(displayError).replace("\r\n", "\n").replace("\t", "    "));
+						final var dialog = new TTextDialogScreen(parent, title, text);
+						client.setScreen(dialog.getAsScreen());
+					});
 
 		//wiki url
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {

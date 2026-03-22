@@ -87,7 +87,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 	 * @param widget The {@link TCustomStatWidget} to post-process.
 	 * @throws NullPointerException If any of the arguments is {@code null}.
 	 */
-	private final void postProcessWidget(@NotNull StatsView.StatsInitContext context, @NotNull TCustomStatWidget widget)
+	public final void postProcessWidget(@NotNull StatsView.StatsInitContext context, @NotNull TCustomStatWidget widget)
 	{
 		//obtain stat instance
 		final var stat = widget.statProperty().get();

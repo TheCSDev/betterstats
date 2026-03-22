@@ -35,7 +35,6 @@ import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resource.TComponent.gui;
-import static net.minecraft.network.chat.Component.translatable;
 
 /**
  * {@link TScreen} implementation featuring GUI for configuring this mod.
@@ -49,7 +48,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	private final @Nullable Screen lastScreen;
 	// ==================================================
 	public BetterStatsConfigScreen(@Nullable Screen lastScreen) {
-		super(BLanguage.betterstats().append(" - ").append(BLanguage.gui_menubar_file_settings()));
+		super(BLanguage.mmName_betterstats().append(" - ").append(BLanguage.gui_menubar_file_settings()));
 		this.lastScreen = lastScreen;
 	}
 	// ==================================================
@@ -86,7 +85,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		final @NotNull var tcd_config = TCDCommons.getConfig();
 
 		// ---------- better statistics screen
-		StatsViewUtils.initGroupLabel(panel, translatable(BetterStats.MOD_ID))
+		StatsViewUtils.initGroupLabel(panel, BLanguage.mmName_betterstats())
 				.textAlignmentProperty().set(CompassDirection.CENTER, BetterStatsConfigScreen.class);
 
 		//[betterstats] initialize common-sided settings
@@ -104,7 +103,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				bss_config.getApiEndpoint().toString(),
 				(p, o, n) -> {
 					try { bss_config.setApiEndpoint(URI.create(n));}
-					catch(RuntimeException __) { /*ignored*/ }
+					catch(RuntimeException ignored) {}
 				}
 		);
 
@@ -128,7 +127,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		initNothingSetting(panel);
 
 		// ---------- tcd-commons api
-		StatsViewUtils.initGroupLabel(panel, translatable(TCDCommons.MOD_ID))
+		StatsViewUtils.initGroupLabel(panel, TLanguage.mmName_tcdcommons())
 				.textAlignmentProperty().set(CompassDirection.CENTER, BetterStatsConfigScreen.class);
 
 		//[tcdcommons] initialize common-sided settings

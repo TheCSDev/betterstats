@@ -45,8 +45,11 @@ public final class BLanguage
 		}
 	}
 	// ==================================================
-	public static final MutableComponent betterstats() { return translatable("betterstats"); }
+	public static final MutableComponent mmName_betterstats() { return translatable("modmenu.nameTranslation.betterstats"); }
+	public static final MutableComponent mmSummary_betterstats() { return translatable("modmenu.summaryTranslation.betterstats"); }
 	// ==================================================
+	public static final MutableComponent stat_betterstats_timeSinceLogin() { return translatable("stat.betterstats.time_since_login"); }
+	// --------------------------------------------------
 	public static final MutableComponent config_common_registerCommands() { return translatable("betterstats.config.common.register_commands"); }
 	public static final MutableComponent config_common_registerCommands_tooltip() { return translatable("betterstats.config.common.register_commands.tooltip"); }
 	public static final MutableComponent config_common_apiEndpoint() { return translatable("betterstats.config.common.api_endpoint"); }
@@ -90,13 +93,18 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_filter_distanceUnit() { return translatable("betterstats.gui.statsview.filter.distance_unit"); }
 	public static final MutableComponent gui_statsview_filter_timeUnit() { return translatable("betterstats.gui.statsview.filter.time_unit"); }
 	public static final MutableComponent gui_statsview_stats_noStats() { return translatable("betterstats.gui.statsview.stats.no_stats"); }
+	public static final MutableComponent gui_statsview_stats_ctxMenu_viewErrorInfo() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_error_info"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
+	// --------------------------------------------------
+	public static final MutableComponent gui_homeTab_featuredStats() { return translatable("betterstats.gui.home_tab.featured_stats"); }
 	// ==================================================
 	public static final @Reflected MutableComponent credits() { return translatable("betterstats.credits"); }
 	public static final @Reflected MutableComponent credits_section_topSponsors() { return translatable("betterstats.credits.section.top_sponsors"); }
 	public static final @Reflected MutableComponent credits_section_topSponsors_summary() { return translatable("betterstats.credits.section.top_sponsors.summary"); }
 	public static final @Reflected MutableComponent credits_section_recentSponsors() { return translatable("betterstats.credits.section.recent_sponsors"); }
 	public static final @Reflected MutableComponent credits_section_recentSponsors_summary() { return translatable("betterstats.credits.section.recent_sponsors.summary"); }
+	public static final @Reflected MutableComponent credits_section_recentSponsors_entry_sponsor() { return translatable("betterstats.credits.section.recent_sponsors.entry.sponsor"); }
+	public static final @Reflected MutableComponent credits_section_recentSponsors_entry_sponsor_summary() { return translatable("betterstats.credits.section.recent_sponsors.entry.sponsor.summary"); }
 	public static final @Reflected MutableComponent credits_section_specialThanks() { return translatable("betterstats.credits.section.special_thanks"); }
 	public static final @Reflected MutableComponent credits_section_specialThanks_summary() { return translatable("betterstats.credits.section.special_thanks.summary"); }
 	public static final @Reflected MutableComponent credits_section_specialThanks_entry_you() { return translatable("betterstats.credits.section.special_thanks.entry.you"); }

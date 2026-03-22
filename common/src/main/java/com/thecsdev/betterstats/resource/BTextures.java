@@ -14,6 +14,8 @@ public final class BTextures
 	// ==================================================
 	private BTextures() {}
 	// ==================================================
+	public static final Identifier icon() { return fromNamespaceAndPath(MOD_ID, "icon.png"); }
+	// --------------------------------------------------
 	public static final Identifier gui_images_nostatsSilhouette() { return fromNamespaceAndPath(MOD_ID, "textures/gui/images/nostats_silhouette.png"); }
 	// ==================================================
 }

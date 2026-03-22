@@ -26,8 +26,9 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 	public static final McbsEditorHomepageTab INSTANCE = new McbsEditorHomepageTab();
 	// --------------------------------------------------
 	private @NotNull CompletableFuture<List<CreditsSection>> credits;
+	private @NotNull CompletableFuture<List<CreditsSection>> news;
 	// ==================================================
-	private McbsEditorHomepageTab() { refresh(); }
+	private McbsEditorHomepageTab() { refetch(); }
 	// ==================================================
 	public final @Override int hashCode() { return System.identityHashCode(this); }
 	public final @Override boolean equals(@Nullable Object obj) { return this == obj; }
@@ -41,12 +42,18 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 	 * {@link CreditsSection}s information to be displayed on the homepage tab.
 	*/
 	public final @NotNull CompletableFuture<List<CreditsSection>> getCreditsAsync() { return credits; }
+
+	/**
+	 * Returns the future that will complete (or has completed) with the
+	 * {@link CreditsSection}s containing news information.
+	 */
+	public final @NotNull CompletableFuture<List<CreditsSection>> getNewsAsync() { return news; }
 	// ==================================================
 	/**
 	 * Refreshes the news and credits information by (re/)fetching from the
 	 * REST-ful APIs.
 	 */
-	public final @ApiStatus.Internal void refresh()
+	public final @ApiStatus.Internal void refetch()
 	{
 		//fetch the REST-ful API
 		final var api = BetterStatsRestAPI.fetchAsync();
@@ -56,6 +63,9 @@ public final class McbsEditorHomepageTab extends McbsEditorTab
 				.exceptionally(e -> List.of())
 				.thenCombine(fetchBuiltInCreditsAsync(), (list1, list2) ->
 						Stream.concat(list1.stream(), list2.stream()).toList());
+		this.news     = api
+				.thenCompose(BetterStatsRestAPI::fetchNewsAsync)
+				.exceptionally(e -> List.of());
 	}
 	// ==================================================
 }
