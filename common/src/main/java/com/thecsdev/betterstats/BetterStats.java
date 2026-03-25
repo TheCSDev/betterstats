@@ -5,7 +5,7 @@ import com.thecsdev.betterstats.command.StatisticsCommand;
 import com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI;
 import com.thecsdev.betterstats.server.BetterStatsServer;
 import com.thecsdev.common.util.TUtils;
-import dev.architectury.event.events.common.CommandRegistrationEvent;
+import com.thecsdev.commonmc.api.events.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +85,7 @@ public class BetterStats
 		BetterStatsRestAPI.RateLimitingInfo.init();
 
 		//command registration
-		CommandRegistrationEvent.EVENT.register((dispatcher, commandBuildContext, commandSelection) -> {
+		CommandEvent.INIT_COMMANDS.addListener((dispatcher, commandBuildContext, commandSelection) -> {
 			//do not register if commands are disabled
 			if(!CONFIG.canRegisterCommands()) return;
 			//otherwise register commands
