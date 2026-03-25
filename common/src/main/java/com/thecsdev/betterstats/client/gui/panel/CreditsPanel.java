@@ -135,7 +135,7 @@ public final class CreditsPanel extends TPanelElement.Paintable
 			if(entry.getSummary() != null)
 				el_entry.tooltipProperty().set(__ -> TTooltip.of(entry.getSummary()), CreditsPanel.class);
 			if(entry.getHomepageURI() != null)
-				el_entry.eClicked.register(__ -> showUriScreen(entry.getHomepageURI().toString(), false));
+				el_entry.eClicked.addListener(__ -> showUriScreen(entry.getHomepageURI().toString(), false));
 			el_entry.setBounds(panel.computeNextYBounds(15, 0));
 			panel.add(el_entry);
 			el_entry.clearAndInit(); //TODO - figure out what to do with this

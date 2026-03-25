@@ -98,7 +98,7 @@ public final class TabStripPanel extends TElement
 			getLabel().textAlignmentProperty().set(CompassDirection.WEST, EntryElement.class);
 			getLabel().textScaleProperty().set(0.85, EntryElement.class);
 			getLabel().textColorProperty().set(isSelected() ? 0xFFc5e762 : 0xEEFFFFFF, EntryElement.class);
-			super.eClicked.register(btn -> {
+			super.eClicked.addListener(btn -> {
 				btn.enabledProperty().set(false, TabStripPanel.class);
 				TabStripPanel.this.mcbsEditor.setCurrentTab(this.tab);
 			});
@@ -127,7 +127,7 @@ public final class TabStripPanel extends TElement
 			btn_close.getLabel().textAlignmentProperty().set(CompassDirection.CENTER, EntryElement.class);
 			btn_close.getLabel().textScaleProperty().set(0.7, EntryElement.class);
 			btn_close.getLabel().textColorProperty().set(0xBBFFFFFF, EntryElement.class);
-			btn_close.eClicked.register(__ -> TabStripPanel.this.mcbsEditor.removeTab(this.tab));
+			btn_close.eClicked.addListener(__ -> TabStripPanel.this.mcbsEditor.removeTab(this.tab));
 			add(btn_close);
 		}
 		// ==================================================

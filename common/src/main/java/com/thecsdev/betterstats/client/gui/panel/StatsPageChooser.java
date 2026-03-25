@@ -3,6 +3,8 @@ package com.thecsdev.betterstats.client.gui.panel;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
+import com.thecsdev.common.event.Event;
+import com.thecsdev.common.event.Events;
 import com.thecsdev.common.util.TUtils;
 import com.thecsdev.common.util.annotations.CallerSensitive;
 import com.thecsdev.common.util.enumerations.CompassDirection;
@@ -11,8 +13,6 @@ import com.thecsdev.commonmc.api.client.gui.misc.TFillColorElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.api.stats.util.SubjectStats;
-import dev.architectury.event.Event;
-import dev.architectury.event.EventFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.Identifier;
@@ -51,7 +51,7 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 	 * The {@link Consumer} parameter provides the new page value (zero-indexed).
 	 */
 	@Deprecated
-	public final Event<Consumer<Integer>> ePageChanged = EventFactory.createLoop();
+	public final Event<Consumer<Integer>> ePageChanged = Events.createLoop();
 	// ==================================================
 	/**
 	 * @param pageCount The total number of pages available.
@@ -83,8 +83,8 @@ public final class StatsPageChooser extends TFillColorElement.Flat
 		refreshElements();
 
 		//button functionality
-		this.btn_left.eClicked.register(__ -> setPageValue(getPageValue() - 1));
-		this.btn_right.eClicked.register(__ -> setPageValue(getPageValue() + 1));
+		this.btn_left.eClicked.addListener(__ -> setPageValue(getPageValue() - 1));
+		this.btn_right.eClicked.addListener(__ -> setPageValue(getPageValue() + 1));
 	}
 	// ==================================================
 	protected final @Override void initCallback() {

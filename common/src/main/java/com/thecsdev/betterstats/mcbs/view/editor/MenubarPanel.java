@@ -79,7 +79,7 @@ public final class MenubarPanel extends TElement
 										this.mcbsEditor),
 								"Menubar item failed to produce a context menu, ID " + itemKey),
 						MenubarPanel.class);
-				button.eClicked.register(TElement::showContextMenu);
+				button.eClicked.addListener(TElement::showContextMenu);
 				panel.add(button);
 			}
 			//hold menubar items accountable for failures
