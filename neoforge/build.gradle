@@ -29,7 +29,7 @@ repositories
 dependencies
 {
 	neoForge "net.neoforged:neoforge:${parent["neoforge.version"]}"
-	modImplementation "dev.architectury:architectury-neoforge:${parent["architectury.version"]}"
+	//modImplementation "dev.architectury:architectury-neoforge:${parent["architectury.version"]}"
 
 	common(project(path: ':common', configuration: 'namedElements')) { setTransitive(false) }
 	shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')

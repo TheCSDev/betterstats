@@ -26,13 +26,6 @@ ordering     = "NONE"
 side         = "BOTH"
 
 [[dependencies.${properties["mod.id"]}]]
-modId        = "architectury"
-type         = "required"
-versionRange = "${properties["neo.toml.dependencies.architectury"]}"
-ordering     = "AFTER"
-side         = "BOTH"
-
-[[dependencies.${properties["mod.id"]}]]
 modId        = "tcdcommons"
 type         = "required"
 versionRange = "${properties["neo.toml.dependencies.tcdcommons"]}"
