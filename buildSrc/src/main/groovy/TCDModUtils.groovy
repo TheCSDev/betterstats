@@ -27,7 +27,7 @@ final class TCDModUtils
 		//then, from the file list, we only return the ones whose name contains '.mixin.'
 		return rssFiles.toList()
 				.findAll((String it) -> {
-					it = it.toLowerCase(Locale.ENGLISH)
+					it = it.toLowerCase(Locale.ROOT)
 					return it.contains(".mixin") && it.endsWith(".json")
 				})
 				.toArray(new String[0])
