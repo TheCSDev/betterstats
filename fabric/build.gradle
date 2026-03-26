@@ -20,10 +20,10 @@ configurations
 dependencies
 {
 	modImplementation "net.fabricmc:fabric-loader:${parent["fabric.loader_version"]}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${parent["fabric.api_version"]}"
-	modImplementation "dev.architectury:architectury-fabric:${parent["architectury.version"]}"
+	modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${parent["fabric.api_version"]}"
+	//modImplementation "dev.architectury:architectury-fabric:${parent["architectury.version"]}"
 
-	common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+	common(project(path: ':common', configuration: 'namedElements')) { setTransitive(false) }
 	shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
 	//compile-time jar files in jarjar

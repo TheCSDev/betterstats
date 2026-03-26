@@ -6,7 +6,7 @@ dependencies
 	// which get remapped to the correct annotations on each platform.
 	// Do NOT use other classes from Fabric Loader.
 	modImplementation "net.fabricmc:fabric-loader:${parent["fabric.loader_version"]}"
-	modImplementation "dev.architectury:architectury:${parent["architectury.version"]}"
+	//modImplementation "dev.architectury:architectury:${parent["architectury.version"]}"
 
 	//compile-time jar files in jarjar
 	modCompileOnlyApi(fileTree(dir: 'src/main/resources/META-INF/jarjar', include: '*.jar'))

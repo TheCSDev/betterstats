@@ -4,8 +4,8 @@ import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorTabGUI;
+import com.thecsdev.commonmc.api.client.events.ClientEvent;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
-import dev.architectury.event.events.client.ClientPlayerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 
@@ -39,8 +39,8 @@ public class BetterStatsClient extends BetterStats
 		});
 
 		//keep track of last login time
-		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
-		ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+		ClientEvent.PLAYER_JOIN.addListener(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+		ClientEvent.PLAYER_QUIT.addListener(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
 	}
 	// ==================================================
 	/**

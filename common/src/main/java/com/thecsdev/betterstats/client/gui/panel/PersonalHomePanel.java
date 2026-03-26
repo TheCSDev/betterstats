@@ -326,7 +326,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			btn_ctx.getLabel().setText(Component.literal("☰"));
 			btn_ctx.getLabel().textColorProperty().set(0xFFDDDDDD, ModSummaryPanel.class);
 			btn_ctx.setBounds(bb.endX - 17, bb.endY - 17, 17, 17);
-			btn_ctx.eClicked.register(__ -> btn_ctx.showContextMenu());
+			btn_ctx.eClicked.addListener(__ -> btn_ctx.showContextMenu());
 			btn_ctx.contextMenuProperty().set(__ -> new TContextMenu.Builder(client)
 					.addButton(
 							gui(BSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),
@@ -425,7 +425,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			final int pad = scrollPaddingProperty().getI();
 			final var btn = new TButtonWidget.Flat();
 			btn.setBounds(computeNextXBounds(getBounds().height - (pad * 2), GAP));
-			btn.eClicked.register(onClick);
+			btn.eClicked.addListener(onClick);
 			btn.tooltipProperty().set(__ -> TTooltip.of(tooltip), QuickAccessPanel.class);
 			add(btn);
 
