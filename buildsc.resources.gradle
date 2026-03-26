@@ -1,0 +1,20 @@
+import static TCDModUtils.getMixinFileNames
+
+processResources
+{
+	//include the gradle properties file but renamed as 'mod-id.properties'
+	from("gradle.properties") { rename { "${project["mod.id"]}.properties" } }
+
+	//include the license file as well. necessary for legal reasons
+	from("LICENSE.md")
+
+	//obtain array of applicable mixin files, and turn it into string
+	String mixins = getMixinFileNames(project)
+			.collect { "\"$it\"" }
+			.join(',').with { "[$it]" }
+
+	//expand root project properties to the 'fabric.mod.json' file
+	filesMatching(["fabric.mod.json", "*.json", "pack.mcmeta"]) {
+		expand(properties: [mixins: mixins] + project.properties)
+	}
+}

@@ -9,9 +9,3 @@ repositories
 	mavenCentral()
 	gradlePluginPortal()
 }
-
-dependencies
-{
-	//compileOnly(gradleApi())
-	//compileOnly(localGroovy())
-}

@@ -1,0 +1,28 @@
+java
+{
+	//include sources and java-doc jar files when compiling
+	withSourcesJar()
+	withJavadocJar()
+
+	//java-doc configuration
+	tasks.named('javadoc') {
+		options {
+			//configure javadoc to be quiet about certain warnings, and to use UTF-8
+			encoding = 'UTF-8'
+			addStringOption('Xdoclint:none', '-quiet')
+			//define the custom JDK tags
+			tags(
+					'apiNote:a:API Note:',
+					'implSpec:a:Implementation Requirements:',
+					'implNote:a:Implementation Note:'
+			)
+		}
+	}
+
+	//configure the java compatibility version
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+//configure all Java compile tasks to target Java 25
+tasks.withType(JavaCompile).configureEach { it.options.release = 25 }
