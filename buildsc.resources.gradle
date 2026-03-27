@@ -2,25 +2,44 @@ import static TCDModUtils.getMixinFileNames
 
 tasks.named("processResources", ProcessResources)
 {
+	//include the gradle properties file but renamed as 'mod-id.properties'
+	from("gradle.properties") { rename { "${project["mod.id"]}.properties" } }
+
 	//obtain array of applicable mixin files, and turn it into string
-	String mixins = getMixinFileNames(project)
+	final String fabricMixins = getMixinFileNames(project)
 			.collect { "\"$it\"" }
 			.join(',').with { "[$it]" }
+	final String neoforgeMixins = getMixinFileNames(project)
+		.collect { '[[mixins]]\nconfig = "' + it + '"\n' }
+		.join('\n')
 
 	//expand root project properties to the 'fabric.mod.json' file
-	filesMatching(["fabric.mod.json", "*.json", "pack.mcmeta"]) {
-		expand(properties: [mixins: mixins] + project.properties)
+	filesMatching(["fabric.mod.json", "*.json", "pack.mcmeta", "META-INF/neoforge.mods.toml"]) {
+		expand(properties: ["fabric.mixins": fabricMixins] + ["neoforge.mixins": neoforgeMixins] + project.properties)
 	}
 }
 
 tasks.named("jar", Jar)
 {
-	//include the gradle properties file but renamed as 'mod-id.properties'
-	from("gradle.properties") { rename { "${project["mod.id"]}.properties" } }
+	//do not include empty directories in the final build
+	includeEmptyDirs = false
 
 	//include the license file as well. necessary for legal reasons
 	from("LICENSE.md")
 
 	//exclude all nested jar files in 'META-INF/jarjar'
 	exclude("META-INF/jarjar/**")
+
+	//exclude '.class' files that do not belong in the maven group.
+	//such files are only meant to be placeholders for optional external libraries
+	final String packagePath = project["maven.group"].toString().replace('.', '/').toLowerCase(Locale.ROOT)
+	eachFile((FileCopyDetails details) ->
+	{
+		//only apply filtering logic to '.class' files
+		if(!details.getName().toLowerCase(Locale.ROOT).endsWith('.class'))
+			return;
+		//if the class is NOT inside the allowed package path, exclude it
+		if(!details.getPath().toLowerCase(Locale.ROOT).contains(packagePath))
+			details.exclude()
+	})
 }

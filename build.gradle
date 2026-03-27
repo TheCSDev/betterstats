@@ -13,5 +13,5 @@ apply from: "buildsc.resources.gradle"
 apply from: "buildsc.javacfg.gradle"
 
 base { archivesName = project["mod.id"].toString() }
-version = "${project["mod.version"]}+fabric-${project["minecraft.version"]}"
+version = "${project["mod.version"]}+fn-${project["minecraft.version"]}"
 group   = project["maven.group"]

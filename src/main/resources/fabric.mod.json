@@ -20,7 +20,7 @@
 		"client": ["${properties["fabric.json.entrypoints.client"]}"],
 		"server": ["${properties["fabric.json.entrypoints.server"]}"]
 	},
-	"mixins": ${properties["mixins"]},
+	"mixins": ${properties["fabric.mixins"]},
 	"depends":
 	{
 		"java":         "${properties["fabric.json.depends.java"]}",
