@@ -3,13 +3,16 @@ import static TCDModUtils.getMixinFileNames
 tasks.named("processResources", ProcessResources)
 {
 	//obtain array of applicable mixin files, and turn it into string
-	String mixins = getMixinFileNames(project)
+	final String fabricMixins = getMixinFileNames(project)
 			.collect { "\"$it\"" }
 			.join(',').with { "[$it]" }
+	final String neoforgeMixins = getMixinFileNames(project)
+		.collect { '[[mixins]]\nconfig = "' + it + '"\n' }
+		.join('\n')
 
 	//expand root project properties to the 'fabric.mod.json' file
-	filesMatching(["fabric.mod.json", "*.json", "pack.mcmeta"]) {
-		expand(properties: [mixins: mixins] + project.properties)
+	filesMatching(["fabric.mod.json", "*.json", "pack.mcmeta", "META-INF/neoforge.mods.toml"]) {
+		expand(properties: ["fabric.mixins": fabricMixins] + ["neoforge.mixins": neoforgeMixins] + project.properties)
 	}
 }
 

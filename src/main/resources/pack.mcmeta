@@ -2,6 +2,8 @@
 	"pack":
 	{
 		"description": { "text": "${properties["mod.name"]}'s resource pack." },
-		"pack_format": ${properties["pack.format"]}
+		"pack_format": ${properties["pack.format"]},
+		"min_format":  ${properties["pack.format"]},
+		"max_format":  9001
 	}
 }
