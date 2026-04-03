@@ -25,5 +25,12 @@ versionRange = "${properties["neo.toml.dependencies.minecraft"]}"
 ordering     = "NONE"
 side         = "BOTH"
 
+[[dependencies.${properties["mod.id"]}]]
+modId        = "tcdcommons"
+type         = "required"
+versionRange = "${properties["neo.toml.dependencies.tcdcommons"]}"
+ordering     = "BEFORE"
+side         = "BOTH"
+
 # Mixin declarations are dynamically inserted below:
 ${properties["neoforge.mixins"]}
