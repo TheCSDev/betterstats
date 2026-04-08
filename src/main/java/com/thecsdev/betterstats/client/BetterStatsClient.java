@@ -23,12 +23,12 @@ public class BetterStatsClient extends BetterStats
 	// ==================================================
 	public BetterStatsClient()
 	{
-		//register features
+		//initialize and register features
 		BClientRegistries.bootstrap();
 		McbsEditorTabGUI.bootstrap();
 
 		//modify the "Statistics" button on the game's pause screen
-		registerVanillaButtonMod(PauseScreen.class, translatable("gui.stats"), (button, vanillaOnClick) -> {
+		registerVanillaButtonMod(PauseScreen.class, translatable("gui.stats"), (_, vanillaOnClick) -> {
 			//if the user is holding down "Shift", run vanilla button functionality
 			if(TGuiUtils.isShiftDown()) vanillaOnClick.run();
 			//else open the Better Statistics Screen
@@ -39,8 +39,8 @@ public class BetterStatsClient extends BetterStats
 		});
 
 		//keep track of last login time
-		ClientEvent.PLAYER_JOIN.addListener(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
-		ClientEvent.PLAYER_QUIT.addListener(__ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+		ClientEvent.PLAYER_JOIN.addListener(_ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+		ClientEvent.PLAYER_QUIT.addListener(_ -> LAST_LOGIN_TIME = System.currentTimeMillis());
 	}
 	// ==================================================
 	/**
