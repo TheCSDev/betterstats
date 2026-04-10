@@ -2,10 +2,19 @@ plugins {
 	id 'net.fabricmc.fabric-loom' version "1.15-SNAPSHOT"
 }
 
-dependencies {
+repositories
+{
+	mavenCentral()
+	maven { url = "https://maven.terraformersmc.com/releases/" }
+}
+
+dependencies
+{
 	minecraft      "com.mojang:minecraft:${project["minecraft.version"]}"
 	implementation "net.fabricmc:fabric-loader:${project["fabric.loader_version"]}"
 	runtimeOnly    "net.fabricmc.fabric-api:fabric-api:${project["fabric.api_version"]}"
+
+	implementation "com.terraformersmc:modmenu:18.0.0-alpha.8"
 	implementation fileTree(dir: 'src/main/resources/META-INF/jarjar', include: '*.jar')
 }
 
