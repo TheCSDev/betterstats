@@ -2,6 +2,8 @@ package com.thecsdev.betterstats.api.mcbs.model.goal;
 
 import com.mojang.serialization.*;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -48,19 +50,21 @@ public abstract class McbsGoal
 	 * Returns the {@link McbsGoalType} of this {@link McbsGoal}.
 	 */
 	public final @NotNull McbsGoalType<?> getType() { return this.type; }
-	// ==================================================
+	// --------------------------------------------------
 	/**
 	 * Returns a value ranging from 0 to 1, that indicates current progress towards
 	 * completing the goal. A value of 1 indicates that the goal is completed.
 	 * @param mcbsFile The {@link McbsFile} to check the progress for.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
+	@Contract(pure = true)
 	public abstract double getProgress(@NotNull McbsFile mcbsFile) throws NullPointerException;
 
 	/**
 	 * Returns {@code true} only if {@link #getProgress(McbsFile)} is {@code >= 1.0}.
 	 * @param mcbsFile The {@link McbsFile} to check the progress for.
 	 */
+	@Contract(pure = true)
 	public final boolean isDone(@NotNull McbsFile mcbsFile) { return getProgress(mcbsFile) >= 1d; }
 	// ==================================================
 }

@@ -118,4 +118,6 @@ public final class BLanguage
 	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
 	// ==================================================
+	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_stat_int_value() { return translatable("mcbsgoaltype.betterstats.stat_int_value"); }
+	// ==================================================
 }

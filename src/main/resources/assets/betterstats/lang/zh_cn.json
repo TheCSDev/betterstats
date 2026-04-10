@@ -80,5 +80,7 @@
 	"betterstats.credits.section.contributors.entry.contribute": "[+] [参与贡献]",
 	"betterstats.credits.section.contributors.entry.contribute.summary": "参与此模组的开发，以名列此榜单。",
 	"betterstats.credits.section.founder_contributors": "创始贡献者",
-	"betterstats.credits.section.founder_contributors.summary": "在 v5.X 版本之前为此模组做出贡献的社区成员。"
+	"betterstats.credits.section.founder_contributors.summary": "在 v5.X 版本之前为此模组做出贡献的社区成员。",
+
+	"mcbsgoaltype.betterstats.stat_int_value": "Target stat value (number)"
 }

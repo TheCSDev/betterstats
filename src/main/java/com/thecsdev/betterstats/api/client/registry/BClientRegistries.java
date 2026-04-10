@@ -1,6 +1,8 @@
 package com.thecsdev.betterstats.api.client.registry;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
+import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout;
@@ -12,14 +14,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import static com.mojang.serialization.Lifecycle.stable;
-import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.betterstats.api.registry.BRegistries.id;
-import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 import static net.minecraft.resources.ResourceKey.createRegistryKey;
 
 /**
@@ -47,6 +44,12 @@ public final class BClientRegistries
 	 * Registered entries appear the "stats view" dropdown.
 	 */
 	public static final Registry<StatsView> STATS_VIEW;
+
+	/**
+	 * {@link Registry} for {@link McbsGoalGUI}s.<br>
+	 * Registered entries are factories that construct GUIs for {@link McbsGoal}s.
+	 */
+	public static final Registry<McbsGoalGUI<?>> GOAL_GUI;
 	// ==================================================
 	public static final void bootstrap() { /*invokes <clinit>*/ }
 	static
@@ -54,6 +57,7 @@ public final class BClientRegistries
 		//create registry instances
 		MENUBAR_ITEM = new MappedRegistry<>(createRegistryKey(id("menubar_item")), stable());
 		STATS_VIEW   = new MappedRegistry<>(createRegistryKey(id("stats_view")), stable());
+		GOAL_GUI     = new MappedRegistry<>(createRegistryKey(id("goal_gui")), stable());
 
 		//register menubar items
 		Registry.register(MENUBAR_ITEM, id("file"),  MenubarItemFile.INSTANCE);
