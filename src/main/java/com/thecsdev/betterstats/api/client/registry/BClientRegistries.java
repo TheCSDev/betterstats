@@ -2,9 +2,11 @@ package com.thecsdev.betterstats.api.client.registry;
 
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
 import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.mcbs.view.goal.McbsSivGoalGUI;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemFile;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemView;
@@ -14,6 +16,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 
 import static com.mojang.serialization.Lifecycle.stable;
 import static com.thecsdev.betterstats.api.registry.BRegistries.id;
@@ -48,6 +51,12 @@ public final class BClientRegistries
 	/**
 	 * {@link Registry} for {@link McbsGoalGUI}s.<br>
 	 * Registered entries are factories that construct GUIs for {@link McbsGoal}s.
+	 * <p>
+	 * The {@link McbsGoalGUI} {@link Identifier}s <b>MUST</b> match the
+	 * {@link Identifier}s of corresponding {@link McbsGoalType}s.
+	 *
+	 * @see McbsGoalType#getKey()
+	 * @see McbsGoalGUI#getKey()
 	 */
 	public static final Registry<McbsGoalGUI<?>> GOAL_GUI;
 	// ==================================================
@@ -71,6 +80,9 @@ public final class BClientRegistries
 		Registry.register(STATS_VIEW, id("mobs"),    StatsViewMobs.INSTANCE);
 		Registry.register(STATS_VIEW, id("food"),    StatsViewFood.INSTANCE);
 		Registry.register(STATS_VIEW, id("hunter"),  StatsViewHunter.INSTANCE);
+
+		//register mcbs goal gui-s
+		Registry.register(GOAL_GUI, id("stat_int_value"), McbsSivGoalGUI.INSTANCE);
 	}
 	// ==================================================
 }

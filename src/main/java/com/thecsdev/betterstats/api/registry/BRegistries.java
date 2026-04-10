@@ -4,6 +4,7 @@ import com.mojang.serialization.Lifecycle;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
+import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +38,12 @@ public final class BRegistries
 	 * {@link Registry} for {@link McbsGoalType}s.<br>
 	 * Allows this mod to be capable of recognizing and serializing {@link McbsGoal}
 	 * instances.
+	 * <p>
+	 * The {@link McbsGoalType} {@link Identifier}s <b>MUST</b> match the
+	 * {@link Identifier}s of corresponding {@link McbsGoalGUI}s.
+	 *
+	 * @see McbsGoalType#getKey()
+	 * @see McbsGoalGUI#getKey()
 	 */
 	public static final Registry<McbsGoalType<?>> GOAL_TYPE;
 	// ==================================================

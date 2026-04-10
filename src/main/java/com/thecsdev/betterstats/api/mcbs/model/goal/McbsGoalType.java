@@ -2,8 +2,6 @@ package com.thecsdev.betterstats.api.mcbs.model.goal;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
-import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import com.thecsdev.betterstats.api.registry.BRegistries;
 import com.thecsdev.common.util.annotations.Virtual;
 import net.minecraft.network.chat.Component;
@@ -35,17 +33,17 @@ public abstract class McbsGoalType<T extends McbsGoal>
 	}
 	// ==================================================
 	/**
+	 * Returns the {@link Class} of the {@link McbsGoal} this {@link McbsGoalType}
+	 * represents.
+	 */
+	public final @NotNull Class<T> getBaseClass() { return this.baseClass; }
+
+	/**
 	 * Returns the {@link Identifier} key for this {@link McbsGoalType} in the
 	 * {@link BRegistries#GOAL_TYPE} registry, or {@code null} if this
 	 * {@link McbsGoalType} is not registered.
 	 */
 	public final @Nullable Identifier getKey() { return BRegistries.GOAL_TYPE.getKey(this); }
-
-	/**
-	 * Returns the {@link Class} of the {@link McbsGoal} this {@link McbsGoalType}
-	 * represents.
-	 */
-	public final @NotNull Class<T> getBaseClass() { return this.baseClass; }
 
 	/**
 	 * Returns the {@link Codec} used for serializing and deserializing {@link McbsGoal}s
@@ -64,12 +62,5 @@ public abstract class McbsGoalType<T extends McbsGoal>
 				Component.translatable(String.format("mcbsgoaltype.%s.%s", key.getNamespace(), key.getPath())) :
 				Component.literal(getClass().toString());
 	}
-
-	/**
-	 * Returns the unique {@link Identifier} of the {@link McbsGoalGUI}
-	 * instance registered in {@link BClientRegistries#GOAL_GUI}, that corresponds
-	 * to this {@link McbsGoalType}.
-	 */
-	public @Virtual @Nullable Identifier getGuiId() { return null; }
 	// ==================================================
 }
