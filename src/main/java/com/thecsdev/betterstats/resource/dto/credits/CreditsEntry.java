@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import com.thecsdev.commonmc.api.serialization.TCodecs;
+import com.thecsdev.commonmc.api.serialization.TCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
@@ -96,9 +96,9 @@ public final class CreditsEntry
 				return ops.getMap(input).flatMap(map ->
 				{
 					//obtain property values from the map
-					final var avatar_uri = TCodecs.URI.parse(ops, map.get("avatar_uri")).result();
+					final var avatar_uri = TCodec.URI.parse(ops, map.get("avatar_uri")).result();
 					final var name = ComponentSerialization.CODEC.parse(ops, map.get("name"));
-					final var homepage_uri = TCodecs.URI.parse(ops, map.get("homepage_uri")).result();
+					final var homepage_uri = TCodec.URI.parse(ops, map.get("homepage_uri")).result();
 					final var summary = ComponentSerialization.CODEC.parse(ops, map.get("summary")).result();
 
 					//name value is required
@@ -127,12 +127,12 @@ public final class CreditsEntry
 
 				//put property values in the map
 				if (input.getAvatarURI() != null)
-					mapBuilder.add("avatar_uri", TCodecs.URI.encodeStart(ops, input.getAvatarURI()));
+					mapBuilder.add("avatar_uri", TCodec.URI.encodeStart(ops, input.getAvatarURI()));
 				mapBuilder.add("name", ComponentSerialization.CODEC.encodeStart(ops, input.getName()));
 				if (input.getSummary() != null)
 					mapBuilder.add("summary", ComponentSerialization.CODEC.encodeStart(ops, input.getSummary()));
 				if (input.getHomepageURI() != null)
-					mapBuilder.add("homepage_uri", TCodecs.URI.encodeStart(ops, input.getHomepageURI()));
+					mapBuilder.add("homepage_uri", TCodec.URI.encodeStart(ops, input.getHomepageURI()));
 
 				//build and return the map
 				return mapBuilder.build(prefix);

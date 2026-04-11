@@ -3,18 +3,14 @@ package com.thecsdev.betterstats.api.mcbs.model;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
-import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
-import com.thecsdev.commonmc.api.serialization.TCodecs;
+import com.thecsdev.commonmc.api.serialization.TCodec;
 import net.minecraft.SharedConstants;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
-
-import static com.thecsdev.commonmc.api.serialization.TCodecs.lenientListOf;
 
 /**
  * This {@link Class} serves as the main MVC data structure for storing and managing all
@@ -25,18 +21,18 @@ public final class McbsFile
 	// ================================================== ==================================================
 	//                                           McbsFile IMPLEMENTATION
 	// ================================================== ==================================================
-	private final @NotNull McbsStats      stats;
-	private final @NotNull List<McbsGoal> goals;
+	private final @NotNull McbsStats                 stats;
+	private final @NotNull Map<Identifier, McbsGoal> goals;
 	// ==================================================
-	public McbsFile() { this(new McbsStats(), List.of()); }
+	public McbsFile() { this(new McbsStats(), Map.of()); }
 	// --------------------------------------------------
 	private McbsFile(
-			@NotNull McbsStats statsMutable, @NotNull List<McbsGoal> goalsImmutable)
+			@NotNull McbsStats statsMutable, @NotNull Map<Identifier, McbsGoal> goalsImmutable)
 			throws NullPointerException
 	{
 		//field values must be independent and not associated with any other instances
 		this.stats = Objects.requireNonNull(statsMutable);
-		this.goals = new LinkedList<>(Objects.requireNonNull(goalsImmutable));
+		this.goals = new LinkedHashMap<>(Objects.requireNonNull(goalsImmutable));
 	}
 	// ==================================================
 	/**
@@ -45,10 +41,9 @@ public final class McbsFile
 	public final @NotNull McbsStats getStats() { return this.stats; }
 
 	/**
-	 * Returns the {@link List} of {@link McbsGoal}s associated with
-	 * this {@link McbsFile}.
+	 * Returns the {@link McbsGoal}s associated with this {@link McbsFile}.
 	 */
-	public final @NotNull List<McbsGoal> getGoals() { return this.goals; }
+	public final @NotNull Map<Identifier, McbsGoal> getGoals() { return this.goals; }
 	// ==================================================
 	/**
 	 * This method completely replaces all the data in this {@link McbsFile} with data
@@ -70,8 +65,8 @@ public final class McbsFile
 			instance.group(
 					Codec.INT.fieldOf("DataVersion").forGetter(_ -> SharedConstants.getCurrentVersion().dataVersion().version()),
 					McbsStats.CODEC.fieldOf("stats").forGetter(McbsFile::getStats),
-					lenientListOf(McbsGoal.CODEC).lenientOptionalFieldOf("betterstats:goals", List.of()).forGetter(mcbsFile -> (List) mcbsFile.getGoals())
-			).apply(instance, (_, stats, goals) -> new McbsFile(stats, (List) goals))
+					TCodec.lenientMap(Identifier.CODEC, McbsGoal.CODEC).lenientOptionalFieldOf("betterstats:goals", Map.of()).forGetter(mcbsFile -> (Map) mcbsFile.getGoals())
+			).apply(instance, (_, stats, goals) -> new McbsFile(stats, (Map) goals))
 	);
 	// ================================================== ==================================================
 }
