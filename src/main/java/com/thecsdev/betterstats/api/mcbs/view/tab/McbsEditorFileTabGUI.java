@@ -92,6 +92,7 @@ public final class McbsEditorFileTabGUI extends McbsEditorTabGUI<McbsEditorFileT
 			final var ctx = new StatsView.FiltersInitContext() {
 				public final @Override @NotNull TPanelElement getPanel() { return panel; }
 				public final @Override @NotNull StatsView.Filters getFilters() { return tab.getStatFilters(); }
+				public final @Override @NotNull McbsEditorFileTab getTab() { return tab; }
 			};
 			view.initFilters(ctx);
 
@@ -150,6 +151,7 @@ public final class McbsEditorFileTabGUI extends McbsEditorTabGUI<McbsEditorFileT
 				public final @Override @NotNull TPanelElement getPanel() { return panel; }
 				public final @Override @NotNull StatsView.Filters getFilters() { return tab.getStatFilters(); }
 				public final @Override @NotNull IStatsProvider getStats() { return tab.getStats(); }
+				public final @Override @NotNull McbsEditorFileTab getTab() { return tab; }
 			});
 
 			//if no statistics got initialized, init "no stats" gui

@@ -59,6 +59,9 @@
 	"betterstats.gui.statsview.stats.no_stats": "There are no stats to show yet...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "View error info",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "View on Wiki",
+	"betterstats.gui.statsview.mcbs_goals": "Goals",
+	"betterstats.gui.statsview.mcbs_goals.summary_prefix": "[New ✨]",
+	"betterstats.gui.statsview.mcbs_goals.summary": "Define custom milestones to track your progress toward specific statistical targets like resource collection.",
 
 	"betterstats.gui.home_tab.featured_stats": "Featured statistics",
 

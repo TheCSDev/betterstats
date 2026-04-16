@@ -14,9 +14,12 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -47,20 +50,19 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	/**
 	 * "Special" {@link McbsEditorTab} instance, specifically for interfacing with
 	 * {@link LocalPlayerStatsProvider} data.
-	 * <p>
-	 * TODO - This is marked as {@link ApiStatus.Internal} because I plan to come up
-	 *        with some other mechanism for identifying and treating "special" tabs.
 	 */
 	@ApiStatus.Internal
 	public static final McbsEditorFileTab LOCALPLAYER = new McbsEditorFileTab(new McbsFile());
 	// ==================================================
 	private final @NotNull  McbsFile          mcbsFile;
 	// --------------------------------------------------
+	private final @NotNull  ReadOnlyStats     _roStats;
 	private final @NotNull  StatsView.Filters _statFilters = new Filters();
 	private       @Nullable Path              _lastSaveFile;
 	// ==================================================
 	public McbsEditorFileTab(@NotNull McbsFile mcbsFile) throws NullPointerException {
 		this.mcbsFile = Objects.requireNonNull(mcbsFile);
+		this._roStats = new ReadOnlyStats(mcbsFile.getStats());
 	}
 	public McbsEditorFileTab(@NotNull Path path) throws NullPointerException, IOException {
 		this(new McbsFile());
@@ -93,8 +95,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * Intended to be <b>read-only</b>! Attempts to set stat values may and
 	 * likely will {@code throw}!
 	 */
-	//TODO - Return an object that's truly read-only.
-	public final @NotNull IStatsProvider getStats() { return this.mcbsFile.getStats(); }
+	public final @NotNull IStatsProvider getStats() { return this._roStats; }
 	// ==================================================
 	/**
 	 * Returns the {@link StatsView} instance that is currently selected for
@@ -332,6 +333,30 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		public Object merge(Identifier key, Object value, BiFunction<? super Object, ? super Object, ?> remappingFunction) {
 			McbsEditorFileTab.this.addEditCount();
 			return super.merge(key, value, remappingFunction);
+		}
+		// ==================================================
+	}
+	// ================================================== ==================================================
+	//                                      ReadOnlyStats IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * {@link IStatsProvider} implementation that acts as a wrapper for another
+	 * {@link IStatsProvider} instance, exposing no functions for mutability.
+	 */
+	private static final @ApiStatus.Internal class ReadOnlyStats implements IStatsProvider
+	{
+		// ==================================================
+		private final @NotNull IStatsProvider stats;
+		// ==================================================
+		public ReadOnlyStats(@NotNull IStatsProvider stats) throws NullPointerException {
+			this.stats = Objects.requireNonNull(stats);
+		}
+		// ==================================================
+		public final @Override <T> int getIntValue(Stat<T> stat) {
+			return this.stats.getIntValue(stat);
+		}
+		public final @Override <T> int getIntValue(@NotNull StatType<T> type, @NonNull T subject) throws NullPointerException {
+			return this.stats.getIntValue(type, subject);
 		}
 		// ==================================================
 	}

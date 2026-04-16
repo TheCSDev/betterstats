@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats.api.mcbs.view.statsview;
 
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
 import com.thecsdev.betterstats.api.mcbs.view.McbsEditorGUI;
@@ -114,6 +115,12 @@ public abstract class StatsView implements TDropdownWidget.Entry
 		default @ApiStatus.NonExtendable void setStatsView(@Nullable StatsView statsView) {
 			getFilters().setProperty(StatsView.class, FID_STATSVIEW, statsView);
 		}
+		// --------------------------------------------------
+		/**
+		 * The {@link McbsEditorFileTab} instance of the currently initializing view.
+		 * @since 5.2.0
+		 */
+		public @NotNull McbsEditorFileTab getTab();
 		// ==================================================
 	}
 	// ================================================== ==================================================
@@ -146,6 +153,12 @@ public abstract class StatsView implements TDropdownWidget.Entry
 		 * will {@code throw}!
 		 */
 		public @NotNull IStatsProvider getStats();
+		// --------------------------------------------------
+		/**
+		 * The {@link McbsEditorFileTab} instance of the currently initializing view.
+		 * @since 5.2.0
+		 */
+		public @NotNull McbsEditorFileTab getTab();
 		// ==================================================
 	}
 	// ================================================== ==================================================
