@@ -126,7 +126,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 			//initialize gui elements
 			this.el_icon      = new TTextureElement(BSprites.gui_editor_goal_listedGoalIconBg());
-			this.el_lblTitle  = new TLabelElement(this.goal.getType().getName());
+			this.el_lblTitle  = new TLabelElement(this.goal.getObjectiveText(this.file));
 			this.el_lblTitle.textScaleProperty().set(1.1d, ListedGoalGui.class);
 			this.el_lblTitle.dropShadowProperty().set(false, ListedGoalGui.class);
 			this.el_progrBar  = new BGoalProgressBar(this.goal.getProgress(this.file));
@@ -182,7 +182,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 			//goal title label
 			this.el_lblTitle.setBounds(0, 0, bb_right.width, 12);
-			this.el_lblTitle.setText(this.goal.getType().getName());
+			this.el_lblTitle.setText(this.goal.getObjectiveText(this.file));
 			el_right.addRel(this.el_lblTitle);
 
 			//goal progress bar

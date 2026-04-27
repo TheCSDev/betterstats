@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
+import com.thecsdev.betterstats.resource.BLanguage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatType;
@@ -140,7 +141,7 @@ public final class McbsSivGoal extends McbsGoal
 	// --------------------------------------------------
 	public final @Override @NotNull Component getObjectiveText(
 			@NotNull McbsFile mcbsFile) throws NullPointerException {
-		return super.getObjectiveText(mcbsFile);
+		return BLanguage.mcbsgoaltype_betterstats_siv_objectiveName(this);
 	}
 	// ==================================================
 }

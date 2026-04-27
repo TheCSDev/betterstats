@@ -1,18 +1,29 @@
 package com.thecsdev.betterstats.resource;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.common.util.annotations.Reflected;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static com.thecsdev.commonmc.api.stats.IStatsProvider.getCustomStatName;
+import static com.thecsdev.commonmc.api.stats.IStatsProvider.getStatTypeName;
+import static net.minecraft.core.registries.BuiltInRegistries.*;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
@@ -121,6 +132,62 @@ public final class BLanguage
 	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
 	// ==================================================
-	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_stat_int_value() { return translatable("mcbsgoaltype.betterstats.stat_int_value"); }
+	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv() { return translatable("mcbsgoaltype.betterstats.stat_int_value"); }
+
+	/**
+	 * Returns the "objective" display text for a given {@link McbsSivGoal}.
+	 * @param goal The {@link McbsSivGoal}.
+	 */
+	@SuppressWarnings("SuperfluousFormat")
+	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv_objectiveName(
+			@NotNull McbsSivGoal goal) throws NullPointerException
+	{
+		// ---------- define placeholder arguments
+		Component arg1; //stat type - ex. "Times mined"
+		Component arg2; //stat subject - ex. "Stone"
+		int       arg3; //stat value goal - target value, ex. 1256
+		int       arg4; //'target minus from' value - ex. in 'mined 25 out of 75 stone' the 50 is this number
+
+		// ---------- initialize argument values
+		final @NotNull Identifier statTypeId = goal.getStatType();
+		final @NotNull Identifier statSubjId = goal.getStatSubject();
+		//stat type name
+		final @Nullable var statType = STAT_TYPE.getValue(statTypeId);
+		arg1 = (statType != null) ?
+				getStatTypeName(statType) :
+				literal(String.valueOf(statTypeId));
+
+		//stat subject name
+		if(statType != null) {
+			//obtain subject's registry and entry
+			final @NotNull  var statSubjReg = statType.getRegistry();
+			final @Nullable var statSubj    = statSubjReg.getValue(statSubjId);
+			//obtain subject name based on registry
+			//(switch 'case'-s are ordered by popularity/frequency, to save on cpu cycles)
+			if(statSubj != null) arg2 = switch (statSubjReg) {
+				case Registry<?> reg when reg.equals(ITEM)        -> ((Item) statSubj).getName(((Item) statSubj).getDefaultInstance());
+				case Registry<?> reg when reg.equals(BLOCK)       -> ((Block) statSubj).getName();
+				case Registry<?> reg when reg.equals(CUSTOM_STAT) -> getCustomStatName((Identifier) statSubj);
+				case Registry<?> reg when reg.equals(ENTITY_TYPE) -> ((EntityType<?>) statSubj).getDescription();
+				default -> literal(String.valueOf(statSubjId));
+			};
+			else arg2 = literal(String.valueOf(statSubjId));
+		}
+		else arg2 = literal(String.valueOf(statSubjId));
+
+		//stat values
+		arg3 = goal.getTargetValue();
+		arg4 = Math.max(arg3 - goal.getFromValue(), 0);
+
+		// ---------- construct and return the text
+		final var lang             = Language.getInstance();
+		final var lang_granular    = String.format("mcbsgoal.siv_objective.%s.%s.%s.%s", statTypeId.getNamespace(), statTypeId.getPath(), statSubjId.getNamespace(), statSubjId.getPath());
+		final var lang_categorical = String.format("mcbsgoal.siv_objective.%s.%s",       statTypeId.getNamespace(), statTypeId.getPath());
+		final var lang_abstract    = "mcbsgoal.siv_objective";
+
+		if(lang.has(lang_granular))         return translatable(lang_granular,    arg1, arg2, arg3, arg4);
+		else if(lang.has(lang_categorical)) return translatable(lang_categorical, arg1, arg2, arg3, arg4);
+		else                                return translatable(lang_abstract,    arg1, arg2, arg3, arg4);
+	}
 	// ==================================================
 }
