@@ -36,16 +36,22 @@ public final class BSprites
 	public static final Identifier gui_editor_tab_statsFile_statsBackground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/stats_background"); }
 	public static final Identifier gui_editor_tab_statsFile_statsForeground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/stats_foreground"); }
 	// --------------------------------------------------
+	public static final Identifier gui_editor_goal_listedGoalBg() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_bg"); }
+	public static final Identifier gui_editor_goal_listedGoalIconBg() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_icon-bg"); }
+	public static final Identifier gui_editor_goal_listedGoalPBarBg() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_pbar-bg"); }
+	// --------------------------------------------------
 	public static final Identifier gui_icon_close() { return fromNamespaceAndPath(MOD_ID, "icon/close"); }
 	public static final Identifier gui_icon_settings() { return fromNamespaceAndPath(MOD_ID, "icon/settings"); }
 	public static final Identifier gui_icon_heart() { return fromNamespaceAndPath(MOD_ID, "icon/heart"); }
 	public static final Identifier gui_icon_heartBss() { return fromNamespaceAndPath(MOD_ID, "icon/heart_bss"); }
-	// --------------------------------------------------
+	public static final Identifier gui_icon_pencil() { return fromNamespaceAndPath(MOD_ID, "icon/pencil"); }
+	public static final Identifier gui_icon_trash() { return fromNamespaceAndPath(MOD_ID, "icon/trash"); }
+	// -
 	public static final Identifier gui_icon_filterSort() { return fromNamespaceAndPath(MOD_ID, "icon/filter_sort"); }
 	public static final Identifier gui_icon_filterGroup() { return fromNamespaceAndPath(MOD_ID, "icon/filter_group"); }
 	public static final Identifier gui_icon_filterUnitDist() { return fromNamespaceAndPath(MOD_ID, "icon/filter_unit_dist"); }
 	public static final Identifier gui_icon_filterUnitTime() { return fromNamespaceAndPath(MOD_ID, "icon/filter_unit_time"); }
-	// --------------------------------------------------
+	// -
 	public static final Identifier gui_icon_faviconCf() { return fromNamespaceAndPath(MOD_ID, "icon/favicon_curseforge"); }
 	public static final Identifier gui_icon_faviconMr() { return fromNamespaceAndPath(MOD_ID, "icon/favicon_modrinth"); }
 	public static final Identifier gui_icon_faviconWiki() { return fromNamespaceAndPath(MOD_ID, "icon/favicon_mcwiki"); }

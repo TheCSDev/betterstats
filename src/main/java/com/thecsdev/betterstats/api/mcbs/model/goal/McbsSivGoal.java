@@ -5,12 +5,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -128,6 +127,20 @@ public final class McbsSivGoal extends McbsGoal
 		if(Math.abs(t - f) < 1e-9) return 1d;
 		//calculate via 'linear interpolation' and return
 		return Math.clamp((v - f) / (t - f), 0d, 1d);
+	}
+
+	public final @Override @NotNull Component getProgressText(
+			@NotNull McbsFile mcbsFile) throws NullPointerException
+	{
+		final int statVal = mcbsFile.getStats().getIntValue(this.statType, this.statSubject);
+		final int outOf   = Math.max(this.targetValue - this.fromValue, 0);
+		final int got     = Math.clamp(statVal - this.fromValue, 0, outOf);
+		return Component.literal(got + " / " + outOf);
+	}
+	// --------------------------------------------------
+	public final @Override @NotNull Component getObjectiveText(
+			@NotNull McbsFile mcbsFile) throws NullPointerException {
+		return super.getObjectiveText(mcbsFile);
 	}
 	// ==================================================
 }

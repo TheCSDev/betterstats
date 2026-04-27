@@ -1,7 +1,9 @@
 package com.thecsdev.betterstats.api.mcbs.model.goal;
 
-import com.mojang.serialization.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
+import com.thecsdev.common.util.annotations.Virtual;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -61,10 +63,35 @@ public abstract class McbsGoal
 	public abstract double getProgress(@NotNull McbsFile mcbsFile) throws NullPointerException;
 
 	/**
+	 * Returns visual user-friendly text that indicates current progress towards
+	 * completing the goal. For example "15 / 25" or "1 / 3" and so on.
+	 * @param mcbsFile The {@link McbsFile} to get the progress text for.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public abstract @NotNull Component getProgressText(@NotNull McbsFile mcbsFile)
+			throws NullPointerException;
+
+	/**
 	 * Returns {@code true} only if {@link #getProgress(McbsFile)} is {@code >= 1.0}.
 	 * @param mcbsFile The {@link McbsFile} to check the progress for.
 	 */
 	@Contract(pure = true)
-	public final boolean isDone(@NotNull McbsFile mcbsFile) { return getProgress(mcbsFile) >= 1d; }
+	public final boolean isDone(@NotNull McbsFile mcbsFile) { return getProgress(mcbsFile) >= 1; }
+	// --------------------------------------------------
+	/**
+	 * Returns the user-friendy display text for what the goal's "objective" is.<br>
+	 * For example "Mine 100 Stone" or "Kill 30 Zombie" or "Travel 500 meters".
+	 * <p>
+	 * This differs from {@link McbsGoalType#getName()} in the fact that goal type name
+	 * is a generic name that applies to all corresponding {@link McbsGoal} instances.
+	 * @param mcbsFile The {@link McbsFile} to fetch progress data from.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 * @see McbsGoalType#getName()
+	 */
+	public @Virtual @NotNull Component getObjectiveText(
+			@NotNull McbsFile mcbsFile) throws NullPointerException {
+		Objects.requireNonNull(mcbsFile);
+		return getType().getName();
+	}
 	// ==================================================
 }

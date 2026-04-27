@@ -24,6 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -112,6 +113,8 @@ public final class StatsViewUtils
 	 * @throws NullPointerException If an argument is {@code null}.
 	 * @see #initGroupLabel(TPanelElement, Component)
 	 */
+	@ApiStatus.Internal
+	@ApiStatus.Experimental
 	public static final @NotNull Map.Entry<TFillColorElement, TLabelElement> initGroupLabelFramed(
 			@NotNull TPanelElement panel, @NotNull Component text, double textScale)
 			throws NullPointerException
