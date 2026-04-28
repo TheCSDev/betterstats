@@ -104,6 +104,7 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_filter_distanceUnit() { return translatable("betterstats.gui.statsview.filter.distance_unit"); }
 	public static final MutableComponent gui_statsview_filter_timeUnit() { return translatable("betterstats.gui.statsview.filter.time_unit"); }
 	public static final MutableComponent gui_statsview_stats_noStats() { return translatable("betterstats.gui.statsview.stats.no_stats"); }
+	public static final MutableComponent gui_statsview_stats_noGoals() { return translatable("betterstats.gui.statsview.stats.no_goals"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewErrorInfo() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_error_info"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
@@ -138,7 +139,7 @@ public final class BLanguage
 	 * Returns the "objective" display text for a given {@link McbsSivGoal}.
 	 * @param goal The {@link McbsSivGoal}.
 	 */
-	@SuppressWarnings("SuperfluousFormat")
+	@SuppressWarnings("SuperfluousFormat") //translators may need the extra args
 	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv_objectiveName(
 			@NotNull McbsSivGoal goal) throws NullPointerException
 	{

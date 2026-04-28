@@ -9,6 +9,7 @@ import com.thecsdev.betterstats.client.gui.widget.BGoalProgressBar;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.math.Bounds2i;
+import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
@@ -85,12 +86,26 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	@ApiStatus.Internal
 	private static final void initGoals(@NotNull StatsInitContext context)
 	{
+		//preparation
 		final var panel = context.getPanel();
-		context.getTab().getGoals().forEach((_, goal) -> {
-			final var item = new ListedGoalGui<>(context, goal);
-			item.setBounds(panel.computeNextYBounds(45, 6));
-			panel.add(item);
-		});
+		final var goals = context.getTab().getGoals();
+
+		//initialize gui
+		if(!goals.isEmpty()) {
+			//initialize gui for each goal entry
+			for(final var goal :goals.values()) {
+				final var el_goal = new ListedGoalGui<>(context, goal);
+				el_goal.setBounds(panel.computeNextYBounds(40, 4));
+				panel.add(el_goal);
+			}
+		} else {
+			//initialize "no goals" label
+			final int pad         = panel.scrollPaddingProperty().getI();
+			final var lbl_noGoals = new TLabelElement(BLanguage.gui_statsview_stats_noGoals());
+			lbl_noGoals.setBounds(panel.getBounds().add(pad, pad, -pad * 2, -pad * 2));
+			lbl_noGoals.textAlignmentProperty().set(CompassDirection.CENTER, StatsViewGoals.class);
+			panel.add(lbl_noGoals);
+		}
 	}
 	// ================================================== ==================================================
 	//                                      ListedGoalGui IMPLEMENTATION
@@ -120,20 +135,24 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		{
 			//initialize fields
 			Objects.requireNonNull(context);
-			this.goal    = Objects.requireNonNull(goal);
-			this.goalGui = McbsGoalGUI.findFor(goal);
-			this.file    = context.getTab().getMcbsFile();
+			final var tab = context.getTab();
+			this.goal     = Objects.requireNonNull(goal);
+			this.goalGui  = McbsGoalGUI.findFor(goal);
+			this.file     = tab.getMcbsFile();
 
 			//initialize gui elements
 			this.el_icon      = new TTextureElement(BSprites.gui_editor_goal_listedGoalIconBg());
 			this.el_lblTitle  = new TLabelElement(this.goal.getObjectiveText(this.file));
-			this.el_lblTitle.textScaleProperty().set(1.1d, ListedGoalGui.class);
 			this.el_lblTitle.dropShadowProperty().set(false, ListedGoalGui.class);
 			this.el_progrBar  = new BGoalProgressBar(this.goal.getProgress(this.file));
 			this.el_lblProgr  = new TLabelElement(this.goal.getProgressText(this.file));
 			this.el_lblProgr.textColorProperty().set(0xFFf3e7b7, ListedGoalGui.class);
+			this.el_lblProgr.textScaleProperty().set(0.9d, ListedGoalGui.class);
 			this.el_btnEdit   = new TButtonWidget();
 			this.el_btnDelete = new TButtonWidget();
+
+			//initialize button functionality
+			this.el_btnDelete.eClicked.addListener(_ -> tab.removeGoal(this.goal));
 		}
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
@@ -181,12 +200,12 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			add(el_rightBtns);
 
 			//goal title label
-			this.el_lblTitle.setBounds(0, 0, bb_right.width, 12);
+			this.el_lblTitle.setBounds(0, 0, bb_right.width, 10);
 			this.el_lblTitle.setText(this.goal.getObjectiveText(this.file));
 			el_right.addRel(this.el_lblTitle);
 
 			//goal progress bar
-			this.el_progrBar.setBounds(0, 12 + 4, (int) (bb_right.width / 2.7d), 12);
+			this.el_progrBar.setBounds(0, 14, (int) (bb_right.width / 2.7d), 14);
 			this.el_progrBar.setValue(this.goal.getProgress(this.file));
 			el_right.addRel(this.el_progrBar);
 

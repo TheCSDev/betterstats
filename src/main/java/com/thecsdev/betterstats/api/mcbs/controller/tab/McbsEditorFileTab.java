@@ -28,6 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -119,7 +121,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * <p>
 	 * <b><u>Important API note:</u></b><br>
 	 * Intended to be <b>read-only</b>! Attempts to modify the map (e.g.
-	 * adding/removing goals) may and will {@code throw}!
+	 * adding/removing goals) will {@code throw}!
 	 */
 	public final @NotNull Map<Identifier, McbsGoal> getGoals() { return this._roGoals; }
 	// ==================================================
@@ -149,6 +151,66 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * stats are to be shown on screen.
 	 */
 	public final @NotNull StatsView.Filters getStatFilters() { return this._statFilters; }
+	// --------------------------------------------------
+	/**
+	 * Puts an {@link McbsGoal} into {@link McbsFile#getGoals()}.
+	 * @param goal The {@link McbsGoal} to add.
+	 * @return {@code true} if the {@link McbsFile} did not already contain the goal.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final void putGoal(@NotNull McbsGoal goal) throws NullPointerException
+	{
+		//do nothing if goal is already added
+		final var goals = this.mcbsFile.getGoals();
+		if(goals.containsValue(Objects.requireNonNull(goal))) return;
+		//construct default id based on current time
+		final var now   = LocalDateTime.now();
+		final var path  = DateTimeFormatter.ofPattern("yyyy_MM_dd-HH_mm_ss_nnnnnnnnn").format(now);
+		final var id    = Identifier.withDefaultNamespace("generated/" + path);
+		//put goal and increment edit count
+		putGoal(id, goal);
+	}
+
+	/**
+	 * Puts an {@link McbsGoal} into {@link McbsFile#getGoals()} with a specific
+	 * {@link Identifier} key.
+	 * @param id The {@link Identifier} key to associate with the goal.
+	 * @param goal The {@link McbsGoal} to add.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	public final void putGoal(@NotNull Identifier id, @NotNull McbsGoal goal)
+			throws NullPointerException {
+		final var goals = this.mcbsFile.getGoals();
+		goals.put(id, Objects.requireNonNull(goal));
+		addEditCount();
+	}
+
+	/**
+	 * Removes an {@link McbsGoal} from the {@link McbsFile}.
+	 * @param goal The {@link McbsGoal} to remove.
+	 * @return {@code true} if the goal was removed, or {@code false} if the
+	 *         {@link McbsFile} did not contain the specified goal.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final boolean removeGoal(@NotNull McbsGoal goal) throws NullPointerException {
+		Objects.requireNonNull(goal);
+		try { return this.mcbsFile.getGoals().values().remove(goal); }
+		finally { addEditCount(); }
+	}
+
+	/**
+	 * Removes an {@link McbsGoal} from the {@link McbsFile}.
+	 * @param id The {@link Identifier} key of the {@link McbsGoal} to remove.
+	 * @return {@code true} if the goal was removed, or {@code false} if the
+	 *         {@link McbsFile} did not contain a goal with the specified id.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	@SuppressWarnings("RedundantCollectionOperation") //sometimes, IDE is stupid
+	public final boolean removeGoal(@NotNull Identifier id) throws NullPointerException {
+		Objects.requireNonNull(id);
+		try { return this.mcbsFile.getGoals().keySet().remove(id); }
+		finally { addEditCount(); }
+	}
 	// ==================================================
 	/**
 	 * Saves the {@link McbsFile} data of this {@link McbsEditorFileTab} to the

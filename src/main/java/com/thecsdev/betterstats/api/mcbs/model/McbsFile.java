@@ -10,9 +10,9 @@ import net.minecraft.SharedConstants;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static net.minecraft.resources.Identifier.parse;
 
@@ -36,7 +36,7 @@ public final class McbsFile
 	{
 		//field values must be independent and not associated with any other instances
 		this.stats = Objects.requireNonNull(statsMutable);
-		this.goals = new LinkedHashMap<>(Objects.requireNonNull(goalsImmutable));
+		this.goals = new ConcurrentHashMap<>(Objects.requireNonNull(goalsImmutable));
 
 		//FIXME - Remove test goals:
 		if(TCDCommonsConfig.FLAG_DEV_ENV) {
