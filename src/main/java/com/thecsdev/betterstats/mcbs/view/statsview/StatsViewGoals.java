@@ -220,7 +220,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 			// ---------- far-right-side buttons
 			placeRightSideButton(el_rightBtns, this.el_btnEdit, BSprites.gui_icon_pencil());
-			placeRightSideButton(el_rightBtns, this.el_btnDelete, BSprites.gui_icon_trash());
+			placeRightSideButton(el_rightBtns, this.el_btnDelete, BSprites.gui_icon_trashRed());
 		}
 
 		/**

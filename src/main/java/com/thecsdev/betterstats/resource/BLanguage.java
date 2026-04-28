@@ -133,7 +133,7 @@ public final class BLanguage
 	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
 	// ==================================================
-	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv() { return translatable("mcbsgoaltype.betterstats.stat_int_value"); }
+	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv() { return translatable("betterstats.mcbsgoaltype.betterstats.stat_int_value"); }
 
 	/**
 	 * Returns the "objective" display text for a given {@link McbsSivGoal}.
@@ -182,9 +182,9 @@ public final class BLanguage
 
 		// ---------- construct and return the text
 		final var lang             = Language.getInstance();
-		final var lang_granular    = String.format("mcbsgoal.siv_objective.%s.%s.%s.%s", statTypeId.getNamespace(), statTypeId.getPath(), statSubjId.getNamespace(), statSubjId.getPath());
-		final var lang_categorical = String.format("mcbsgoal.siv_objective.%s.%s",       statTypeId.getNamespace(), statTypeId.getPath());
-		final var lang_abstract    = "mcbsgoal.siv_objective";
+		final var lang_abstract    = "betterstats.mcbsgoal.siv_objective";
+		final var lang_categorical = String.format("%s.%s.%s", lang_abstract,    statTypeId.getNamespace(), statTypeId.getPath());
+		final var lang_granular    = String.format("%s.%s.%s", lang_categorical, statSubjId.getNamespace(), statSubjId.getPath());
 
 		if(lang.has(lang_granular))         return translatable(lang_granular,    arg1, arg2, arg3, arg4);
 		else if(lang.has(lang_categorical)) return translatable(lang_categorical, arg1, arg2, arg3, arg4);
