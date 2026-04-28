@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.registry.BRegistries;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.annotations.Virtual;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -61,7 +62,7 @@ public abstract class McbsGoalType<T extends McbsGoal>
 	public @Virtual @NotNull Component getName() {
 		final @Nullable var key = getKey();
 		return (key != null) ?
-				Component.translatable(String.format("mcbsgoaltype.%s.%s", key.getNamespace(), key.getPath())) :
+				BLanguage.mcbsgoaltypeName(key) :
 				Component.literal(getClass().toString());
 	}
 	// ==================================================

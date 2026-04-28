@@ -3,15 +3,21 @@ package com.thecsdev.betterstats.api.mcbs.view.goal;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.annotations.Virtual;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
+import com.thecsdev.commonmc.api.client.gui.screen.TTextDialogScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 import static com.thecsdev.betterstats.api.client.registry.BClientRegistries.GOAL_GUI;
 import static java.util.Objects.requireNonNull;
@@ -59,6 +65,28 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 				preferredPadding, preferredPadding,
 				-preferredPadding * 2, -preferredPadding * 2));
 		onto.add(ico);
+	}
+
+	/**
+	 * Creates a {@link Screen} that presents an interface allowing the user to
+	 * edit properties for an {@link McbsGoal} of type {@code T}.
+	 * @param goal The goal whose properties are to be edited.
+	 * @param lastScreen The {@link Screen} that was open right before the returned edit screen opened.
+	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
+	 */
+	public @Virtual Screen createEditScreen(@NotNull T goal, @Nullable Screen lastScreen)
+			throws NullPointerException
+	{
+		Objects.requireNonNull(goal);
+		return new TTextDialogScreen(
+				lastScreen,
+				Component.literal("")
+						.append(BLanguage.gui_statsview_stats_mcbsGoals_noEditGui())
+						.append("\n\n")
+						.append("T: " + goal.getType().getClass() + "\n")
+						.append("G: " + goal.getClass() + "\n")
+						.append("N: ").append(goal.getType().getName())
+		).getAsScreen();
 	}
 	// ==================================================
 	/**

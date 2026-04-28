@@ -1,6 +1,7 @@
 package com.thecsdev.betterstats.resource;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.common.util.annotations.Reflected;
 import net.minecraft.ChatFormatting;
@@ -110,6 +111,10 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_summaryPrefix() { return translatable("betterstats.gui.statsview.mcbs_goals.summary_prefix"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_summary() { return translatable("betterstats.gui.statsview.mcbs_goals.summary"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_editBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.edit_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn_confirm() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn.confirm"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_noEditGui() { return translatable("betterstats.gui.statsview.mcbs_goals.no_edit_gui"); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_homeTab_featuredStats() { return translatable("betterstats.gui.home_tab.featured_stats"); }
 	// ==================================================
@@ -133,14 +138,20 @@ public final class BLanguage
 	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
 	// ==================================================
-	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv() { return translatable("betterstats.mcbsgoaltype.betterstats.stat_int_value"); }
+	/**
+	 * Returns the display name of a given {@link McbsGoalType}.
+	 * @param goalTypeId The {@link Identifier} of said {@link McbsGoalType}.
+	 */
+	public static final MutableComponent mcbsgoaltypeName(@NotNull Identifier goalTypeId) {
+		return translatable(String.format("betterstats.mcbsgoaltype.%s.%s", goalTypeId.getNamespace(), goalTypeId.getPath()));
+	}
 
 	/**
 	 * Returns the "objective" display text for a given {@link McbsSivGoal}.
 	 * @param goal The {@link McbsSivGoal}.
 	 */
 	@SuppressWarnings("SuperfluousFormat") //translators may need the extra args
-	public static final @Reflected MutableComponent mcbsgoaltype_betterstats_siv_objectiveName(
+	public static final @Reflected MutableComponent mcbsgoal_sivObjectiveText(
 			@NotNull McbsSivGoal goal) throws NullPointerException
 	{
 		// ---------- define placeholder arguments

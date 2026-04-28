@@ -63,6 +63,10 @@
 	"betterstats.gui.statsview.mcbs_goals": "Goals",
 	"betterstats.gui.statsview.mcbs_goals.summary_prefix": "[New ✨]",
 	"betterstats.gui.statsview.mcbs_goals.summary": "Define custom milestones to track your progress toward specific statistical targets like resource collection.",
+	"betterstats.gui.statsview.mcbs_goals.edit_btn": "Edit goal",
+	"betterstats.gui.statsview.mcbs_goals.delete_btn": "Delete goal",
+	"betterstats.gui.statsview.mcbs_goals.delete_btn.confirm": "Are you sure?",
+	"betterstats.gui.statsview.mcbs_goals.no_edit_gui": "This goal type does not have an editing interface.",
 
 	"betterstats.gui.home_tab.featured_stats": "Featured statistics",
 

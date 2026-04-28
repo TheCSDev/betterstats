@@ -141,7 +141,7 @@ public final class McbsSivGoal extends McbsGoal
 	// --------------------------------------------------
 	public final @Override @NotNull Component getObjectiveText(
 			@NotNull McbsFile mcbsFile) throws NullPointerException {
-		return BLanguage.mcbsgoaltype_betterstats_siv_objectiveName(this);
+		return BLanguage.mcbsgoal_sivObjectiveText(this);
 	}
 	// ==================================================
 }

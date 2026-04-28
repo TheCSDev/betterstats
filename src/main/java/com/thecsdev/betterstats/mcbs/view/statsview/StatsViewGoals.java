@@ -15,6 +15,7 @@ import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
+import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.initSearchFilter;
 import static com.thecsdev.commonmc.resource.TComponent.gui;
@@ -120,9 +122,9 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		//background sprite identifier
 		private static final Identifier ID_BG = BSprites.gui_editor_goal_listedGoalBg();
 		// --------------------------------------------------
-		private final @NotNull  T                 goal;
-		private final @Nullable McbsGoalGUI<T>    goalGui;
-		private final @NotNull  McbsFile          file;
+		private final @NotNull  T               goal;
+		private final @Nullable McbsGoalGUI<T>  goalGui;
+		private final @NotNull  McbsFile        file;
 		// --------------------------------------------------
 		private final @NotNull TTextureElement  el_icon;
 		private final @NotNull TLabelElement    el_lblTitle;
@@ -149,9 +151,30 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			this.el_lblProgr.textColorProperty().set(0xFFf3e7b7, ListedGoalGui.class);
 			this.el_lblProgr.textScaleProperty().set(0.9d, ListedGoalGui.class);
 			this.el_btnEdit   = new TButtonWidget();
+			this.el_btnEdit.tooltipProperty().set(
+					_ -> TTooltip.of(BLanguage.gui_statsview_stats_mcbsGoals_editBtn()),
+					ListedGoalGui.class);
 			this.el_btnDelete = new TButtonWidget();
+			this.el_btnDelete.tooltipProperty().set(
+					_ -> TTooltip.of(BLanguage.gui_statsview_stats_mcbsGoals_deleteBtn()),
+					ListedGoalGui.class);
 
 			//initialize button functionality
+			this.el_btnEdit.eClicked.addListener(btn -> {
+				final @NotNull  var client     = Objects.requireNonNull(btn.getClient(), "Missing 'client' instance");
+				final @Nullable var editScreen = Optional.ofNullable(this.goalGui)
+						.map(gui -> gui.createEditScreen(this.goal, client.screen))
+						.orElse(null);
+				if(editScreen != null) {
+					client.setScreen(editScreen);
+					tab.addEditCount();
+				} else {
+					btn.tooltipProperty().set(
+							_ -> TTooltip.of(BLanguage.gui_statsview_stats_mcbsGoals_noEditGui()),
+							ListedGoalGui.class);
+				}
+			});
+
 			this.el_btnDelete.eClicked.addListener(_ -> tab.removeGoal(this.goal));
 		}
 		// ==================================================
