@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +58,7 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	 * @param preferredPadding The preferred padding to be applied around the icon.
 	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
 	 */
+	@Contract(pure = true)
 	public @Virtual void initIcon(@Nullable T goal, @NotNull TElement onto, int preferredPadding)
 			throws NullPointerException
 	{
@@ -66,6 +68,14 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 				-preferredPadding * 2, -preferredPadding * 2));
 		onto.add(ico);
 	}
+	// --------------------------------------------------
+	/**
+	 * Returns {@code true} if and only if {@link #createEditScreen(McbsGoal, Screen)}
+	 * is intended to be used.
+	 * @implNote This method should return a constant value.
+	 */
+	@Contract(pure = true)
+	public @Virtual boolean isEditable() { return false; }
 
 	/**
 	 * Creates a {@link Screen} that presents an interface allowing the user to
@@ -73,8 +83,10 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	 * @param goal The goal whose properties are to be edited.
 	 * @param lastScreen The {@link Screen} that was open right before the returned edit screen opened.
 	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
+	 * @implNote If {@link #isEditable()} returns {@code false}, avoid overriding this method.
 	 */
-	public @Virtual Screen createEditScreen(@NotNull T goal, @Nullable Screen lastScreen)
+	@Contract(pure = true)
+	public @Virtual @NotNull Screen createEditScreen(@NotNull T goal, @Nullable Screen lastScreen)
 			throws NullPointerException
 	{
 		Objects.requireNonNull(goal);
@@ -83,9 +95,10 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 				Component.literal("")
 						.append(BLanguage.gui_statsview_stats_mcbsGoals_noEditGui())
 						.append("\n\n")
-						.append("T: " + goal.getType().getClass() + "\n")
-						.append("G: " + goal.getClass() + "\n")
-						.append("N: ").append(goal.getType().getName())
+						.append("T: " + goal.getType().getClass() + "\n")            //type
+						.append("G: " + goal.getClass() + "\n")                      //goal
+						.append("N: ").append(goal.getType().getName()).append("\n") //name (of type)
+						.append("O: ").append(goal.getObjectiveText())               //objective
 		).getAsScreen();
 	}
 	// ==================================================
@@ -95,6 +108,7 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	 * @param <T> The {@link McbsGoal}.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
+	@Contract(pure = true)
 	public static final @Nullable <T extends McbsGoal> McbsGoalGUI<T> findFor(@NotNull T goal) throws NullPointerException {
 		//noinspection unchecked | the goal's constructor ensures the type is correct
 		return findFor((McbsGoalType<T>) requireNonNull(goal).getType());
@@ -106,6 +120,7 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	 * @param <T> The {@link McbsGoal} type.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
+	@Contract(pure = true)
 	public static final @Nullable <T extends McbsGoal> McbsGoalGUI<T> findFor(@NotNull McbsGoalType<T> type) throws NullPointerException
 	{
 		//argument must not be null

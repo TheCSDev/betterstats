@@ -37,6 +37,7 @@ public final class BSprites
 	public static final Identifier gui_editor_tab_statsFile_statsForeground() { return fromNamespaceAndPath(MOD_ID, "editor/tab/stats_file/stats_foreground"); }
 	// --------------------------------------------------
 	public static final Identifier gui_editor_goal_listedGoalBg() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_bg"); }
+	public static final Identifier gui_editor_goal_listedGoalBgDone() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_bg-done"); }
 	public static final Identifier gui_editor_goal_listedGoalIconBg() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_icon-bg"); }
 	public static final Identifier gui_editor_goal_listedGoalPBarBg() { return fromNamespaceAndPath(MOD_ID, "editor/goal/listed-goal_pbar-bg"); }
 	// --------------------------------------------------

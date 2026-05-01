@@ -63,6 +63,9 @@
 	"betterstats.gui.statsview.mcbs_goals": "Goals",
 	"betterstats.gui.statsview.mcbs_goals.summary_prefix": "[New ✨]",
 	"betterstats.gui.statsview.mcbs_goals.summary": "Define custom milestones to track your progress toward specific statistical targets like resource collection.",
+	"betterstats.gui.statsview.mcbs_goals.overview": "Overview",
+	"betterstats.gui.statsview.mcbs_goals.overview.completed_goals": "Completed goals",
+	"betterstats.gui.statsview.mcbs_goals.overview.total_progress": "Total progress",
 	"betterstats.gui.statsview.mcbs_goals.edit_btn": "Edit goal",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn": "Delete goal",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn.confirm": "Are you sure?",
@@ -90,7 +93,7 @@
 	"betterstats.credits.section.founder_contributors": "创始贡献者",
 	"betterstats.credits.section.founder_contributors.summary": "在 v5.X 版本之前为此模组做出贡献的社区成员。",
 
-	"betterstats.mcbsgoaltype.betterstats.stat_int_value": "Target stat value (number)",
+	"betterstats.mcbsgoaltype.betterstats.stat_int_value": "General numeric goal",
 
 	"betterstats.mcbsgoal.siv_objective":                     "%4$d [%1$s] for [%2$s]",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom":    "Do '%2$s' %4$d times",

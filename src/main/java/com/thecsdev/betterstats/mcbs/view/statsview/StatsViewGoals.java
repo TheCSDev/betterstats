@@ -9,6 +9,7 @@ import com.thecsdev.betterstats.client.gui.widget.BGoalProgressBar;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.math.Bounds2i;
+import com.thecsdev.common.math.UDim2;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -60,6 +62,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	public final @Override void initStats(@NotNull StatsInitContext context) {
 		final var panel = context.getPanel();
 		initSummary(panel);
+		initOverview(context);
 		initGoals(context);
 	}
 	// ==================================================
@@ -82,6 +85,75 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	}
 	// --------------------------------------------------
 	/**
+	 * Initializes the 'overview' GUI that shows things like the number
+	 * of completed goals and overall completion progression.
+	 * @param context The {@link StatsInitContext}.
+	 */
+	//TODO - Uses an anti-dry practices. Code something better.
+	@ApiStatus.Internal
+	private static final void initOverview(@NotNull StatsInitContext context)
+	{
+		// ---------- preparation
+		final var panel = context.getPanel();
+		final var goals = context.getTab().getGoals();
+		if(goals.isEmpty()) return;
+		final var file  = context.getTab().getMcbsFile(); //do not write, read only
+
+		int done = 0, total = goals.size();
+		for(final var goal : goals.values())
+			if(goal.isDone(file)) done++;
+
+		// ---------- initialize group label
+		StatsViewUtils.initGroupLabel(panel, BLanguage.gui_statsview_stats_mcbsGoals_overview());
+
+		// ---------- initialize gui
+		//the base 'panel' for the two entries
+		final var base = new TElement();
+		base.setBounds(panel.computeNextYBounds(40, 4));
+		panel.add(base);
+
+		//number of complete goals
+		final var el_complete = new TTextureElement(BSprites.gui_editor_goal_listedGoalBg());
+		base.add(el_complete);
+		el_complete.setBounds(UDim2.ZERO, new UDim2(0.5, -2, 1, 0));
+
+		final var ico_complete = new TTextureElement(BSprites.gui_editor_goal_listedGoalIconBg());
+		ico_complete.setBounds(5, 5, 30, 30);
+		el_complete.addRel(ico_complete);
+
+		final var ico2_complete = new TTextureElement(Identifier.withDefaultNamespace("textures/item/writable_book.png"));
+		ico2_complete.setBounds(5, 5, 20, 20);
+		ico_complete.addRel(ico2_complete);
+
+		final var txt_complete = new TLabelElement(Component.literal("")
+				.append(BLanguage.gui_statsview_stats_mcbsGoals_overview_completedGoals())
+				.append(Component.literal("\n" + done + " / " + total).withColor(0xFFf3e7b7))
+		);
+		el_complete.add(txt_complete);
+		txt_complete.setBounds(new UDim2(0, 42, 0, 0), new UDim2(1, -47, 1, 0));
+
+		//completion percentage
+		final var el_progress = new TTextureElement(BSprites.gui_editor_goal_listedGoalBg());
+		base.add(el_progress);
+		el_progress.setBounds(new UDim2(0.5, 2, 0, 0), new UDim2(0.5, -3, 1, 0));
+
+		final var ico_progress = new TTextureElement(BSprites.gui_editor_goal_listedGoalIconBg());
+		ico_progress.setBounds(5, 5, 30, 30);
+		el_progress.addRel(ico_progress);
+
+		final var ico2_progress = new TTextureElement(BSprites.gui_icon_filterGroup());
+		ico2_progress.setBounds(5, 5, 20, 20);
+		ico_progress.addRel(ico2_progress);
+
+		final var txt_progress = new TLabelElement(Component.literal("")
+				.append(BLanguage.gui_statsview_stats_mcbsGoals_overview_totalProgress())
+				.append(Component.literal("\n" + new DecimalFormat("#%").format((double) done / total)).withColor(0xFFf3e7b7))
+		);
+		el_progress.add(txt_progress);
+		txt_progress.setBounds(new UDim2(0, 42, 0, 0), new UDim2(1, -47, 1, 0));
+	}
+	// --------------------------------------------------
+	/**
 	 * Initializes the "goals" GUI for a given {@link StatsInitContext}.
 	 * @param context The {@link StatsInitContext}.
 	 */
@@ -94,6 +166,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 		//initialize gui
 		if(!goals.isEmpty()) {
+			StatsViewUtils.initGroupLabel(panel, BLanguage.gui_statsview_stats_mcbsGoals());
 			//initialize gui for each goal entry
 			for(final var goal :goals.values()) {
 				final var el_goal = new ListedGoalGui<>(context, goal);
@@ -120,7 +193,8 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	{
 		// ==================================================
 		//background sprite identifier
-		private static final Identifier ID_BG = BSprites.gui_editor_goal_listedGoalBg();
+		private static final Identifier ID_BG      = BSprites.gui_editor_goal_listedGoalBg();
+		private static final Identifier ID_BG_DONE = BSprites.gui_editor_goal_listedGoalBgDone();
 		// --------------------------------------------------
 		private final @NotNull  T               goal;
 		private final @Nullable McbsGoalGUI<T>  goalGui;
@@ -144,12 +218,11 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 			//initialize gui elements
 			this.el_icon      = new TTextureElement(BSprites.gui_editor_goal_listedGoalIconBg());
-			this.el_lblTitle  = new TLabelElement(this.goal.getObjectiveText(this.file));
+			this.el_lblTitle  = new TLabelElement(this.goal.getObjectiveText());
 			this.el_lblTitle.dropShadowProperty().set(false, ListedGoalGui.class);
 			this.el_progrBar  = new BGoalProgressBar(this.goal.getProgress(this.file));
 			this.el_lblProgr  = new TLabelElement(this.goal.getProgressText(this.file));
-			this.el_lblProgr.textColorProperty().set(0xFFf3e7b7, ListedGoalGui.class);
-			this.el_lblProgr.textScaleProperty().set(0.9d, ListedGoalGui.class);
+			this.el_lblProgr.textScaleProperty().set(0.85d, ListedGoalGui.class);
 			this.el_btnEdit   = new TButtonWidget();
 			this.el_btnEdit.tooltipProperty().set(
 					_ -> TTooltip.of(BLanguage.gui_statsview_stats_mcbsGoals_editBtn()),
@@ -169,35 +242,38 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 					client.setScreen(editScreen);
 					tab.addEditCount();
 				} else {
+					btn.enabledProperty().set(false, ListedGoalGui.class);
 					btn.tooltipProperty().set(
 							_ -> TTooltip.of(BLanguage.gui_statsview_stats_mcbsGoals_noEditGui()),
 							ListedGoalGui.class);
 				}
 			});
-
 			this.el_btnDelete.eClicked.addListener(_ -> tab.removeGoal(this.goal));
 		}
 		// ==================================================
 		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
 			final var bb = getBounds();
-			pencil.drawGuiSprite(ID_BG, bb.x, bb.y, bb.width, bb.height, 0xFFFFFFFF);
+			if(!this.goal.isDone(this.file))
+				pencil.drawGuiSprite(ID_BG, bb.x, bb.y, bb.width, bb.height, 0xFFFFFFFF);
+			else pencil.drawGuiSprite(ID_BG_DONE, bb.x, bb.y, bb.width, bb.height, 0xFFFFFFFF);
 		}
 		// --------------------------------------------------
 		protected final @Override void initCallback()
 		{
 			// ---------- preparation
-			final var bb     = getBounds();
-			final var pad    = 5;
-			final var bb_ico = new Bounds2i(
+			final var bb       = getBounds();
+			final var pad      = 5;
+			final var bb_ico   = new Bounds2i(
 					bb.x + pad,             //x
 					bb.y + pad,             //y
 					bb.height - (pad * 2),  //width
 					bb.height - (pad * 2)); //height
-			final var bb_right = new Bounds2i(
+			final var bb_right   = new Bounds2i(
 					bb_ico.endX + pad + 3,                     //x
 					bb.y        + pad + 3,                     //y
 					bb.width  - bb_ico.width - (pad * 2) - 12, //width
 					bb.height                - (pad * 2) - 6); //height
+			final var progress = this.goal.getProgress(this.file);
 
 			// ---------- left side
 			//place the goal icon element
@@ -224,25 +300,29 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 			//goal title label
 			this.el_lblTitle.setBounds(0, 0, bb_right.width, 10);
-			this.el_lblTitle.setText(this.goal.getObjectiveText(this.file));
+			this.el_lblTitle.setText(this.goal.getObjectiveText());
 			el_right.addRel(this.el_lblTitle);
 
 			//goal progress bar
 			this.el_progrBar.setBounds(0, 14, (int) (bb_right.width / 2.7d), 14);
-			this.el_progrBar.setValue(this.goal.getProgress(this.file));
+			this.el_progrBar.setValue(progress);
 			el_right.addRel(this.el_progrBar);
 
 			//goal progress label
 			this.el_lblProgr.setBounds(
-					this.el_progrBar.getBounds().endX + 7,
+					this.el_progrBar.getBounds().endX + 3,
 					this.el_progrBar.getBounds().y,
 					bb_right.width / 3,
 					this.el_progrBar.getBounds().height);
-			this.el_lblProgr.setText(this.goal.getProgressText(this.file));
+			this.el_lblProgr.setText(Component.literal("")
+					.append(Component.literal(new DecimalFormat("#%").format(progress)).withColor(0xFFf3e7b7))
+					.append("  ")
+					.append(this.goal.getProgressText(this.file)));
 			el_right.add(this.el_lblProgr);
 
 			// ---------- far-right-side buttons
-			placeRightSideButton(el_rightBtns, this.el_btnEdit, BSprites.gui_icon_pencil());
+			if(this.goalGui != null && this.goalGui.isEditable())
+				placeRightSideButton(el_rightBtns, this.el_btnEdit, BSprites.gui_icon_pencil());
 			placeRightSideButton(el_rightBtns, this.el_btnDelete, BSprites.gui_icon_trashRed());
 		}
 

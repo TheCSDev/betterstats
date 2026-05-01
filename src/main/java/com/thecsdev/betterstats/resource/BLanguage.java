@@ -111,6 +111,9 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_summaryPrefix() { return translatable("betterstats.gui.statsview.mcbs_goals.summary_prefix"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_summary() { return translatable("betterstats.gui.statsview.mcbs_goals.summary"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview() { return translatable("betterstats.gui.statsview.mcbs_goals.overview"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_completedGoals() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.completed_goals"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_totalProgress() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.total_progress"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_editBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.edit_btn"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn_confirm() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn.confirm"); }
@@ -142,7 +145,7 @@ public final class BLanguage
 	 * Returns the display name of a given {@link McbsGoalType}.
 	 * @param goalTypeId The {@link Identifier} of said {@link McbsGoalType}.
 	 */
-	public static final MutableComponent mcbsgoaltypeName(@NotNull Identifier goalTypeId) {
+	public static final MutableComponent mcbsgoaltype_name(@NotNull Identifier goalTypeId) {
 		return translatable(String.format("betterstats.mcbsgoaltype.%s.%s", goalTypeId.getNamespace(), goalTypeId.getPath()));
 	}
 

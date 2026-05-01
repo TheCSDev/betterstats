@@ -75,6 +75,11 @@ public final @ApiStatus.Internal class BGoalProgressBar extends TFillColorElemen
 	public final DoubleProperty valueProperty() { return this.value; }
 	// --------------------------------------------------
 	/**
+	 * Returns the value of {@link #valueProperty()}.
+	 */
+	public final double getValue() { return this.value.getD(); }
+
+	/**
 	 * Sets the value of {@link #valueProperty()}.
 	 * @param value The new value, ranging from 0 to 1.
 	 */

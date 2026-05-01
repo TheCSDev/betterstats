@@ -68,6 +68,7 @@ public abstract class McbsGoal
 	 * @param mcbsFile The {@link McbsFile} to get the progress text for.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
+	@Contract(pure = true)
 	public abstract @NotNull Component getProgressText(@NotNull McbsFile mcbsFile)
 			throws NullPointerException;
 
@@ -84,14 +85,10 @@ public abstract class McbsGoal
 	 * <p>
 	 * This differs from {@link McbsGoalType#getName()} in the fact that goal type name
 	 * is a generic name that applies to all corresponding {@link McbsGoal} instances.
-	 * @param mcbsFile The {@link McbsFile} to fetch progress data from.
-	 * @throws NullPointerException If the argument is {@code null}.
+	 *
 	 * @see McbsGoalType#getName()
 	 */
-	public @Virtual @NotNull Component getObjectiveText(
-			@NotNull McbsFile mcbsFile) throws NullPointerException {
-		Objects.requireNonNull(mcbsFile);
-		return getType().getName();
-	}
+	@Contract(pure = true)
+	public @Virtual @NotNull Component getObjectiveText() { return getType().getName(); }
 	// ==================================================
 }

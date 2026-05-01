@@ -75,5 +75,7 @@ public final class McbsSivGoalGUI extends McbsGoalGUI<McbsSivGoal>
 			}
 		}
 	}
+	// --------------------------------------------------
+	public final @Override boolean isEditable() { return true; }
 	// ==================================================
 }

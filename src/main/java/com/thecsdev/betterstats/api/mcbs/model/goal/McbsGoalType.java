@@ -2,7 +2,6 @@ package com.thecsdev.betterstats.api.mcbs.model.goal;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.registry.BRegistries;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.annotations.Virtual;
@@ -57,12 +56,12 @@ public abstract class McbsGoalType<T extends McbsGoal>
 	 * Returns the user-friendly display name for this {@link McbsGoalType}.
 	 * This is the general name for the type of goal itself, that applies
 	 * to all corresponding {@link McbsGoal} instances.
-	 * @see McbsGoal#getObjectiveText(McbsFile)
+	 * @see McbsGoal#getObjectiveText()
 	 */
 	public @Virtual @NotNull Component getName() {
 		final @Nullable var key = getKey();
 		return (key != null) ?
-				BLanguage.mcbsgoaltypeName(key) :
+				BLanguage.mcbsgoaltype_name(key) :
 				Component.literal(getClass().toString());
 	}
 	// ==================================================
