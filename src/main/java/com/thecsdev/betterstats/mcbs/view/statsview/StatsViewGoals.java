@@ -99,9 +99,13 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		if(goals.isEmpty()) return;
 		final var file  = context.getTab().getMcbsFile(); //do not write, read only
 
-		int done = 0, total = goals.size();
-		for(final var goal : goals.values())
-			if(goal.isDone(file)) done++;
+		int done = 0, goalCount = goals.size();
+		double progressSum = 0;
+		for(final var goal : goals.values()) {
+			final var gp = goal.getProgress(file);
+			progressSum += gp;
+			if(gp >= 1) done++;
+		}
 
 		// ---------- initialize group label
 		StatsViewUtils.initGroupLabel(panel, BLanguage.gui_statsview_stats_mcbsGoals_overview());
@@ -127,7 +131,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 		final var txt_complete = new TLabelElement(Component.literal("")
 				.append(BLanguage.gui_statsview_stats_mcbsGoals_overview_completedGoals())
-				.append(Component.literal("\n" + done + " / " + total).withColor(0xFFf3e7b7))
+				.append(Component.literal("\n" + done + " / " + goalCount).withColor(0xFFf3e7b7))
 		);
 		el_complete.add(txt_complete);
 		txt_complete.setBounds(new UDim2(0, 42, 0, 0), new UDim2(1, -47, 1, 0));
@@ -147,7 +151,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 
 		final var txt_progress = new TLabelElement(Component.literal("")
 				.append(BLanguage.gui_statsview_stats_mcbsGoals_overview_totalProgress())
-				.append(Component.literal("\n" + new DecimalFormat("#%").format((double) done / total)).withColor(0xFFf3e7b7))
+				.append(Component.literal("\n" + new DecimalFormat("#%").format(progressSum / goalCount)).withColor(0xFFf3e7b7))
 		);
 		el_progress.add(txt_progress);
 		txt_progress.setBounds(new UDim2(0, 42, 0, 0), new UDim2(1, -47, 1, 0));

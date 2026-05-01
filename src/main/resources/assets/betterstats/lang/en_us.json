@@ -23,6 +23,8 @@
 	"betterstats.config.common.register_commands.tooltip": "Registers this mod's commands (ex. '/statistics').",
 	"betterstats.config.common.api_endpoint": "API endpoint",
 	"betterstats.config.common.api_endpoint.tooltip": "The URI address of the REST-ful HTTP API endpoint this mod uses to communicate with this mod developer's servers.",
+	"betterstats.config.common.experimental_features": "Experimental features",
+	"betterstats.config.common.experimental_features.tooltip": "Whether to enable experimental features.\nSuch features may be buggy, cause crashes, or result in data loss. Enable at your own risk, then restart the game.\n\nPresence of such features is not indicative of their eventual release. They may be removed at any time without warning.",
 	"betterstats.config.client.allow_chat_psa": "Allow chat PSA messages",
 	"betterstats.config.client.allow_chat_psa.tooltip": "Allows rare informational PSA messages from the developer of this mod to show up in chat. Turn this off to suppress all such notifications.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI mobs follow cursor",

@@ -90,22 +90,27 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 
 		//[betterstats] initialize common-sided settings
 		initTableHead(panel, TLanguage.config_common(), TLanguage.config_propertyValue());
-		initBooleanProperty(
-				panel,
-				BLanguage.config_common_registerCommands(),
-				TTooltip.of(BLanguage.config_common_registerCommands_tooltip()),
-				bss_config.canRegisterCommands(),
-				(p, o, n) -> bss_config.setRegisterCommands(n));
 		initStringProperty(
 				panel,
 				BLanguage.config_common_apiEndpoint(),
 				TTooltip.of(BLanguage.config_common_apiEndpoint_tooltip()),
 				bss_config.getApiEndpoint().toString(),
-				(p, o, n) -> {
+				(_, _, n) -> {
 					try { bss_config.setApiEndpoint(URI.create(n));}
 					catch(RuntimeException ignored) {}
-				}
-		);
+				});
+		initBooleanProperty(
+				panel,
+				BLanguage.config_common_registerCommands(),
+				TTooltip.of(BLanguage.config_common_registerCommands_tooltip()),
+				bss_config.canRegisterCommands(),
+				(_, _, n) -> bss_config.setRegisterCommands(n));
+		initBooleanProperty(
+				panel,
+				BLanguage.config_common_experiments(),
+				TTooltip.of(BLanguage.config_common_experiments_tooltip()),
+				bss_config.experimentsEnabled(),
+				(_, _, n) -> bss_config.setExperimentsEnabled(n));
 
 		//[betterstats] initialize client-sided settings
 		initTableHead(panel, TLanguage.config_client(), TLanguage.config_propertyValue());
@@ -114,13 +119,13 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				BLanguage.config_client_guiMobsFollowCursor(),
 				TTooltip.of(BLanguage.config_client_guiMobsFollowCursor_tooltip()),
 				bss_config.getGuiMobsFollowCursor(),
-				(p, o, n) -> bss_config.setGuiMobsFollowCursor(n));
+				(_, _, n) -> bss_config.setGuiMobsFollowCursor(n));
 		initBooleanProperty(
 				panel,
 				BLanguage.config_client_allowChatPsa(),
 				TTooltip.of(BLanguage.config_client_allowChatPsa_tooltip()),
 				bss_config.allowsChatPsaMessages(),
-				(p, o, n) -> bss_config.setAllowChatPsaMessages(n));
+				(_, _, n) -> bss_config.setAllowChatPsaMessages(n));
 
 		//[betterstats] initialize server-sided settings
 		initTableHead(panel, TLanguage.config_server(), TLanguage.config_propertyValue());
@@ -141,7 +146,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				TLanguage.config_client_updateItemGroupsOnJoin(),
 				TTooltip.of(TLanguage.config_client_updateItemGroupsOnJoin_tooltip()),
 				tcd_config.updateItemGroupsOnJoin(),
-				(p, o, n) -> tcd_config.setUpdateItemGroupsOnJoin(n));
+				(_, _, n) -> tcd_config.setUpdateItemGroupsOnJoin(n));
 
 		//[tcdcommons] initialize server-sided settings
 		initTableHead(panel, TLanguage.config_server(), TLanguage.config_propertyValue());
@@ -151,7 +156,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		//flag element that saves the config once this gui is removed
 		final var el_saveFlag = new TElement();
 		el_saveFlag.setBounds(panel.computeNextYBounds(0, 0));
-		el_saveFlag.screenProperty().addChangeListener((p, o, n) ->
+		el_saveFlag.screenProperty().addChangeListener((_, _, n) ->
 		{
 			//save the config files otherwise
 			if(n == null) TUtils.uncheckedCall(() -> {
@@ -232,7 +237,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		final var el_bg = new TFillColorElement.Flat((panel.size() % 2 == 0) ? 0x33000000 : 0x44000000, 0);
 		el_bg.hoverableProperty().set(true, BetterStatsConfigScreen.class);
 		el_bg.setBounds(panel.computeNextYBounds(26, 0));
-		if(tooltip != null) el_bg.tooltipProperty().set(__ -> tooltip, BetterStatsConfigScreen.class);
+		if(tooltip != null) el_bg.tooltipProperty().set(_ -> tooltip, BetterStatsConfigScreen.class);
 		panel.add(el_bg);
 
 		//name label
@@ -244,7 +249,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		//value checkbox
 		final var ch_value = new TCheckboxWidget(value);
 		ch_value.checkedProperty().addChangeListener(changeListener);
-		if(tooltip != null) ch_value.tooltipProperty().set(__ -> tooltip, BetterStatsConfigScreen.class);
+		if(tooltip != null) ch_value.tooltipProperty().set(_ -> tooltip, BetterStatsConfigScreen.class);
 		el_bg.add(ch_value);
 		ch_value.setBounds(new UDim2(1, -30, 0, 3), new UDim2(0, 20, 0, 20));
 	}
@@ -266,7 +271,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		final var el_bg = new TFillColorElement.Flat((panel.size() % 2 == 0) ? 0x33000000 : 0x44000000, 0);
 		el_bg.hoverableProperty().set(true, BetterStatsConfigScreen.class);
 		el_bg.setBounds(panel.computeNextYBounds(26, 0));
-		if(tooltip != null) el_bg.tooltipProperty().set(__ -> tooltip, BetterStatsConfigScreen.class);
+		if(tooltip != null) el_bg.tooltipProperty().set(_ -> tooltip, BetterStatsConfigScreen.class);
 		panel.add(el_bg);
 
 		//name label

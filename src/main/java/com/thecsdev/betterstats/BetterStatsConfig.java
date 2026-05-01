@@ -3,6 +3,7 @@ package com.thecsdev.betterstats;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.thecsdev.commonmc.TCDCommonsConfig;
 import com.thecsdev.commonmc.api.config.ModConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -20,17 +21,14 @@ public final class BetterStatsConfig extends ModConfig
 	// ==================================================
 	private @Expose @SerializedName("common-registerCommands")     boolean commands         = true;
 	private @Expose @SerializedName("common-apiEndpoint")          String  apiEndpointStr   = "https://api.thecsdev.com/";
+	private @Expose @SerializedName("common-experimentalFeatures") boolean experiments      = false;
 	private @Expose @SerializedName("client-allowChatPsaMessages") boolean allowChatPsa     = true;
 	private @Expose @SerializedName("client-guiMobsFollowCursor")  boolean mobsFollowCursor = true;
 	// --------------------------------------------------
 	private transient @NotNull URI apiEndpoint;
 	// ==================================================
-	public BetterStatsConfig()
-	{
-		//initialize super
+	public BetterStatsConfig() {
 		super(MOD_ID);
-
-		//initialize fields
 		this.apiEndpoint = URI.create(this.apiEndpointStr);
 	}
 	// ==================================================
@@ -55,6 +53,13 @@ public final class BetterStatsConfig extends ModConfig
 	 * messages in chat.
 	 */
 	public final boolean allowsChatPsaMessages() { return this.allowChatPsa; }
+
+	/**
+	 * Whether experimental features are allowed to show up in-game.
+	 */
+	public final boolean experimentsEnabled() {
+		return TCDCommonsConfig.FLAG_DEV_ENV || this.experiments;
+	}
 	// ==================================================
 	/**
 	 * Sets whether this mod's commands are to be registered.
@@ -83,6 +88,11 @@ public final class BetterStatsConfig extends ModConfig
 	 * messages in chat.
 	 */
 	public final void setAllowChatPsaMessages(boolean value) { this.allowChatPsa = value; }
+
+	/**
+	 * Sets whether experimental features are allowed to show up in-game.
+	 */
+	public final void setExperimentsEnabled(boolean value) { this.experiments = value; }
 	// ==================================================
 	protected final @Override void onLoad(@NonNull JsonObject from)
 	{

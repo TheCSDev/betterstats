@@ -11,7 +11,6 @@ import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemFile;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemView;
 import com.thecsdev.betterstats.mcbs.view.statsview.*;
-import com.thecsdev.commonmc.TCDCommonsConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.MappedRegistry;
@@ -81,7 +80,7 @@ public final class BClientRegistries
 		Registry.register(STATS_VIEW, id("mobs"),    StatsViewMobs.INSTANCE);
 		Registry.register(STATS_VIEW, id("food"),    StatsViewFood.INSTANCE);
 		Registry.register(STATS_VIEW, id("hunter"),  StatsViewHunter.INSTANCE);
-		if(TCDCommonsConfig.FLAG_DEV_ENV) //FIXME - Remove dev env flag check once feature is ready
+		if(BetterStats.getConfig().experimentsEnabled()) //FIXME - Remove experimental
 			Registry.register(STATS_VIEW, id("goals"), StatsViewGoals.INSTANCE);
 
 		//register mcbs goal gui-s
