@@ -56,7 +56,7 @@
 	"betterstats.gui.statsview.filter.distance_unit": "Хәрәкәт берәмлеге буенча",
 	"betterstats.gui.statsview.filter.time_unit": "Вакыт берәмлеге буенча",
 	"betterstats.gui.statsview.stats.no_stats": "Күрсәтү өчен статистика юк әле...",
-	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Хата мәглүматын карау",
+	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Хата мәгълүматын карау",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Викида карау",
 
 	"betterstats.gui.home_tab.featured_stats": "Сайланган статистика",
