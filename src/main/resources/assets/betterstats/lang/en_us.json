@@ -68,6 +68,8 @@
 	"betterstats.gui.statsview.mcbs_goals.overview": "Overview",
 	"betterstats.gui.statsview.mcbs_goals.overview.completed_goals": "Completed goals",
 	"betterstats.gui.statsview.mcbs_goals.overview.total_progress": "Total progress",
+	"betterstats.gui.statsview.mcbs_goals.new_btn": "[ + New goal ]",
+	"betterstats.gui.statsview.mcbs_goals.manage_btn": "Manage goals",
 	"betterstats.gui.statsview.mcbs_goals.edit_btn": "Edit goal",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn": "Delete goal",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn.confirm": "Are you sure?",

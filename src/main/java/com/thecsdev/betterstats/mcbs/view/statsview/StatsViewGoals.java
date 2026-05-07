@@ -31,6 +31,8 @@ import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.GAP;
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.initSearchFilter;
 import static com.thecsdev.commonmc.resource.TComponent.gui;
 
@@ -47,6 +49,14 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	 * The main instance of this {@link Class}.
 	 */
 	public static final StatsViewGoals INSTANCE = new StatsViewGoals();
+
+	/**
+	 * {@link StatsView.Filters} key for whether the goal management buttons
+	 * should currently be visible.
+	 * <p>
+	 * <b>Filter value type:</b> {@code boolean}
+	 */
+	public static final Identifier FID_MANAGE_GOALS = Identifier.fromNamespaceAndPath(MOD_ID, "manage_goals");
 	// ==================================================
 	private StatsViewGoals() {}
 	// ==================================================
@@ -54,9 +64,37 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		return gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_mcbsGoals());
 	}
 	// --------------------------------------------------
-	public final @Override void initFilters(@NotNull FiltersInitContext context) {
+	public final @Override void initFilters(@NotNull FiltersInitContext context)
+	{
+		// ---------- default filters
 		StatsViewUtils.initDefaultFilters(context);
 		initSearchFilter(context);
+
+		// ---------- preparation for other controls
+		final var panel   = context.getPanel();
+		final var filters = context.getFilters();
+
+		// ---------- management buttons
+		SeparatorElement.init(panel);
+		//"new goal" button
+		final var btn_newGoal = new TButtonWidget();
+		btn_newGoal.setBounds(panel.computeNextYBounds(20, GAP));
+		btn_newGoal.getLabel().setText(BLanguage.gui_statsview_stats_mcbsGoals_newBtn());
+		panel.add(btn_newGoal);
+
+		//"manage goals" button
+		final var btn_manageGoals = new TButtonWidget();
+		btn_manageGoals.setBounds(panel.computeNextYBounds(20, GAP));
+		btn_manageGoals.getLabel().setText(BLanguage.gui_statsview_stats_mcbsGoals_manageBtn());
+		btn_manageGoals.eClicked.addListener(_ -> {
+			final boolean val = filters.getProperty(boolean.class, FID_MANAGE_GOALS, false);
+			filters.setProperty(boolean.class, FID_MANAGE_GOALS, !val);
+		});
+		panel.add(btn_manageGoals);
+
+		// ---------- goal filters
+		SeparatorElement.init(panel);
+		//TODO - Implement
 	}
 	// --------------------------------------------------
 	public final @Override void initStats(@NotNull StatsInitContext context) {
@@ -200,16 +238,17 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		private static final Identifier ID_BG      = BSprites.gui_editor_goal_listedGoalBg();
 		private static final Identifier ID_BG_DONE = BSprites.gui_editor_goal_listedGoalBgDone();
 		// --------------------------------------------------
-		private final @NotNull  T               goal;
-		private final @Nullable McbsGoalGUI<T>  goalGui;
-		private final @NotNull  McbsFile        file;
+		private final @NotNull  T                 goal;
+		private final @Nullable McbsGoalGUI<T>    goalGui;
+		private final @NotNull  McbsFile          file;
+		private final @NotNull  StatsView.Filters filters;
 		// --------------------------------------------------
-		private final @NotNull TTextureElement  el_icon;
-		private final @NotNull TLabelElement    el_lblTitle;
-		private final @NotNull BGoalProgressBar el_progrBar;
-		private final @NotNull TLabelElement    el_lblProgr;
-		private final @NotNull TButtonWidget    el_btnEdit;
-		private final @NotNull TButtonWidget    el_btnDelete;
+		private final @NotNull TTextureElement    el_icon;
+		private final @NotNull TLabelElement      el_lblTitle;
+		private final @NotNull BGoalProgressBar   el_progrBar;
+		private final @NotNull TLabelElement      el_lblProgr;
+		private final @NotNull TButtonWidget      el_btnEdit;
+		private final @NotNull TButtonWidget      el_btnDelete;
 		// ==================================================
 		public ListedGoalGui(@NotNull StatsInitContext context, @NotNull T goal)
 		{
@@ -219,6 +258,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			this.goal     = Objects.requireNonNull(goal);
 			this.goalGui  = McbsGoalGUI.findFor(goal);
 			this.file     = tab.getMcbsFile();
+			this.filters  = context.getFilters();
 
 			//initialize gui elements
 			this.el_icon      = new TTextureElement(BSprites.gui_editor_goal_listedGoalIconBg());
@@ -300,6 +340,9 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			el_rightBtns.setBounds(bb_right);
 			el_rightBtns.hoverableProperty().set(false, ListedGoalGui.class);
 			el_rightBtns.focusableProperty().set(false, ListedGoalGui.class);
+			el_rightBtns.visibleProperty().set(
+					this.filters.getProperty(boolean.class, FID_MANAGE_GOALS, false),
+					ListedGoalGui.class);
 			add(el_rightBtns);
 
 			//goal title label
@@ -366,6 +409,28 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			el_icon.setBounds(bb_btn.x + 5, bb_btn.y + 5, bb_btn.width - 10, bb_btn.height - 10);
 			el_icon.visibleProperty().set(button.isVisible(), ListedGoalGui.class);
 			onto.add(el_icon);
+		}
+		// ==================================================
+	}
+	// ================================================== ==================================================
+	//                                   SeparatorElement IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * Basic {@link TElement} implementation that draws a horizontal line.
+	 */
+	@ApiStatus.Internal
+	private static final class SeparatorElement extends TElement
+	{
+		// ==================================================
+		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
+			final var bb = getBounds();
+			pencil.fillColor(bb.x, bb.y + (bb.height / 2), bb.width, 1, 0x44FFFFFF);
+		}
+		// ==================================================
+		public static final void init(@NotNull TPanelElement panel) {
+			final var s = new SeparatorElement();
+			s.setBounds(panel.computeNextYBounds(7, GAP));
+			panel.add(s);
 		}
 		// ==================================================
 	}

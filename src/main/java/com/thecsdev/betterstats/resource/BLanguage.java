@@ -116,6 +116,8 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview() { return translatable("betterstats.gui.statsview.mcbs_goals.overview"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_completedGoals() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.completed_goals"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_totalProgress() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.total_progress"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_newBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.new_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_manageBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.manage_btn"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_editBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.edit_btn"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn_confirm() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn.confirm"); }
