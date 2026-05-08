@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats.mcbs.view.statsview;
 
+import com.google.common.collect.HashBiMap;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
@@ -28,12 +29,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
-import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.GAP;
-import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.initSearchFilter;
+import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.*;
 import static com.thecsdev.commonmc.resource.TComponent.gui;
 
 /**
@@ -99,7 +101,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	// --------------------------------------------------
 	public final @Override void initStats(@NotNull StatsInitContext context) {
 		final var panel = context.getPanel();
-		initSummary(panel);
+		initAlerts(panel);
 		initOverview(context);
 		initGoals(context);
 	}
@@ -110,16 +112,24 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	 * @param panel The target {@link TPanelElement}.
 	 */
 	@ApiStatus.Internal
-	private static final void initSummary(@NotNull TPanelElement panel)
+	private static final void initAlerts(@NotNull TPanelElement panel)
 	{
-		final var gLabel = StatsViewUtils.initGroupLabelFramed(
+		StatsViewUtils.initGroupLabelFramed(
 				panel,
 				Component.literal("")
-					.append(BLanguage.gui_statsview_stats_mcbsGoals_summaryPrefix().withStyle(ChatFormatting.YELLOW))
+					.append(BLanguage.gui_statsview_stats_mcbsGoals_alert1Prefix().withStyle(ChatFormatting.YELLOW))
 					.append(" ")
-					.append(BLanguage.gui_statsview_stats_mcbsGoals_summary()),
-				0.9d);
-		gLabel.getValue().textColorProperty().set(0xEEFFFFFF, StatsViewGoals.class);
+					.append(BLanguage.gui_statsview_stats_mcbsGoals_alert1()),
+				0.9d)
+				.getValue().textColorProperty().set(0xEEFFFFFF, StatsViewGoals.class);
+		StatsViewUtils.initGroupLabelFramed(
+				panel,
+				Component.literal("")
+						.append(BLanguage.gui_statsview_stats_mcbsGoals_alert2Prefix().withStyle(ChatFormatting.AQUA))
+						.append(" ")
+						.append(BLanguage.gui_statsview_stats_mcbsGoals_alert2()),
+				0.9d)
+				.getValue().textColorProperty().set(0xEEFFFFFF, StatsViewGoals.class);
 	}
 	// --------------------------------------------------
 	/**
@@ -203,23 +213,39 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	private static final void initGoals(@NotNull StatsInitContext context)
 	{
 		//preparation
-		final var panel = context.getPanel();
-		final var goals = context.getTab().getGoals();
+		final var panel         = context.getPanel();
+		final var file          = context.getTab().getMcbsFile();
+		final var filters       = context.getFilters();
+		final var filter_search = filters.getProperty(String.class, FID_SEARCH, "");
+
+		final var goalMap = HashBiMap.create(context.getTab().getGoals()); //shallow copy
+		final var goals   = goalMap.values().stream()
+				//filter based on search query
+				.filter(goal -> {
+					if(filter_search.isBlank()) return true;
+					final var a = (goalMap.inverse().get(goal).toString() + goal.getType().getName().getString() + goal.getObjectiveText().getString())
+							.toLowerCase(Locale.ROOT).replaceAll("\\s+", "");
+					final var b = filter_search.toLowerCase(Locale.ROOT).replaceAll("\\s+", "");
+					return a.contains(b);
+				})
+				//then sort based on progress
+				.sorted(Comparator.comparing((McbsGoal goal) -> goal.getProgress(file)).reversed())
+				//lastly, convert to list
+				.toList();
 
 		//initialize gui
+		StatsViewUtils.initGroupLabel(panel, BLanguage.gui_statsview_stats_mcbsGoals());
 		if(!goals.isEmpty()) {
-			StatsViewUtils.initGroupLabel(panel, BLanguage.gui_statsview_stats_mcbsGoals());
 			//initialize gui for each goal entry
-			for(final var goal :goals.values()) {
+			for(final var goal : goals) {
 				final var el_goal = new ListedGoalGui<>(context, goal);
 				el_goal.setBounds(panel.computeNextYBounds(40, 4));
 				panel.add(el_goal);
 			}
 		} else {
 			//initialize "no goals" label
-			final int pad         = panel.scrollPaddingProperty().getI();
 			final var lbl_noGoals = new TLabelElement(BLanguage.gui_statsview_stats_noGoals());
-			lbl_noGoals.setBounds(panel.getBounds().add(pad, pad, -pad * 2, -pad * 2));
+			lbl_noGoals.setBounds(panel.computeNextYBounds(24, 0));
 			lbl_noGoals.textAlignmentProperty().set(CompassDirection.CENTER, StatsViewGoals.class);
 			panel.add(lbl_noGoals);
 		}

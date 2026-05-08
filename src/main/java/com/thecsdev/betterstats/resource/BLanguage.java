@@ -111,8 +111,10 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewErrorInfo() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_error_info"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
-	public static final MutableComponent gui_statsview_stats_mcbsGoals_summaryPrefix() { return translatable("betterstats.gui.statsview.mcbs_goals.summary_prefix"); }
-	public static final MutableComponent gui_statsview_stats_mcbsGoals_summary() { return translatable("betterstats.gui.statsview.mcbs_goals.summary"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1Prefix() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1.prefix"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert2Prefix() { return translatable("betterstats.gui.statsview.mcbs_goals.alert2.prefix"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert2() { return translatable("betterstats.gui.statsview.mcbs_goals.alert2"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview() { return translatable("betterstats.gui.statsview.mcbs_goals.overview"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_completedGoals() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.completed_goals"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_totalProgress() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.total_progress"); }
