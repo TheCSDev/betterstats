@@ -3,9 +3,11 @@ package com.thecsdev.betterstats.mcbs.view.statsview;
 import com.google.common.collect.HashBiMap;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
 import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
+import com.thecsdev.betterstats.api.registry.BRegistries;
 import com.thecsdev.betterstats.client.gui.widget.BGoalProgressBar;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
@@ -13,6 +15,7 @@ import com.thecsdev.common.math.Bounds2i;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
+import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TSeparatorElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
@@ -24,6 +27,7 @@ import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,7 +36,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.*;
@@ -86,6 +94,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		// ---------- preparation for other controls
 		final var panel   = context.getPanel();
 		final var filters = context.getFilters();
+		final var client  = Minecraft.getInstance();
 
 		// ---------- management buttons
 		TSeparatorElement.initH(panel, 7 + GAP, 1, 0x44FFFFFF);
@@ -93,6 +102,10 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		final var btn_newGoal = new TButtonWidget();
 		btn_newGoal.setBounds(panel.computeNextYBounds(20, GAP));
 		btn_newGoal.getLabel().setText(BLanguage.gui_statsview_stats_mcbsGoals_newBtn());
+		btn_newGoal.eClicked.addListener(_ -> btn_newGoal.showContextMenu());
+		btn_newGoal.contextMenuProperty().set(
+				_ -> buildNewGoalCtxMenu(context),
+				StatsViewGoals.class);
 		panel.add(btn_newGoal);
 
 		//"manage goals" button
@@ -265,6 +278,62 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			lbl_noGoals.textAlignmentProperty().set(CompassDirection.CENTER, StatsViewGoals.class);
 			panel.add(lbl_noGoals);
 		}
+	}
+	// ==================================================
+	/**
+	 * Builds a {@link TContextMenu} for the "New goal" button.
+	 * @param filtersContext The {@link StatsView.FiltersInitContext}.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	private static final @NotNull TContextMenu buildNewGoalCtxMenu(
+			@NotNull FiltersInitContext filtersContext) throws NullPointerException
+	{
+		//preparation and create the context menu builder
+		final var client    = Minecraft.getInstance();
+		final var ctxMenu   = new TContextMenu.Builder(client);
+		final var fileGoals = filtersContext.getTab().getMcbsFile().getGoals();
+
+		//collect goal types into grouped map (key = mod-id, value = mod's goal types)
+		final var goalTypes = StreamSupport.stream(BRegistries.GOAL_TYPE.spliterator(), false)
+				.collect(
+						Collectors.groupingBy(
+								(McbsGoalType<?> gt) -> Optional.ofNullable(gt.getKey()).map(Identifier::getNamespace).orElse("*"),
+								LinkedHashMap::new,
+								Collectors.collectingAndThen(
+										Collectors.toList(),
+										list -> {
+											list.sort(Comparator.comparing(gt -> gt.getName().getString()));
+											return list;
+										}
+								)
+						)
+				);
+
+		//iterate goal type groups and add context menu entries for them
+		for(final var goalTypeGroup : goalTypes.values())
+		{
+			//separator to separate from other mods
+			ctxMenu.addSeparator();
+			//then initialize 'current' mod's goal type button entries
+			for(final var goalType : goalTypeGroup)
+			{
+				//add a button for a given goal type
+				ctxMenu.addButton(goalType.getName(), _ ->
+				{
+					//create new goal instance and put it in
+					final var newGoal   = Objects.requireNonNull(goalType.create(), "Goal type failed to produce an instance");
+					final var newGoalId = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
+					fileGoals.put(newGoalId, newGoal);      //a direct untracked change tool place
+					filtersContext.getTab().addEditCount(); //track the change, refreshed the gui
+
+					//open editor gui (if possible)
+					//FIXME - IMPLEMENT
+				});
+			}
+		}
+
+		//build and return the constructed context menu
+		return ctxMenu.build();
 	}
 	// ================================================== ==================================================
 	//                                      ListedGoalGui IMPLEMENTATION

@@ -7,8 +7,10 @@ import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.annotations.Virtual;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -25,6 +27,7 @@ public abstract class McbsGoalType<T extends McbsGoal>
 	 */
 	public static final McbsGoalType<McbsSivGoal> STAT_INT_VALUE = new McbsGoalType<>(McbsSivGoal.class) {
 		public final @Override @NotNull MapCodec<McbsSivGoal> getCodec() { return McbsSivGoal.CODEC; }
+		public final @Override @NonNull McbsSivGoal create() { return new McbsSivGoal(); }
 	};
 	// ==================================================
 	private final @NotNull Class<T> baseClass;
@@ -64,5 +67,12 @@ public abstract class McbsGoalType<T extends McbsGoal>
 				BLanguage.mcbsgoaltype_name(key) :
 				Component.literal(getClass().toString());
 	}
+	// ==================================================
+	/**
+	 * Creates an {@link McbsGoal} instance for this {@link McbsGoalType},
+	 * with default configurations (where any apply).
+	 */
+	@Contract("-> new")
+	public abstract @NotNull T create();
 	// ==================================================
 }

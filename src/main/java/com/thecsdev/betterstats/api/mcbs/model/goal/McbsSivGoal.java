@@ -9,14 +9,13 @@ import com.thecsdev.betterstats.resource.BLanguage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatType;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-import static net.minecraft.core.registries.BuiltInRegistries.ITEM;
-import static net.minecraft.core.registries.BuiltInRegistries.STAT_TYPE;
+import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
+import static net.minecraft.resources.Identifier.withDefaultNamespace;
 
 /**
  * {@link McbsGoal} implementation whose goal is to achieve a specific
@@ -36,16 +35,19 @@ public final class McbsSivGoal extends McbsGoal
 				Codec.INT.fieldOf("target_value").forGetter(McbsSivGoal::getTargetValue)
 		).apply(instance, McbsSivGoal::new)
 	);
+
+	/**
+	 * {@link #getStatType()} value that is used for {@link McbsSivGoal} instances
+	 * constructed using the default {@link #McbsSivGoal()} constructor.
+	 */
+	public static final Identifier STID_EDITTHISGOAL = fromNamespaceAndPath(MOD_ID, "edit_this_goal");
 	// ==================================================
 	private @NotNull Identifier statType;
 	private @NotNull Identifier statSubject;
 	private          int        fromValue;
 	private          int        targetValue;
 	// ==================================================
-	public McbsSivGoal() {
-		//noinspection DataFlowIssue - unlikely
-		this(STAT_TYPE.getKey(Stats.ITEM_USED), ITEM.getKey(Items.AIR), 0, 0);
-	}
+	public McbsSivGoal() { this(STID_EDITTHISGOAL, withDefaultNamespace("air"), 0, 0); }
 
 	public McbsSivGoal(
 			@NotNull Identifier statType, @NotNull Identifier statSubject,

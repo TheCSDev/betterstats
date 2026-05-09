@@ -126,7 +126,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		if(displayError != null)
 			builder.addButton(
 					missingNo().append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewErrorInfo()),
-					__ -> {
+					_ -> {
 						final var parent = client.screen;
 						final var title  = missingNo().append(" ").append(TLanguage.misc_somethingWentWrong());
 						final var text   = literal(getStackTrace(displayError).replace("\r\n", "\n").replace("\t", "    "));
@@ -139,13 +139,13 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
-					__ -> Util.getPlatform().openUri(url_wiki));
+					_ -> Util.getPlatform().openUri(url_wiki));
 		}
 
-		//close button, and thenbuild and return a new context menu
+		//close button, and then build and return a new context menu
 		builder.addButton(
 			gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
-			__ -> {});
+			_ -> {});
 		return builder.build();
 	};
 	// --------------------------------------------------
@@ -167,7 +167,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		// ==================================================
 		public static final SortBy VANILLA = new SortBy(
 				"VANILLA", Component.literal("-"),
-				(o1, o2) -> 0);
+				(_, _) -> 0);
 		public static final SortBy ALPHABETICAL = new SortBy(
 				"ALPHABETICAL", Component.literal("A-Z"),
 				comparing(stat -> stat.getSubjectDisplayName().getString()));
@@ -221,19 +221,19 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			final var dropdown = new TDropdownWidget<SortBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			dropdown.getEntries().addAll(values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(SortBy.class, FID, VANILLA),
 					SortBy.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(SortBy.class, FID, n));
 		}
 		// ==================================================
 		/**
-		 * Retuns all {@link SortBy} instances that are to be used.
+		 * Returns all {@link SortBy} instances that are to be used.
 		 */
 		public static final @NotNull Collection<SortBy> values()
 		{
@@ -273,7 +273,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			final var map = new LinkedHashMap<String, ArrayList<EntityStats>>();
 			//group the stats
 			for(final var stat : stats)
-				map.computeIfAbsent(stat.getSubjectID().getNamespace(), __ -> new ArrayList<>())
+				map.computeIfAbsent(stat.getSubjectID().getNamespace(), _ -> new ArrayList<>())
 						.add(stat);
 			//remap the map and return it
 			return map.entrySet().stream().collect(Collectors.toMap(
@@ -282,7 +282,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 						return ModInfoProvider.getInstance().getModInfo(entry.getKey()).getName();
 					},
 					Map.Entry::getValue,
-					(existing, replacement) -> existing,
+					(existing, _) -> existing,
 					LinkedHashMap::new
 			));
 		}),
@@ -292,13 +292,13 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			//group the stats
 			for(final var stat : stats) {
 				final var category = stat.getSubject().getCategory();
-				map.computeIfAbsent(category, __ -> new ArrayList<>()).add(stat);
+				map.computeIfAbsent(category, _ -> new ArrayList<>()).add(stat);
 			}
 			//remap the map and return it
 			return map.entrySet().stream().collect(Collectors.toMap(
 					entry -> translatable("mobCategory." + entry.getKey().getName()),
 					Map.Entry::getValue,
-					(existing, replacement) -> existing,
+					(existing, _) -> existing,
 					LinkedHashMap::new
 			));
 		});
@@ -338,14 +338,14 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			final var dropdown = new TDropdownWidget<StatsViewMobs.GroupBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), StatsViewMobs.GroupBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(StatsViewMobs.GroupBy.class, FID, MOD),
 					StatsViewMobs.GroupBy.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(GroupBy.class, FID, n));
 		}
 		// ==================================================

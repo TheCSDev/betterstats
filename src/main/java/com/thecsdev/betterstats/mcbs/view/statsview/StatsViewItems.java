@@ -125,7 +125,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			//add the entry
 			builder.addButton(
 					block("block/command_block_front").append(" /give @s"),
-					__ -> {
+					_ -> {
 						try {
 							final var id = stats.getSubjectID().toString();
 							final var ss = stats.getSubject().getDefaultMaxStackSize();
@@ -139,13 +139,13 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
-					__ -> Util.getPlatform().openUri(url_wiki));
+					_ -> Util.getPlatform().openUri(url_wiki));
 		}
 
 		//close button, and then build and return a new context menu
 		builder.addButton(
 			gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
-			__ -> {});
+			_ -> {});
 		return builder.build();
 	};
 	// --------------------------------------------------
@@ -167,7 +167,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 		// ==================================================
 		public static final SortBy VANILLA = new SortBy(
 				"VANILLA", Component.literal("-"),
-				(o1, o2) -> 0);
+				(_, _) -> 0);
 		public static final SortBy ALPHABETICAL = new SortBy(
 				"ALPHABETICAL", Component.literal("A-Z"),
 				comparing(stat -> stat.getSubjectDisplayName().getString()));
@@ -221,14 +221,14 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var dropdown = new TDropdownWidget<SortBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			dropdown.getEntries().addAll(values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(SortBy.class, FID, VANILLA),
 					SortBy.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(SortBy.class, FID, n));
 		}
 		// ==================================================
@@ -273,7 +273,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var map = new LinkedHashMap<String, ArrayList<ItemStats>>();
 			//group the stats
 			for(final var stat : stats)
-				map.computeIfAbsent(stat.getSubjectID().getNamespace(), __ -> new ArrayList<>())
+				map.computeIfAbsent(stat.getSubjectID().getNamespace(), _ -> new ArrayList<>())
 						.add(stat);
 			//remap the map and return it
 			return map.entrySet().stream().collect(Collectors.toMap(
@@ -282,7 +282,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 						return ModInfoProvider.getInstance().getModInfo(entry.getKey()).getName();
 					},
 					Map.Entry::getValue,
-					(existing, replacement) -> existing,
+					(existing, _) -> existing,
 					LinkedHashMap::new
 			));
 		}),
@@ -291,13 +291,13 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var map = new LinkedHashMap<CreativeModeTab, ArrayList<ItemStats>>();
 			//group the stats
 			for(final var stat : stats)
-				map.computeIfAbsent(getCreativeModeTab(stat.getSubject()), __ -> new ArrayList<>())
+				map.computeIfAbsent(getCreativeModeTab(stat.getSubject()), _ -> new ArrayList<>())
 						.add(stat);
 			//remap the map and return it
 			return map.entrySet().stream().collect(Collectors.toMap(
 					entry -> entry.getKey() != null ? entry.getKey().getDisplayName() : Component.literal("*"),
 					Map.Entry::getValue,
-					(existing, replacement) -> existing,
+					(existing, _) -> existing,
 					LinkedHashMap::new
 			));
 		});
@@ -337,14 +337,14 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 			final var dropdown = new TDropdownWidget<StatsViewItems.GroupBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), StatsViewItems.GroupBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(StatsViewItems.GroupBy.class, FID, TAB),
 					StatsViewItems.GroupBy.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(GroupBy.class, FID, n));
 		}
 		// ==================================================
