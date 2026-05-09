@@ -119,7 +119,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 	public static enum SortBy implements TDropdownWidget.Entry
 	{
 		// ==================================================
-		VANILLA      (literal("-"),   (o1, o2) -> 0), //order in which stats were registered
+		VANILLA      (literal("-"),   (_, _) -> 0), //order in which stats were registered
 		ALPHABETICAL (literal("A-Z"), comparing(stat -> stat.getSubjectDisplayName().getString())),
 		LACITEBAHPLA (literal("Z-A"), ALPHABETICAL.getStatsSorter().reversed()),
 		INCREMENTAL  (literal("0-9"), comparing(CustomStat::getValue)),
@@ -141,7 +141,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 		public final @Override @NotNull Component getDisplayName() { return this.name; }
 
 		/**
-		 * Returns the statistics sorder associated with this {@link SortBy} instance.
+		 * Returns the statistics order associated with this {@link SortBy} instance.
 		 * @see SubjectStatsView#getStatsSorter(Filters)
 		 */
 		public final @NotNull Comparator<CustomStat> getStatsSorter() { return this.sorter; }
@@ -164,14 +164,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var dropdown = new TDropdownWidget<SortBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), SortBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(SortBy.class, FID, ALPHABETICAL),
 					SortBy.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(SortBy.class, FID, n));
 		}
 		// ==================================================
@@ -195,7 +195,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var map = new LinkedHashMap<String, ArrayList<CustomStat>>();
 			//group the stats
 			for(final var stat : stats)
-				map.computeIfAbsent(stat.getSubjectID().getNamespace(), __ -> new ArrayList<>())
+				map.computeIfAbsent(stat.getSubjectID().getNamespace(), _ -> new ArrayList<>())
 						.add(stat);
 			//remap the map and return it
 			return map.entrySet().stream().collect(Collectors.toMap(
@@ -204,7 +204,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 						return ModInfoProvider.getInstance().getModInfo(entry.getKey()).getName();
 					},
 					Map.Entry::getValue,
-					(existing, replacement) -> existing,
+					(existing, _) -> existing,
 					LinkedHashMap::new
 			));
 		});
@@ -244,14 +244,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var dropdown = new TDropdownWidget<GroupBy>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), GroupBy.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_groupBy()), GroupBy.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(GroupBy.class, FID, MOD),
 					GroupBy.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(GroupBy.class, FID, n));
 		}
 		// ==================================================
@@ -308,14 +308,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var dropdown = new TDropdownWidget<DistanceUnit>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), DistanceUnit.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_distanceUnit()), DistanceUnit.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_distanceUnit()), DistanceUnit.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(DistanceUnit.class, FID, DistanceUnit.VANILLA),
 					DistanceUnit.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(DistanceUnit.class, FID, n));
 		}
 		// ==================================================
@@ -383,14 +383,14 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var dropdown = new TDropdownWidget<TimeUnit>();
 			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
 			Collections.addAll(dropdown.getEntries(), TimeUnit.values());
-			dropdown.tooltipProperty().set(__ -> TTooltip.of(BLanguage.gui_statsview_filter_timeUnit()), TimeUnit.class);
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_timeUnit()), TimeUnit.class);
 			panel.add(dropdown);
 
 			//set initial value and apply filters on value update
 			dropdown.selectedEntryProperty().set(
 					context.getFilters().getProperty(TimeUnit.class, FID, TimeUnit.VANILLA),
 					TimeUnit.class);
-			dropdown.selectedEntryProperty().addChangeListener((p, o, n) ->
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
 					context.getFilters().setProperty(TimeUnit.class, FID, n));
 		}
 		// ==================================================

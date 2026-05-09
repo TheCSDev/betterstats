@@ -210,9 +210,28 @@ public final class StatsViewUtils
 	 * @param context The {@link StatsView.FiltersInitContext}.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	public static final void initShowAllStatsFilter(final @NotNull StatsView.FiltersInitContext context) throws NullPointerException
+	public static final void initShowAllStatsFilter(final @NotNull StatsView.FiltersInitContext context) throws NullPointerException {
+		initBooleanFilter(context, FID_EMPTYSTATS, false, BLanguage.gui_statsview_filter_showAllStats());
+	}
+	// ==================================================
+	/**
+	 * Initializes a {@link TCheckboxWidget} for a given {@code boolean} type filter.
+	 * @param context The {@link StatsView.FiltersInitContext}.
+	 * @param filterId The unique {@link Identifier} for the filter.
+	 * @param defaultValue The filter's default value.
+	 * @param labelText The checkbox label text.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	public static final void initBooleanFilter(
+			final @NotNull StatsView.FiltersInitContext context,
+			final @NotNull Identifier filterId,
+			final boolean defaultValue,
+			final @NotNull Component labelText) throws NullPointerException
 	{
 		//preparation and math
+		Objects.requireNonNull(context);
+		Objects.requireNonNull(filterId);
+		Objects.requireNonNull(labelText);
 		final var panel    = context.getPanel();
 		final var nextRect = panel.computeNextYBounds(20, GAP);
 
@@ -224,15 +243,15 @@ public final class StatsViewUtils
 		//create and add the label
 		final var label    = new TLabelElement();
 		label.setBounds(nextRect.x + 25, nextRect.y, nextRect.width - 25, nextRect.height);
-		label.setText(BLanguage.gui_statsview_filter_showAllStats());
+		label.setText(labelText);
 		panel.add(label);
 
 		//set up initial value and change listeners
 		checkbox.checkedProperty().set(
-				context.getFilters().getProperty(Boolean.class, FID_EMPTYSTATS, false),
+				context.getFilters().getProperty(Boolean.class, filterId, defaultValue),
 				StatsViewUtils.class);
-		checkbox.checkedProperty().addChangeListener((p, o, n) ->
-				context.getFilters().setProperty(Boolean.class, FID_EMPTYSTATS, n));
+		checkbox.checkedProperty().addChangeListener((_, _, n) ->
+				context.getFilters().setProperty(Boolean.class, filterId, n));
 	}
 	// ==================================================
 	/**

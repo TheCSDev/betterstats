@@ -50,6 +50,7 @@
 	"betterstats.gui.statsview.filter.selected_view": "选择的视图",
 	"betterstats.gui.statsview.filter.search": "搜索",
 	"betterstats.gui.statsview.filter.show_all_stats": "显示所有统计信息",
+	"betterstats.gui.statsview.filter.hide_completed_goals": "Hide completed hoals",
 	"betterstats.gui.statsview.filter.sort_by": "排序方式",
 	"betterstats.gui.statsview.filter.group_by": "分组方式",
 	"betterstats.gui.statsview.filter.group_by.all": "全部",

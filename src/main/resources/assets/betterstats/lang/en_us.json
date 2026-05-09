@@ -50,6 +50,7 @@
 	"betterstats.gui.statsview.filter.selected_view": "Selected view",
 	"betterstats.gui.statsview.filter.search": "Search",
 	"betterstats.gui.statsview.filter.show_all_stats": "Show all stats",
+	"betterstats.gui.statsview.filter.hide_completed_goals": "Hide completed hoals",
 	"betterstats.gui.statsview.filter.sort_by": "Sort by",
 	"betterstats.gui.statsview.filter.group_by": "Group by",
 	"betterstats.gui.statsview.filter.group_by.all": "All",

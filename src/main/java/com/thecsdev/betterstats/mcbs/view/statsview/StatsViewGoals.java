@@ -14,29 +14,32 @@ import com.thecsdev.common.math.UDim2;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
+import com.thecsdev.commonmc.api.client.gui.misc.TSeparatorElement;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
+import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.*;
 import static com.thecsdev.commonmc.resource.TComponent.gui;
+import static java.util.Comparator.comparing;
+import static net.minecraft.network.chat.Component.literal;
+import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
 
 /**
  * {@link StatsView} that displays {@link McbsGoal}s.
@@ -58,7 +61,15 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	 * <p>
 	 * <b>Filter value type:</b> {@code boolean}
 	 */
-	public static final Identifier FID_MANAGE_GOALS = Identifier.fromNamespaceAndPath(MOD_ID, "manage_goals");
+	public static final Identifier FID_MANAGE_GOALS   = fromNamespaceAndPath(MOD_ID, "manage_goals");
+
+	/**
+	 * {@link StatsView.Filters} key for whether the completed goals should
+	 * be hidden.
+	 * <p>
+	 * <b>Filter value type:</b> {@code boolean}
+	 */
+	public static final Identifier FID_HIDE_COMPLETED = fromNamespaceAndPath(MOD_ID, "hide_completed_goals");
 	// ==================================================
 	private StatsViewGoals() {}
 	// ==================================================
@@ -77,7 +88,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		final var filters = context.getFilters();
 
 		// ---------- management buttons
-		SeparatorElement.init(panel);
+		TSeparatorElement.initH(panel, 7 + GAP, 1, 0x44FFFFFF);
 		//"new goal" button
 		final var btn_newGoal = new TButtonWidget();
 		btn_newGoal.setBounds(panel.computeNextYBounds(20, GAP));
@@ -95,8 +106,9 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		panel.add(btn_manageGoals);
 
 		// ---------- goal filters
-		SeparatorElement.init(panel);
-		//TODO - Implement
+		TSeparatorElement.initH(panel, 7 + GAP, 1, 0x44FFFFFF);
+		StatsViewUtils.initBooleanFilter(context, FID_HIDE_COMPLETED, false, BLanguage.gui_statsview_filter_hideCompletedGoals());
+		SortBy.initFilter(context);
 	}
 	// --------------------------------------------------
 	public final @Override void initStats(@NotNull StatsInitContext context) {
@@ -213,13 +225,17 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 	private static final void initGoals(@NotNull StatsInitContext context)
 	{
 		//preparation
-		final var panel         = context.getPanel();
-		final var file          = context.getTab().getMcbsFile();
-		final var filters       = context.getFilters();
-		final var filter_search = filters.getProperty(String.class, FID_SEARCH, "");
+		final var panel           = context.getPanel();
+		final var file            = context.getTab().getMcbsFile();
+		final var filters         = context.getFilters();
+		final var filter_hideDone = filters.getProperty(Boolean.class, FID_HIDE_COMPLETED, false);
+		final var filter_search   = filters.getProperty(String.class, FID_SEARCH, "");
+		final var filter_sortBy   = filters.getProperty(SortBy.class, SortBy.FID, SortBy.DECREMENTAL).getSorter();
 
 		final var goalMap = HashBiMap.create(context.getTab().getGoals()); //shallow copy
 		final var goals   = goalMap.values().stream()
+				//filter based on visibility
+				.filter(goal -> (!filter_hideDone || !goal.isDone(file)))
 				//filter based on search query
 				.filter(goal -> {
 					if(filter_search.isBlank()) return true;
@@ -228,8 +244,8 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 					final var b = filter_search.toLowerCase(Locale.ROOT).replaceAll("\\s+", "");
 					return a.contains(b);
 				})
-				//then sort based on progress
-				.sorted(Comparator.comparing((McbsGoal goal) -> goal.getProgress(file)).reversed())
+				//then sort based on selected sorter
+				.sorted((o1, o2) -> filter_sortBy.compare(Pair.of(file, o1), Pair.of(file, o2)))
 				//lastly, convert to list
 				.toList();
 
@@ -439,24 +455,67 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		// ==================================================
 	}
 	// ================================================== ==================================================
-	//                                   SeparatorElement IMPLEMENTATION
+	//                                             SortBy IMPLEMENTATION
 	// ================================================== ==================================================
 	/**
-	 * Basic {@link TElement} implementation that draws a horizontal line.
+	 * {@link TDropdownWidget.Entry}s for sorting {@link McbsGoal}s.
 	 */
-	@ApiStatus.Internal
-	private static final class SeparatorElement extends TElement
+	public static enum SortBy implements TDropdownWidget.Entry
 	{
 		// ==================================================
-		public final @Override void renderCallback(@NotNull TGuiGraphics pencil) {
-			final var bb = getBounds();
-			pencil.fillColor(bb.x, bb.y + (bb.height / 2), bb.width, 1, 0x44FFFFFF);
+		ALPHABETICAL (literal("A-Z"), comparing(g -> g.getValue().getObjectiveText().getString())),
+		LACITEBAHPLA (literal("Z-A"), ALPHABETICAL.getSorter().reversed()),
+		INCREMENTAL  (literal("0-9"), comparing(g -> g.getRight().getProgress(g.getLeft()))),
+		DECREMENTAL  (literal("9-0"), INCREMENTAL.getSorter().reversed());
+		// --------------------------------------------------
+		/**
+		 * The main "filter id" used for {@link StatsView.Filters}.
+		 */
+		public static final Identifier FID = fromNamespaceAndPath(MOD_ID, "goals_sort_by");
+		// ==================================================
+		private final @NotNull Component                            name;
+		private final @NotNull Comparator<Pair<McbsFile, McbsGoal>> sorter;
+		// ==================================================
+		SortBy(@NotNull Component name, @NotNull Comparator<Pair<McbsFile, McbsGoal>> sorter) {
+			this.name   = Objects.requireNonNull(name);
+			this.sorter = Objects.requireNonNull(sorter);
 		}
 		// ==================================================
-		public static final void init(@NotNull TPanelElement panel) {
-			final var s = new SeparatorElement();
-			s.setBounds(panel.computeNextYBounds(7, GAP));
-			panel.add(s);
+		public final @Override @NotNull Component getDisplayName() { return this.name; }
+
+		/**
+		 * Returns the {@link Comparator} for sorting {@link McbsGoal}s.
+		 */
+		public final @NotNull Comparator<Pair<McbsFile, McbsGoal>> getSorter() { return this.sorter; }
+		// ==================================================
+		/**
+		 * Initializes GUI for the {@link SortBy} filter.
+		 * @param context The {@link StatsView.FiltersInitContext}.
+		 * @throws NullPointerException If the argument is {@code null}.
+		 */
+		public static final void initFilter(@NotNull StatsView.FiltersInitContext context)
+				throws NullPointerException
+		{
+			//create and add the icon and widget
+			final var panel = context.getPanel();
+			final var nextY = panel.computeNextYBounds(20, StatsViewUtils.GAP);
+
+			final var icon = new TTextureElement(BSprites.gui_icon_filterSort());
+			icon.setBounds(nextY.x, nextY.y, 20, nextY.height);
+			panel.add(icon);
+
+			final var dropdown = new TDropdownWidget<SortBy>();
+			dropdown.setBounds(nextY.x + 25, nextY.y, nextY.width - 25, nextY.height);
+			Collections.addAll(dropdown.getEntries(), SortBy.values());
+			dropdown.tooltipProperty().set(_ -> TTooltip.of(BLanguage.gui_statsview_filter_sortBy()), SortBy.class);
+			panel.add(dropdown);
+
+			//set initial value and apply filters on value update
+			dropdown.selectedEntryProperty().set(
+					context.getFilters().getProperty(SortBy.class, FID, DECREMENTAL),
+					SortBy.class);
+			dropdown.selectedEntryProperty().addChangeListener((_, _, n) ->
+					context.getFilters().setProperty(SortBy.class, FID, n));
 		}
 		// ==================================================
 	}

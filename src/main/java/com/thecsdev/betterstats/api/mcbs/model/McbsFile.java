@@ -40,13 +40,13 @@ public final class McbsFile
 
 		//FIXME - Remove test goals:
 		if(TCDCommonsConfig.FLAG_DEV_ENV) {
-			goals.put(parse("1"), new McbsSivGoal(parse("mined"),     parse("stone"),        10));
-			goals.put(parse("2"), new McbsSivGoal(parse("used"),      parse("iron_pickaxe"), 20));
-			goals.put(parse("3"), new McbsSivGoal(parse("broken"),    parse("iron_pickaxe"), 3));
-			goals.put(parse("4"), new McbsSivGoal(parse("picked_up"), parse("cobblestone"),  15));
-			goals.put(parse("5"), new McbsSivGoal(parse("killed"),    parse("pig"),          7));
-			goals.put(parse("6"), new McbsSivGoal(parse("killed_by"), parse("zombie"),       3));
-			goals.put(parse("7"), new McbsSivGoal(parse("custom"),    parse("play_time"),    20*60));
+			goals.put(parse("1"), new McbsSivGoal(parse("mined"),     parse("stone"),             10));
+			goals.put(parse("2"), new McbsSivGoal(parse("used"),      parse("netherite_pickaxe"), 20));
+			goals.put(parse("3"), new McbsSivGoal(parse("broken"),    parse("iron_pickaxe"),      3));
+			goals.put(parse("4"), new McbsSivGoal(parse("picked_up"), parse("cobblestone"),       15));
+			goals.put(parse("5"), new McbsSivGoal(parse("killed"),    parse("pig"),               7));
+			goals.put(parse("6"), new McbsSivGoal(parse("killed_by"), parse("zombie"),            3));
+			goals.put(parse("7"), new McbsSivGoal(parse("custom"),    parse("play_time"),         20*60));
 		}
 	}
 	// ==================================================
