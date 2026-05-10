@@ -47,7 +47,7 @@ public final class McbsSivGoal extends McbsGoal
 	private          int        fromValue;
 	private          int        targetValue;
 	// ==================================================
-	public McbsSivGoal() { this(STID_EDITTHISGOAL, withDefaultNamespace("air"), 0, 0); }
+	public McbsSivGoal() { this(STID_EDITTHISGOAL, withDefaultNamespace("air"), 0, 1); }
 
 	public McbsSivGoal(
 			@NotNull Identifier statType, @NotNull Identifier statSubject,

@@ -94,7 +94,6 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		// ---------- preparation for other controls
 		final var panel   = context.getPanel();
 		final var filters = context.getFilters();
-		final var client  = Minecraft.getInstance();
 
 		// ---------- management buttons
 		TSeparatorElement.initH(panel, 7 + GAP, 1, 0x44FFFFFF);
@@ -326,8 +325,10 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 					fileGoals.put(newGoalId, newGoal);      //a direct untracked change tool place
 					filtersContext.getTab().addEditCount(); //track the change, refreshed the gui
 
-					//open editor gui (if possible)
-					//FIXME - IMPLEMENT
+					//noinspection unchecked | open goal editing screen (if possible)
+					final @Nullable var newGoalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
+					if(newGoalGui != null)
+						client.setScreen(newGoalGui.createEditScreen(client.screen, newGoal));
 				});
 			}
 		}
@@ -391,7 +392,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			this.el_btnEdit.eClicked.addListener(btn -> {
 				final @NotNull  var client     = Objects.requireNonNull(btn.getClient(), "Missing 'client' instance");
 				final @Nullable var editScreen = Optional.ofNullable(this.goalGui)
-						.map(gui -> gui.createEditScreen(this.goal, client.screen))
+						.map(gui -> gui.createEditScreen(client.screen, this.goal))
 						.orElse(null);
 				if(editScreen != null) {
 					client.setScreen(editScreen);

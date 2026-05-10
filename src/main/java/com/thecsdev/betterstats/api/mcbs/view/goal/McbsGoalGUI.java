@@ -70,7 +70,7 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	}
 	// --------------------------------------------------
 	/**
-	 * Returns {@code true} if and only if {@link #createEditScreen(McbsGoal, Screen)}
+	 * Returns {@code true} if and only if {@link #createEditScreen(Screen, McbsGoal)}
 	 * is intended to be used.
 	 * @implNote This method should return a constant value.
 	 */
@@ -80,13 +80,13 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	/**
 	 * Creates a {@link Screen} that presents an interface allowing the user to
 	 * edit properties for an {@link McbsGoal} of type {@code T}.
-	 * @param goal The goal whose properties are to be edited.
 	 * @param lastScreen The {@link Screen} that was open right before the returned edit screen opened.
+	 * @param goal       The goal whose properties are to be edited.
 	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
 	 * @implNote If {@link #isEditable()} returns {@code false}, avoid overriding this method.
 	 */
 	@Contract(pure = true)
-	public @Virtual @NotNull Screen createEditScreen(@NotNull T goal, @Nullable Screen lastScreen)
+	public @Virtual @NotNull Screen createEditScreen(@Nullable Screen lastScreen, @NotNull T goal)
 			throws NullPointerException
 	{
 		Objects.requireNonNull(goal);
