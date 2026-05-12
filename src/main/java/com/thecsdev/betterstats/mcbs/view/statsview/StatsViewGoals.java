@@ -24,6 +24,7 @@ import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
+import com.thecsdev.commonmc.api.client.gui.widget.TToggleButtonWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -108,13 +109,14 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		panel.add(btn_newGoal);
 
 		//"manage goals" button
-		final var btn_manageGoals = new TButtonWidget();
+		final var btn_manageGoals = new TToggleButtonWidget();
 		btn_manageGoals.setBounds(panel.computeNextYBounds(20, GAP));
 		btn_manageGoals.getLabel().setText(BLanguage.gui_statsview_stats_mcbsGoals_manageBtn());
-		btn_manageGoals.eClicked.addListener(_ -> {
-			final boolean val = filters.getProperty(boolean.class, FID_MANAGE_GOALS, false);
-			filters.setProperty(boolean.class, FID_MANAGE_GOALS, !val);
-		});
+		btn_manageGoals.toggledProperty().set(
+				filters.getProperty(boolean.class, FID_MANAGE_GOALS, false),
+				StatsViewGoals.class);
+		btn_manageGoals.toggledProperty().addChangeListener((_, _, n) ->
+				filters.setProperty(boolean.class, FID_MANAGE_GOALS, n));
 		panel.add(btn_manageGoals);
 
 		// ---------- goal filters
@@ -320,10 +322,10 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 				ctxMenu.addButton(goalType.getName(), _ ->
 				{
 					//create new goal instance and put it in
-					final var newGoal   = Objects.requireNonNull(goalType.create(), "Goal type failed to produce an instance");
+					final var newGoal   = Objects.requireNonNull(goalType.create(), "Failed to produce a goal instance for: " + goalType.getClass());
 					final var newGoalId = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
-					fileGoals.put(newGoalId, newGoal);      //a direct untracked change tool place
-					filtersContext.getTab().addEditCount(); //track the change, refreshed the gui
+					fileGoals.put(newGoalId, newGoal);      //a direct untracked change takes place
+					filtersContext.getTab().addEditCount(); //track the change - refreshing the gui
 
 					//noinspection unchecked | open goal editing screen (if possible)
 					final @Nullable var newGoalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
