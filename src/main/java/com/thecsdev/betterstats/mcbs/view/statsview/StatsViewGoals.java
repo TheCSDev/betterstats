@@ -1,6 +1,8 @@
 package com.thecsdev.betterstats.mcbs.view.statsview;
 
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Iterators;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
@@ -102,7 +104,18 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		final var btn_newGoal = new TButtonWidget();
 		btn_newGoal.setBounds(panel.computeNextYBounds(20, GAP));
 		btn_newGoal.getLabel().setText(BLanguage.gui_statsview_stats_mcbsGoals_newBtn());
-		btn_newGoal.eClicked.addListener(_ -> btn_newGoal.showContextMenu());
+		btn_newGoal.eClicked.addListener(_ -> {
+			//if there's just one goal type registered, simplify the ui/ux flow by
+			//creating that goal instance immediately (no context menu)
+			if(BRegistries.GOAL_TYPE.size() == 1) {
+				onClickCreateGoal(
+						context.getTab(),
+						Iterators.getNext(BRegistries.GOAL_TYPE.iterator(), McbsGoalType.STAT_INT_VALUE));
+				return;
+			}
+			//when there are multiple goal types registered, use the context menu
+			btn_newGoal.showContextMenu();
+		});
 		btn_newGoal.contextMenuProperty().set(
 				_ -> buildNewGoalCtxMenu(context),
 				StatsViewGoals.class);
@@ -290,9 +303,9 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			@NotNull FiltersInitContext filtersContext) throws NullPointerException
 	{
 		//preparation and create the context menu builder
-		final var client    = Minecraft.getInstance();
-		final var ctxMenu   = new TContextMenu.Builder(client);
-		final var fileGoals = filtersContext.getTab().getMcbsFile().getGoals();
+		final var client  = Minecraft.getInstance();
+		final var ctxMenu = new TContextMenu.Builder(client);
+		final var tab     = filtersContext.getTab();
 
 		//collect goal types into grouped map (key = mod-id, value = mod's goal types)
 		final var goalTypes = StreamSupport.stream(BRegistries.GOAL_TYPE.spliterator(), false)
@@ -317,26 +330,38 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			ctxMenu.addSeparator();
 			//then initialize 'current' mod's goal type button entries
 			for(final var goalType : goalTypeGroup)
-			{
-				//add a button for a given goal type
-				ctxMenu.addButton(goalType.getName(), _ ->
-				{
-					//create new goal instance and put it in
-					final var newGoal   = Objects.requireNonNull(goalType.create(), "Failed to produce a goal instance for: " + goalType.getClass());
-					final var newGoalId = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
-					fileGoals.put(newGoalId, newGoal);      //a direct untracked change takes place
-					filtersContext.getTab().addEditCount(); //track the change - refreshing the gui
-
-					//noinspection unchecked | open goal editing screen (if possible)
-					final @Nullable var newGoalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
-					if(newGoalGui != null)
-						client.setScreen(newGoalGui.createEditScreen(client.screen, newGoal));
-				});
-			}
+				ctxMenu.addButton(goalType.getName(), _ -> onClickCreateGoal(tab, goalType));
 		}
 
 		//build and return the constructed context menu
 		return ctxMenu.build();
+	}
+	// --------------------------------------------------
+	/**
+	 * Button on-click handler for when user clicks a button to create a goal
+	 * of a specific {@link McbsGoalType}.
+	 * @param tab The {@link McbsEditorFileTab} the user interacted with.
+	 * @param goalType The {@link McbsGoalType} of the goal the user wanted to create.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	private static final void onClickCreateGoal(
+			@NotNull McbsEditorFileTab tab, @NotNull McbsGoalType<?> goalType)
+			throws NullPointerException
+	{
+		//preparation
+		final var client    = Minecraft.getInstance();
+		final var fileGoals = tab.getMcbsFile().getGoals();
+
+		//create new goal instance and put it in
+		final var newGoal   = Objects.requireNonNull(goalType.create(), "Failed to produce a goal instance for: " + goalType.getClass());
+		final var newGoalId = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
+		fileGoals.put(newGoalId, newGoal); //a direct untracked change takes place
+		tab.addEditCount();                //track the change - refreshing the gui
+
+		//noinspection unchecked | open goal editing screen (if possible)
+		final @Nullable var newGoalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
+		if(newGoalGui != null)
+			client.setScreen(newGoalGui.createEditScreen(client.screen, newGoal));
 	}
 	// ================================================== ==================================================
 	//                                      ListedGoalGui IMPLEMENTATION
