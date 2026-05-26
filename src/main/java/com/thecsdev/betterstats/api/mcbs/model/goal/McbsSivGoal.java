@@ -21,6 +21,7 @@ import static net.minecraft.resources.Identifier.withDefaultNamespace;
  * {@link McbsGoal} implementation whose goal is to achieve a specific
  * stat integer value.
  */
+@SuppressWarnings("NotNullFieldNotInitialized")
 public final class McbsSivGoal extends McbsGoal
 {
 	// ==================================================
@@ -42,10 +43,10 @@ public final class McbsSivGoal extends McbsGoal
 	 */
 	public static final Identifier STID_EDITTHISGOAL = fromNamespaceAndPath(MOD_ID, "edit_this_goal");
 	// ==================================================
-	private @NotNull Identifier statType;
-	private @NotNull Identifier statSubject;
-	private          int        fromValue;
-	private          int        targetValue;
+	private @NotNull Identifier statType;     //ex. "Times used"
+	private @NotNull Identifier statSubject;  //ex. "Apple"
+	private          int        fromValue;    //ex. "from 50"
+	private          int        targetValue;  //ex. "to 125" - from 50 to 125 becomes "Use 75 Apple"
 	// ==================================================
 	public McbsSivGoal() { this(STID_EDITTHISGOAL, withDefaultNamespace("air"), 0, 1); }
 
@@ -64,6 +65,11 @@ public final class McbsSivGoal extends McbsGoal
 		this.statSubject = Objects.requireNonNull(statSubject);
 		this.fromValue   = Math.abs(fromValue);
 		this.targetValue = Math.abs(targetValue);
+	}
+
+	public McbsSivGoal(@NotNull McbsSivGoal copyFrom) {
+		super(McbsGoalType.STAT_INT_VALUE);
+		copyFrom(copyFrom);
 	}
 	// ==================================================
 	/**
@@ -143,6 +149,19 @@ public final class McbsSivGoal extends McbsGoal
 	// --------------------------------------------------
 	public final @Override @NotNull Component getObjectiveText() {
 		return BLanguage.mcbsgoal_sivObjectiveText(this);
+	}
+	// ==================================================
+	/**
+	 * Copies values of all fields from the provided {@link McbsSivGoal}
+	 * into this {@link McbsSivGoal}.
+	 * @param other The {@link McbsSivGoal} to copy values from.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final void copyFrom(@NotNull McbsSivGoal other) throws NullPointerException {
+		this.statType    = other.statType;
+		this.statSubject = other.statSubject;
+		this.fromValue   = other.fromValue;
+		this.targetValue = other.targetValue;
 	}
 	// ==================================================
 }
