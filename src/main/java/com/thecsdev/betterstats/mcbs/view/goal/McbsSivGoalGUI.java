@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats.mcbs.view.goal;
 
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
@@ -82,9 +83,11 @@ public final class McbsSivGoalGUI extends McbsGoalGUI<McbsSivGoal>
 	public final @Override boolean isEditable() { return true; }
 	// --------------------------------------------------
 	public final @Override @NotNull Screen createEditScreen(
-			@Nullable Screen lastScreen, @NonNull McbsSivGoal goal)
+			@Nullable Screen lastScreen, @NotNull McbsEditorFileTab editorTab, @NonNull McbsSivGoal goal)
 			throws NullPointerException {
+		//FIXME - REIMPLEMENT:
 		return new McbsSivGoalEditScreen(lastScreen, goal).getAsScreen();
+		//return (new AbstractMcbsGoalEditScreen<>(lastScreen, editorTab, goal) {}).getAsScreen();
 	}
 	// ==================================================
 }

@@ -164,9 +164,7 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		final var goals = this.mcbsFile.getGoals();
 		if(goals.containsValue(Objects.requireNonNull(goal))) return;
 		//construct default id based on current time
-		final var now   = LocalDateTime.now();
-		final var path  = DateTimeFormatter.ofPattern("yyyy_MM_dd-HH_mm_ss_nnnnnnnnn").format(now);
-		final var id    = Identifier.withDefaultNamespace("generated/" + path);
+		final var id = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
 		//put goal and increment edit count
 		putGoal(id, goal);
 	}

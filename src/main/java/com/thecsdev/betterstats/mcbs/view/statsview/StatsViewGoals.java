@@ -39,8 +39,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -349,19 +347,16 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			throws NullPointerException
 	{
 		//preparation
-		final var client    = Minecraft.getInstance();
-		final var fileGoals = tab.getMcbsFile().getGoals();
+		final var client = Minecraft.getInstance();
 
 		//create new goal instance and put it in
-		final var newGoal   = Objects.requireNonNull(goalType.create(), "Failed to produce a goal instance for: " + goalType.getClass());
-		final var newGoalId = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
-		fileGoals.put(newGoalId, newGoal); //a direct untracked change takes place
-		tab.addEditCount();                //track the change - refreshing the gui
+		final var newGoal = Objects.requireNonNull(goalType.create(), "Failed to produce a goal instance for: " + goalType.getClass());
+		tab.putGoal(newGoal);
 
 		//noinspection unchecked | open goal editing screen (if possible)
-		final @Nullable var newGoalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
-		if(newGoalGui != null)
-			client.setScreen(newGoalGui.createEditScreen(client.screen, newGoal));
+		final @Nullable var goalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
+		if(goalGui != null && goalGui.isEditable())
+			client.setScreen(goalGui.createEditScreen(client.screen, tab, newGoal));
 	}
 	// ================================================== ==================================================
 	//                                      ListedGoalGui IMPLEMENTATION
@@ -419,7 +414,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			this.el_btnEdit.eClicked.addListener(btn -> {
 				final @NotNull  var client     = Objects.requireNonNull(btn.getClient(), "Missing 'client' instance");
 				final @Nullable var editScreen = Optional.ofNullable(this.goalGui)
-						.map(gui -> gui.createEditScreen(client.screen, this.goal))
+						.map(gui -> gui.createEditScreen(client.screen, tab, this.goal))
 						.orElse(null);
 				if(editScreen != null) {
 					client.setScreen(editScreen);

@@ -1,6 +1,7 @@
 package com.thecsdev.betterstats.api.mcbs.view.goal;
 
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
 import com.thecsdev.betterstats.resource.BLanguage;
@@ -70,7 +71,7 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	}
 	// --------------------------------------------------
 	/**
-	 * Returns {@code true} if and only if {@link #createEditScreen(Screen, McbsGoal)}
+	 * Returns {@code true} if and only if {@link #createEditScreen(Screen, McbsEditorFileTab, McbsGoal)}
 	 * is intended to be used.
 	 * @implNote This method should return a constant value.
 	 */
@@ -80,13 +81,17 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	/**
 	 * Creates a {@link Screen} that presents an interface allowing the user to
 	 * edit properties for an {@link McbsGoal} of type {@code T}.
-	 * @param lastScreen The {@link Screen} that was open right before the returned edit screen opened.
-	 * @param goal       The goal whose properties are to be edited.
+	 *
+	 * @param lastScreen The {@link Screen} that the returned screen will use as its "last screen".
+	 * @param editorTab The {@link McbsEditorFileTab} that displayed the goals interface, where the
+	 *                  user clicked to edit the given {@link McbsGoal}.
+	 * @param goal The goal whose properties are to be edited.
 	 * @throws NullPointerException If a {@link NotNull} argument is {@code null}.
 	 * @implNote If {@link #isEditable()} returns {@code false}, avoid overriding this method.
 	 */
 	@Contract(pure = true)
-	public @Virtual @NotNull Screen createEditScreen(@Nullable Screen lastScreen, @NotNull T goal)
+	public @Virtual @NotNull Screen createEditScreen(
+			@Nullable Screen lastScreen, @NotNull McbsEditorFileTab editorTab, @NotNull T goal)
 			throws NullPointerException
 	{
 		Objects.requireNonNull(goal);
