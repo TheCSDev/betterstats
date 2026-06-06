@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.api.mcbs.model.goal;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.common.util.annotations.Virtual;
 import net.minecraft.network.chat.Component;
@@ -21,7 +22,7 @@ import static com.thecsdev.betterstats.api.registry.BRegistries.GOAL_TYPE;
  * The progress of a goal is determined by the implementation of the
  * {@link #getProgress(McbsFile)} method.
  */
-public abstract class McbsGoal
+public abstract class McbsGoal implements Cloneable
 {
 	// ==================================================
 	/**
@@ -46,6 +47,15 @@ public abstract class McbsGoal
 		if(type.getBaseClass() != getClass())
 			throw new IllegalArgumentException("Provided McbsGoalType doesn't represent this McbsGoal's Class");
 		this.type = type;
+	}
+	// ==================================================
+	@SuppressWarnings({"MethodDoesntCallSuperMethod", "unchecked"})
+	public @Virtual @NotNull McbsGoal clone() throws IllegalStateException {
+		final var type = (McbsGoalType<McbsGoal>) getType();
+		final var json = type.getCodec().codec().encodeStart(JsonOps.INSTANCE, this).getOrThrow();
+		final var copy = type.getCodec().codec().parse(JsonOps.INSTANCE, json).getOrThrow();
+		if(getClass() != copy.getClass()) throw new IllegalStateException("Class mismatch after #clone()");
+		return copy;
 	}
 	// ==================================================
 	/**

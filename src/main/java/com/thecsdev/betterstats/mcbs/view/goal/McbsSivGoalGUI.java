@@ -85,9 +85,7 @@ public final class McbsSivGoalGUI extends McbsGoalGUI<McbsSivGoal>
 	public final @Override @NotNull Screen createEditScreen(
 			@Nullable Screen lastScreen, @NotNull McbsEditorFileTab editorTab, @NonNull McbsSivGoal goal)
 			throws NullPointerException {
-		//FIXME - REIMPLEMENT:
-		return new McbsSivGoalEditScreen(lastScreen, goal).getAsScreen();
-		//return (new AbstractMcbsGoalEditScreen<>(lastScreen, editorTab, goal) {}).getAsScreen();
+		return new McbsSivGoalEditScreen(lastScreen, editorTab, goal).getAsScreen();
 	}
 	// ==================================================
 }

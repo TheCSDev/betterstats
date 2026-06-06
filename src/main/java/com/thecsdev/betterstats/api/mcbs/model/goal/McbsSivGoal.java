@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
@@ -70,6 +71,13 @@ public final class McbsSivGoal extends McbsGoal
 	public McbsSivGoal(@NotNull McbsSivGoal copyFrom) {
 		super(McbsGoalType.STAT_INT_VALUE);
 		copyFrom(copyFrom);
+	}
+	// ==================================================
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
+	public final @Override @NonNull McbsSivGoal clone() {
+		final var copy = new McbsSivGoal();
+		copy.copyFrom(this);
+		return copy;
 	}
 	// ==================================================
 	/**
