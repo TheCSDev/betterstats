@@ -183,7 +183,8 @@ public final class BLanguage
 		if(statType != null) {
 			//obtain subject's registry and entry
 			final @NotNull  var statSubjReg = statType.getRegistry();
-			final @Nullable var statSubj    = statSubjReg.getValue(statSubjId);
+			final @Nullable var statSubj    = statSubjReg.containsKey(statSubjId) ?
+					statSubjReg.getValue(statSubjId) : null; //must prevent default values
 			//obtain subject name based on registry
 			//(switch 'case'-s are ordered by popularity/frequency, to save on cpu cycles)
 			if(statSubj != null) arg2 = switch (statSubjReg) {

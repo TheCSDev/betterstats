@@ -51,6 +51,8 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 	private       @NotNull  G                 goal;
 	private       @NotNull  G                 preview;
 	private final @Nullable McbsGoalGUI<G>    goalGui;
+	// --------------------------------------------------
+	private final @NotNull  Interface         el_interface;
 	// ==================================================
 	/**
 	 * Constructs an instance of this screen.
@@ -71,16 +73,19 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 				.append(goal.getObjectiveText()));
 
 		//initialize fields
-		this.lastScreen  = lastScreen;
-		this.editorTab   = Objects.requireNonNull(editorTab);
-		this.goalId      = editorTab.getGoals().entrySet().stream()
+		this.lastScreen   = lastScreen;
+		this.editorTab    = Objects.requireNonNull(editorTab);
+		this.goalId       = editorTab.getGoals().entrySet().stream()
 				.filter(entry -> entry.getValue() == goal)
 				.map(Map.Entry::getKey)
 				.findFirst()
 				.orElseThrow(() -> new NoSuchElementException("Editor tab doesn't contain the given goal"));
-		this.goal        = Objects.requireNonNull(goal);
-		this.preview     = (G) goal.clone();
-		this.goalGui     = McbsGoalGUI.findFor(goal);
+		this.goal         = Objects.requireNonNull(goal);
+		this.preview      = (G) goal.clone();
+		this.goalGui      = McbsGoalGUI.findFor(goal);
+
+		//initialize other
+		this.el_interface = new Interface();
 	}
 	// ==================================================
 	/**
@@ -123,9 +128,8 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 	public final @Override @Nullable Screen getLastScreen() { return this.lastScreen; }
 	// --------------------------------------------------
 	protected final @Override void initCallback() {
-		final var el_interface = new Interface();
-		add(el_interface);
-		el_interface.setBounds(new UDim2(0.05, 0, 0, 10), new UDim2(0.9, 0, 1, -20));
+		add(this.el_interface);
+		this.el_interface.setBounds(new UDim2(0.05, 0, 0, 10), new UDim2(0.9, 0, 1, -20));
 	}
 	// ==================================================
 	/**
@@ -151,6 +155,16 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 		//apply changes to the mcbs-file
 		this.editorTab.putGoal(this.goalId, this.goal);
 	}
+
+	/**
+	 * Refreshes the goal preview interface. Call this whenever changes are
+	 * made to {@link #getPreviewGoal()}.
+	 */
+	public final void refreshPreview() {
+		if(this.el_interface.getParent() != this)
+			return;
+		this.el_interface.el_left.clearAndInit();
+	}
 	// ================================================== ==================================================
 	//                                          Interface IMPLEMENTATION
 	// ================================================== ==================================================
@@ -162,13 +176,24 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 	private final class Interface extends TFillColorElement
 	{
 		// ==================================================
-		private final @NotNull  McbsEditorFileTab editorTab = AbstractMcbsGoalEditScreen.this.editorTab;
+		private final @NotNull  McbsEditorFileTab editorTab = Objects.requireNonNull(AbstractMcbsGoalEditScreen.this.editorTab);
 		// --------------------------------------------------
 		private       @NotNull  G                 goal      = AbstractMcbsGoalEditScreen.this.goal;
 		private       @NotNull  G                 preview   = AbstractMcbsGoalEditScreen.this.preview;
 		private final @Nullable McbsGoalGUI<G>    goalGui   = AbstractMcbsGoalEditScreen.this.goalGui;
+		// --------------------------------------------------
+		final @ApiStatus.Internal TElement el_left;
+		final @ApiStatus.Internal TElement el_right;
 		// ==================================================
-		public Interface() { super(0x3B000000, 0xFF000000); }
+		public Interface() {
+			super(0x3B000000, 0xFF000000);
+			this.el_left = new TFillColorElement(0x3B000000, 0) {
+				protected final @Override void initCallback() { initGoalPreviewGui(el_left); }
+			};
+			this.el_right = new TElement() {
+				protected final @Override void initCallback() { initGoalEditorGui(el_right); }
+			};
+		}
 		// ==================================================
 		protected final @Override void initCallback()
 		{
@@ -176,18 +201,11 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 			this.goal    = AbstractMcbsGoalEditScreen.this.goal;
 			this.preview = AbstractMcbsGoalEditScreen.this.preview;
 
-			//initialize baseline bodies for the gui
-			final var el_left = new TFillColorElement(0x3B000000, 0);
-			add(el_left);
-			el_left.setBounds(new UDim2(0, 1, 0, 1), new UDim2(0.35, -1, 1, -2));
-
-			final var el_right = new TElement();
-			add(el_right);
-			el_right.setBounds(new UDim2(0.35, 0, 0, 1), new UDim2(0.65, -1, 1, -2));
-
-			//initialize preview and editing interfaces
-			initGoalPreviewGui(el_left);
-			AbstractMcbsGoalEditScreen.this.initGoalEditorGui(el_right);
+			//add baseline bodies for the gui
+			add(this.el_left);
+			this.el_left.setBounds(new UDim2(0, 1, 0, 1), new UDim2(0.35, -1, 1, -2));
+			add(this.el_right);
+			this.el_right.setBounds(new UDim2(0.35, 0, 0, 1), new UDim2(0.65, -1, 1, -2));
 		}
 		// ==================================================
 		/**
