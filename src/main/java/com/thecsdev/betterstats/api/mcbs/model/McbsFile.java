@@ -39,8 +39,8 @@ public final class McbsFile
 		this.goals = new ConcurrentHashMap<>(Objects.requireNonNull(goalsImmutable));
 
 		//FIXME - Remove test goals:
+		goals.put(parse("1"), new McbsSivGoal(parse("mined"), parse("stone"), 64));
 		if(TCDCommonsConfig.FLAG_DEV_ENV) {
-			goals.put(parse("1"), new McbsSivGoal(parse("mined"),     parse("stone"),             10));
 			goals.put(parse("2"), new McbsSivGoal(parse("used"),      parse("netherite_pickaxe"), 20));
 			goals.put(parse("3"), new McbsSivGoal(parse("broken"),    parse("iron_pickaxe"),      3));
 			goals.put(parse("4"), new McbsSivGoal(parse("picked_up"), parse("cobblestone"),       15));

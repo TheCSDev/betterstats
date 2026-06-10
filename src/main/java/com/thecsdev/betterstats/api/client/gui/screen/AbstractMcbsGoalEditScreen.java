@@ -18,6 +18,7 @@ import com.thecsdev.commonmc.api.client.gui.screen.TScreen;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreenPlus;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
+import com.thecsdev.commonmc.resource.TLanguage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
@@ -224,16 +225,16 @@ public abstract class AbstractMcbsGoalEditScreen<G extends McbsGoal>
 			body.add(el_panel);
 
 			//group label that says "Preview"
-			final var lbl_group = StatsViewUtils.initGroupLabel(el_panel, Component.literal("Preview"));
+			final var lbl_group = StatsViewUtils.initGroupLabel(el_panel, TLanguage.misc_preview());
 			lbl_group.textAlignmentProperty().set(CompassDirection.CENTER, Interface.class);
 
 			//preview for "From:"
-			final var lbl_from = StatsViewUtils.initGroupLabel(el_panel, Component.literal("From:"));
+			final var lbl_from = StatsViewUtils.initGroupLabel(el_panel, TLanguage.misc_from());
 			lbl_from.textColorProperty().set(0xFFC6C6C6, Interface.class);
 			initGoalPreviewGui(el_panel, this.goal);
 
 			//preview for "To:"
-			final var lbl_to = StatsViewUtils.initGroupLabel(el_panel, Component.literal("To:"));
+			final var lbl_to = StatsViewUtils.initGroupLabel(el_panel, TLanguage.misc_to());
 			lbl_to.textColorProperty().set(0xFFC6C6C6, Interface.class);
 			initGoalPreviewGui(el_panel, this.preview);
 

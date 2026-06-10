@@ -30,6 +30,10 @@
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI mobs follow cursor",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Entity stats' GUI mobs visually follow the cursor location.",
 
+	"betterstats.gui.screen.edit_siv_goal.stat_type": "Stat type (Activity)",
+	"betterstats.gui.screen.edit_siv_goal.stat_subject": "Stat subject (Item/Entity/Etc)",
+	"betterstats.gui.screen.edit_siv_goal.target_value_range": "Target value range",
+
 	"betterstats.gui.menubar.file": "File",
 	"betterstats.gui.menubar.file.new": "New",
 	"betterstats.gui.menubar.file.open": "Open",

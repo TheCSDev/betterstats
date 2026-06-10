@@ -80,7 +80,7 @@ public final class BClientRegistries
 		Registry.register(STATS_VIEW, id("mobs"),    StatsViewMobs.INSTANCE);
 		Registry.register(STATS_VIEW, id("food"),    StatsViewFood.INSTANCE);
 		Registry.register(STATS_VIEW, id("hunter"),  StatsViewHunter.INSTANCE);
-		if(BetterStats.getConfig().experimentsEnabled()) //FIXME - Remove experimental
+		if(BetterStats.getConfig().experimentsEnabled()) //FIXME - Remove experimental once feature is ready
 			Registry.register(STATS_VIEW, id("goals"), StatsViewGoals.INSTANCE);
 
 		//register mcbs goal gui-s

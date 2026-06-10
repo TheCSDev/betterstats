@@ -5,12 +5,14 @@ import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
+import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.text.TSimpleTextFieldWidget;
+import com.thecsdev.commonmc.resource.TLanguage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
@@ -67,7 +69,7 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 		body.add(el_scroll);
 
 		//stat type input
-		StatsViewUtils.initGroupLabel(el_panel, Component.literal("Stat type (Activity)"));
+		StatsViewUtils.initGroupLabel(el_panel, BLanguage.gui_screen_editSivGoal_statType());
 		final var in_statType = new TSimpleTextFieldWidget();
 		in_statType.setBounds(el_panel.computeNextYBounds(20, GAP));
 		in_statType.placeholderProperty().set(Component.literal("minecraft:used"), McbsSivGoalEditScreen.class);
@@ -81,7 +83,7 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 		el_panel.add(in_statType);
 
 		//stat subject input
-		StatsViewUtils.initGroupLabel(el_panel, Component.literal("Stat subject (Item/Entity/Etc)"));
+		StatsViewUtils.initGroupLabel(el_panel, BLanguage.gui_screen_editSivGoal_statSubject());
 		final var in_statSubject = new TSimpleTextFieldWidget();
 		in_statSubject.setBounds(el_panel.computeNextYBounds(20, GAP));
 		in_statSubject.placeholderProperty().set(Component.literal("minecraft:air"), McbsSivGoalEditScreen.class);
@@ -95,7 +97,7 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 		el_panel.add(in_statSubject);
 
 		//range input
-		StatsViewUtils.initGroupLabel(el_panel, Component.literal("Range"));
+		StatsViewUtils.initGroupLabel(el_panel, BLanguage.gui_screen_editSivGoal_targetValueRange());
 		final var el_rangeBody = new TElement();
 		el_rangeBody.setBounds(el_panel.computeNextYBounds(20, GAP));
 		el_panel.add(el_rangeBody);
@@ -104,7 +106,7 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 			final int valFrom = stats.getIntValue(goal.getStatType(), goal.getStatSubject());
 			final int valTo   = valFrom + (getGoal().getTargetValue() - getGoal().getFromValue());
 
-			final var el1 = new TLabelElement(Component.literal("From"));
+			final var el1 = new TLabelElement(TLanguage.misc_from());
 			el1.setBounds(bb.x, bb.y, 40, 20);
 			el1.textAlignmentProperty().set(CompassDirection.CENTER, McbsSivGoalEditScreen.class);
 			el1.textColorProperty().set(0xFFC6C6C6, McbsSivGoalEditScreen.class);
@@ -128,7 +130,7 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 			el3.textAlignmentProperty().set(CompassDirection.CENTER, McbsSivGoalEditScreen.class);
 			el_rangeBody.add(el3);
 
-			final var el4 = new TLabelElement(Component.literal("To"));
+			final var el4 = new TLabelElement(TLanguage.misc_to());
 			el4.setBounds(el3.getBounds().endX, bb.y, 40, 20);
 			el4.textAlignmentProperty().set(CompassDirection.CENTER, McbsSivGoalEditScreen.class);
 			el4.textColorProperty().set(0xFFC6C6C6, McbsSivGoalEditScreen.class);

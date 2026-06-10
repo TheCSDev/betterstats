@@ -30,6 +30,10 @@
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI 生物看向光标",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "实体统计信息 GUI 中的生物会始终看向光标位置。",
 
+	"betterstats.gui.screen.edit_siv_goal.stat_type": "Stat type (Activity)",
+	"betterstats.gui.screen.edit_siv_goal.stat_subject": "Stat subject (Item/Entity/Etc)",
+	"betterstats.gui.screen.edit_siv_goal.target_value_range": "Target value range",
+
 	"betterstats.gui.menubar.file": "文件",
 	"betterstats.gui.menubar.file.new": "新建",
 	"betterstats.gui.menubar.file.open": "打开",

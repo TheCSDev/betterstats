@@ -73,6 +73,10 @@ public final class BLanguage
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor_tooltip() { return translatable("betterstats.config.client.gui_mobs_follow_cursor.tooltip"); }
 	// --------------------------------------------------
+	public static final MutableComponent gui_screen_editSivGoal_statType() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_type"); }
+	public static final MutableComponent gui_screen_editSivGoal_statSubject() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_subject"); }
+	public static final MutableComponent gui_screen_editSivGoal_targetValueRange() { return translatable("betterstats.gui.screen.edit_siv_goal.target_value_range"); }
+	// --------------------------------------------------
 	public static final MutableComponent cmd_stats_edit_out(@NotNull Component stat, int affectedPlayerCount) { return translatable("commands.statistics.edit.output", stat, affectedPlayerCount); }
 	public static final MutableComponent cmd_stats_clear_out(int affectedPlayerCount) { return translatable("commands.statistics.clear.output", affectedPlayerCount); }
 	public static final MutableComponent cmd_stats_clear_kick() { return translatable("commands.statistics.clear.kick"); }

@@ -151,7 +151,7 @@ public final class McbsSivGoal extends McbsGoal
 	{
 		final int statVal = mcbsFile.getStats().getIntValue(this.statType, this.statSubject);
 		final int outOf   = Math.max(this.targetValue - this.fromValue, 0);
-		final int got     = Math.clamp(statVal - this.fromValue, 0, outOf);
+		final int got     = Math.clamp(statVal - this.fromValue, Integer.MIN_VALUE, outOf);
 		return Component.literal(got + " / " + outOf);
 	}
 	// --------------------------------------------------
