@@ -39,8 +39,8 @@ public final class McbsFile
 		this.goals = new ConcurrentHashMap<>(Objects.requireNonNull(goalsImmutable));
 
 		//FIXME - Remove test goals:
-		goals.put(parse("1"), new McbsSivGoal(parse("mined"), parse("stone"), 64));
 		if(TCDCommonsConfig.FLAG_DEV_ENV) {
+			goals.put(parse("1"), new McbsSivGoal(parse("mined"),     parse("stone"), 10));
 			goals.put(parse("2"), new McbsSivGoal(parse("used"),      parse("netherite_pickaxe"), 20));
 			goals.put(parse("3"), new McbsSivGoal(parse("broken"),    parse("iron_pickaxe"),      3));
 			goals.put(parse("4"), new McbsSivGoal(parse("picked_up"), parse("cobblestone"),       15));
@@ -68,10 +68,18 @@ public final class McbsFile
 	 * This method completely replaces all the data in this {@link McbsFile} with data
 	 * copied from the provided {@link McbsFile}.
 	 */
-	public final void reloadFrom(@NotNull McbsFile mcbsFile) throws NullPointerException {
+	public final void reloadFrom(@NotNull McbsFile mcbsFile) throws NullPointerException
+	{
+		//argument validity check
 		Objects.requireNonNull(mcbsFile);
-		if(mcbsFile == this) return;
+		if(mcbsFile == this) return; //ignore 'this'
+
+		//reload stats
 		getStats().clearAndAddAll(mcbsFile.getStats());
+
+		//reload goals
+		getGoals().clear();
+		mcbsFile.getGoals().forEach((key, value) -> getGoals().put(key, value.clone()));
 	}
 	// ================================================== ==================================================
 	//                                              Codec IMPLEMENTATION
