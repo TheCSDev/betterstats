@@ -16,9 +16,10 @@
 	"environment":  "*",
 	"entrypoints":
 	{
-		"main":   ["${properties["fabric.json.entrypoints.main"]}"],
-		"client": ["${properties["fabric.json.entrypoints.client"]}"],
-		"server": ["${properties["fabric.json.entrypoints.server"]}"]
+		"main":    ["${properties["fabric.json.entrypoints.main"]}"],
+		"client":  ["${properties["fabric.json.entrypoints.client"]}"],
+		"server":  ["${properties["fabric.json.entrypoints.server"]}"],
+		"modmenu": ["${properties["fabric.json.entrypoints.modmenu"]}"]
 	},
 	"mixins": ${properties["fabric.mixins"]},
 	"depends":

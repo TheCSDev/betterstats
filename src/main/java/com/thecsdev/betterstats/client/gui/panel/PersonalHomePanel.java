@@ -238,22 +238,6 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		lbl_group.textScaleProperty().set(1.1d, PersonalHomePanel.class);
 		news.forEach(section -> CreditsPanel.initSection(this, section));
 	}
-	// --------------------------------------------------
-	/**
-	 * Initializes the "coming soon" section of the panel, which is a placeholder for
-	 * future features that are not yet implemented.
-	 */
-	private final void initComingSoon()
-	{
-		//group label
-		StatsViewUtils.initGroupLabel(this, translatable("createWorld.tab.more.title"));
-
-		//group contents
-		final var lbl = new TLabelElement(TLanguage.misc_comingSoon().append("..."));
-		lbl.setBounds(computeNextYBounds(lbl.fontProperty().get().lineHeight, GAP * 3));
-		lbl.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
-		add(lbl);
-	}
 	// ================================================== ==================================================
 	//                                    ModSummaryPanel IMPLEMENTATION
 	// ================================================== ==================================================
@@ -326,14 +310,14 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			btn_ctx.getLabel().setText(Component.literal("☰"));
 			btn_ctx.getLabel().textColorProperty().set(0xFFDDDDDD, ModSummaryPanel.class);
 			btn_ctx.setBounds(bb.endX - 17, bb.endY - 17, 17, 17);
-			btn_ctx.eClicked.addListener(__ -> btn_ctx.showContextMenu());
-			btn_ctx.contextMenuProperty().set(__ -> new TContextMenu.Builder(client)
+			btn_ctx.eClicked.addListener(_ -> btn_ctx.showContextMenu());
+			btn_ctx.contextMenuProperty().set(_ -> new TContextMenu.Builder(client)
 					.addButton(
 							gui(BSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),
-							___ -> showUriScreen(BetterStats.getProperty("mod.link.curseforge"), true))
+							_ -> showUriScreen(BetterStats.getProperty("mod.link.curseforge"), true))
 					.addButton(
 							gui(BSprites.gui_icon_faviconMr()).append(" ").append(literal("Modrinth")),
-							___ -> showUriScreen(BetterStats.getProperty("mod.link.modrinth"), true))
+							_ -> showUriScreen(BetterStats.getProperty("mod.link.modrinth"), true))
 					.build(), ModSummaryPanel.class);
 			onto.add(btn_ctx);
 		}
@@ -381,14 +365,14 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			final var btn_myStats = initButton(
 					null,
 					BLanguage.gui_menubar_view_localPlayerStats(),
-					__ -> editor.addTab(McbsEditorFileTab.LOCALPLAYER, true));
+					_ -> editor.addTab(McbsEditorFileTab.LOCALPLAYER, true));
 			btn_myStats.getLabel().setText(TComponent.head("Steve"));
 			btn_myStats.getLabel().textAlignmentProperty().set(CompassDirection.CENTER, QuickAccessPanel.class);
 			btn_myStats.getLabel().textScaleProperty().set(1.5d, QuickAccessPanel.class);
 			initButton(
 					Identifier.parse("statistics/item_used"),
 					BLanguage.gui_menubar_view_vanillaScreen(),
-					__ -> {
+					_ -> {
 						final @Nullable var player     = client.player;
 						final @Nullable var lastScreen = client.screen;
 						if(player == null || lastScreen == null) return; //safety - shouldn't happen
@@ -397,11 +381,11 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			initButton(
 					TSprites.gui_icon_fsFolder(),
 					BLanguage.gui_menubar_file_open(),
-					__ -> MenubarItemFile.showOpenFileDialog(client, editor));
+					_ -> MenubarItemFile.showOpenFileDialog(client, editor));
 			initButton(
 					BSprites.gui_icon_settings(),
 					BLanguage.gui_menubar_file_settings(),
-					__ -> editor.addTab(McbsEditorSettingsTab.INSTANCE, true));
+					_ -> editor.addTab(McbsEditorSettingsTab.INSTANCE, true));
 		}
 		// ==================================================
 		/**
@@ -426,7 +410,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 			final var btn = new TButtonWidget.Flat();
 			btn.setBounds(computeNextXBounds(getBounds().height - (pad * 2), GAP));
 			btn.eClicked.addListener(onClick);
-			btn.tooltipProperty().set(__ -> TTooltip.of(tooltip), QuickAccessPanel.class);
+			btn.tooltipProperty().set(_ -> TTooltip.of(tooltip), QuickAccessPanel.class);
 			add(btn);
 
 			//create and add icon

@@ -1,18 +1,30 @@
 package com.thecsdev.betterstats.resource;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.common.util.annotations.Reflected;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static com.thecsdev.commonmc.api.stats.IStatsProvider.getCustomStatName;
+import static com.thecsdev.commonmc.api.stats.IStatsProvider.getStatTypeName;
+import static net.minecraft.core.registries.BuiltInRegistries.*;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 
@@ -54,10 +66,16 @@ public final class BLanguage
 	public static final MutableComponent config_common_registerCommands_tooltip() { return translatable("betterstats.config.common.register_commands.tooltip"); }
 	public static final MutableComponent config_common_apiEndpoint() { return translatable("betterstats.config.common.api_endpoint"); }
 	public static final MutableComponent config_common_apiEndpoint_tooltip() { return translatable("betterstats.config.common.api_endpoint.tooltip"); }
+	public static final MutableComponent config_common_experiments() { return translatable("betterstats.config.common.experimental_features"); }
+	public static final MutableComponent config_common_experiments_tooltip() { return translatable("betterstats.config.common.experimental_features.tooltip"); }
 	public static final MutableComponent config_client_allowChatPsa() { return translatable("betterstats.config.client.allow_chat_psa"); }
 	public static final MutableComponent config_client_allowChatPsa_tooltip() { return translatable("betterstats.config.client.allow_chat_psa.tooltip"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor_tooltip() { return translatable("betterstats.config.client.gui_mobs_follow_cursor.tooltip"); }
+	// --------------------------------------------------
+	public static final MutableComponent gui_screen_editSivGoal_statType() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_type"); }
+	public static final MutableComponent gui_screen_editSivGoal_statSubject() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_subject"); }
+	public static final MutableComponent gui_screen_editSivGoal_targetValueRange() { return translatable("betterstats.gui.screen.edit_siv_goal.target_value_range"); }
 	// --------------------------------------------------
 	public static final MutableComponent cmd_stats_edit_out(@NotNull Component stat, int affectedPlayerCount) { return translatable("commands.statistics.edit.output", stat, affectedPlayerCount); }
 	public static final MutableComponent cmd_stats_clear_out(int affectedPlayerCount) { return translatable("commands.statistics.clear.output", affectedPlayerCount); }
@@ -84,6 +102,7 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_filter_selectedView() { return translatable("betterstats.gui.statsview.filter.selected_view"); }
 	public static final MutableComponent gui_statsview_filter_search() { return translatable("betterstats.gui.statsview.filter.search"); }
 	public static final MutableComponent gui_statsview_filter_showAllStats() { return translatable("betterstats.gui.statsview.filter.show_all_stats"); }
+	public static final MutableComponent gui_statsview_filter_hideCompletedGoals() { return translatable("betterstats.gui.statsview.filter.hide_completed_goals"); }
 	public static final MutableComponent gui_statsview_filter_sortBy() { return translatable("betterstats.gui.statsview.filter.sort_by"); }
 	public static final MutableComponent gui_statsview_filter_groupBy() { return translatable("betterstats.gui.statsview.filter.group_by"); }
 	public static final MutableComponent gui_statsview_filter_groupBy_all() { return translatable("betterstats.gui.statsview.filter.group_by.all"); }
@@ -93,8 +112,23 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_filter_distanceUnit() { return translatable("betterstats.gui.statsview.filter.distance_unit"); }
 	public static final MutableComponent gui_statsview_filter_timeUnit() { return translatable("betterstats.gui.statsview.filter.time_unit"); }
 	public static final MutableComponent gui_statsview_stats_noStats() { return translatable("betterstats.gui.statsview.stats.no_stats"); }
+	public static final MutableComponent gui_statsview_stats_noGoals() { return translatable("betterstats.gui.statsview.stats.no_goals"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewErrorInfo() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_error_info"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1Prefix() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1.prefix"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert2Prefix() { return translatable("betterstats.gui.statsview.mcbs_goals.alert2.prefix"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert2() { return translatable("betterstats.gui.statsview.mcbs_goals.alert2"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview() { return translatable("betterstats.gui.statsview.mcbs_goals.overview"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_completedGoals() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.completed_goals"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_overview_totalProgress() { return translatable("betterstats.gui.statsview.mcbs_goals.overview.total_progress"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_newBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.new_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_manageBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.manage_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_editBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.edit_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn_confirm() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn.confirm"); }
+	public static final MutableComponent gui_statsview_stats_mcbsGoals_noEditGui() { return translatable("betterstats.gui.statsview.mcbs_goals.no_edit_gui"); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_homeTab_featuredStats() { return translatable("betterstats.gui.home_tab.featured_stats"); }
 	// ==================================================
@@ -117,5 +151,70 @@ public final class BLanguage
 	public static final @Reflected MutableComponent credits_section_contributors_entry_contribute_summary() { return translatable("betterstats.credits.section.contributors.entry.contribute.summary"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors() { return translatable("betterstats.credits.section.founder_contributors"); }
 	public static final @Reflected MutableComponent credits_section_founderContributors_summary() { return translatable("betterstats.credits.section.founder_contributors.summary"); }
+	// ==================================================
+	/**
+	 * Returns the display name of a given {@link McbsGoalType}.
+	 * @param goalTypeId The {@link Identifier} of said {@link McbsGoalType}.
+	 */
+	public static final MutableComponent mcbsgoaltype_name(@NotNull Identifier goalTypeId) {
+		return translatable(String.format("betterstats.mcbsgoaltype.%s.%s", goalTypeId.getNamespace(), goalTypeId.getPath()));
+	}
+
+	/**
+	 * Returns the "objective" display text for a given {@link McbsSivGoal}.
+	 * @param goal The {@link McbsSivGoal}.
+	 */
+	@SuppressWarnings("SuperfluousFormat") //translators may need the extra args
+	public static final @Reflected MutableComponent mcbsgoal_sivObjectiveText(
+			@NotNull McbsSivGoal goal) throws NullPointerException
+	{
+		// ---------- define placeholder arguments
+		Component arg1; //stat type - ex. "Times mined"
+		Component arg2; //stat subject - ex. "Stone"
+		int       arg3; //stat value goal - target value, ex. 1256
+		int       arg4; //'target minus from' value - ex. in 'mined 25 out of 75 stone' the 50 is this number
+
+		// ---------- initialize argument values
+		final @NotNull Identifier statTypeId = goal.getStatType();
+		final @NotNull Identifier statSubjId = goal.getStatSubject();
+		//stat type name
+		final @Nullable var statType = STAT_TYPE.getValue(statTypeId);
+		arg1 = (statType != null) ?
+				getStatTypeName(statType) :
+				literal(String.valueOf(statTypeId));
+
+		//stat subject name
+		if(statType != null) {
+			//obtain subject's registry and entry
+			final @NotNull  var statSubjReg = statType.getRegistry();
+			final @Nullable var statSubj    = statSubjReg.containsKey(statSubjId) ?
+					statSubjReg.getValue(statSubjId) : null; //must prevent default values
+			//obtain subject name based on registry
+			//(switch 'case'-s are ordered by popularity/frequency, to save on cpu cycles)
+			if(statSubj != null) arg2 = switch (statSubjReg) {
+				case Registry<?> reg when reg.equals(ITEM)        -> ((Item) statSubj).getName(((Item) statSubj).getDefaultInstance());
+				case Registry<?> reg when reg.equals(BLOCK)       -> ((Block) statSubj).getName();
+				case Registry<?> reg when reg.equals(CUSTOM_STAT) -> getCustomStatName((Identifier) statSubj);
+				case Registry<?> reg when reg.equals(ENTITY_TYPE) -> ((EntityType<?>) statSubj).getDescription();
+				default -> literal(String.valueOf(statSubjId));
+			};
+			else arg2 = literal(String.valueOf(statSubjId));
+		}
+		else arg2 = literal(String.valueOf(statSubjId));
+
+		//stat values
+		arg3 = goal.getTargetValue();
+		arg4 = Math.max(arg3 - goal.getFromValue(), 0);
+
+		// ---------- construct and return the text
+		final var lang             = Language.getInstance();
+		final var lang_abstract    = "betterstats.mcbsgoal.siv_objective";
+		final var lang_categorical = String.format("%s.%s.%s", lang_abstract,    statTypeId.getNamespace(), statTypeId.getPath());
+		final var lang_granular    = String.format("%s.%s.%s", lang_categorical, statSubjId.getNamespace(), statSubjId.getPath());
+
+		if(lang.has(lang_granular))         return translatable(lang_granular,    arg1, arg2, arg3, arg4);
+		else if(lang.has(lang_categorical)) return translatable(lang_categorical, arg1, arg2, arg3, arg4);
+		else                                return translatable(lang_abstract,    arg1, arg2, arg3, arg4);
+	}
 	// ==================================================
 }

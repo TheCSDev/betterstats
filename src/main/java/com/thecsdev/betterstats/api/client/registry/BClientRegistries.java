@@ -1,8 +1,12 @@
 package com.thecsdev.betterstats.api.client.registry;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoalType;
+import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
+import com.thecsdev.betterstats.mcbs.view.goal.McbsSivGoalGUI;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemAbout;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemFile;
 import com.thecsdev.betterstats.mcbs.view.menubar.MenubarItemView;
@@ -13,12 +17,9 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import static com.mojang.serialization.Lifecycle.stable;
-import static com.thecsdev.betterstats.BetterStats.MOD_ID;
-import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
+import static com.thecsdev.betterstats.api.registry.BRegistries.id;
 import static net.minecraft.resources.ResourceKey.createRegistryKey;
 
 /**
@@ -30,20 +31,42 @@ import static net.minecraft.resources.ResourceKey.createRegistryKey;
  * the game's <b>ROOT</b> registry!
  */
 @Environment(EnvType.CLIENT)
-public class BClientRegistries
+public final class BClientRegistries
 {
 	// ==================================================
 	private BClientRegistries() {}
 	// ==================================================
+	/**
+	 * {@link Registry} for {@link MenubarItem}s.<br>
+	 * Registered entries appear on the statistics screen's top-side menu-bar.
+	 */
 	public static final Registry<MenubarItem> MENUBAR_ITEM;
-	public static final Registry<StatsView>   STATS_VIEW;
+
+	/**
+	 * {@link Registry} for {@link StatsView}s.<br>
+	 * Registered entries appear the "stats view" dropdown.
+	 */
+	public static final Registry<StatsView> STATS_VIEW;
+
+	/**
+	 * {@link Registry} for {@link McbsGoalGUI}s.<br>
+	 * Registered entries are factories that construct GUIs for {@link McbsGoal}s.
+	 * <p>
+	 * The {@link McbsGoalGUI} {@link Identifier}s <b>MUST</b> match the
+	 * {@link Identifier}s of corresponding {@link McbsGoalType}s.
+	 *
+	 * @see McbsGoalType#getKey()
+	 * @see McbsGoalGUI#getKey()
+	 */
+	public static final Registry<McbsGoalGUI<?>> GOAL_GUI;
 	// ==================================================
 	public static final void bootstrap() { /*invokes <clinit>*/ }
 	static
 	{
 		//create registry instances
-		STATS_VIEW   = new MappedRegistry<>(createRegistryKey(id("stats_view")), stable());
 		MENUBAR_ITEM = new MappedRegistry<>(createRegistryKey(id("menubar_item")), stable());
+		STATS_VIEW   = new MappedRegistry<>(createRegistryKey(id("stats_view")), stable());
+		GOAL_GUI     = new MappedRegistry<>(createRegistryKey(id("goal_gui")), stable());
 
 		//register menubar items
 		Registry.register(MENUBAR_ITEM, id("file"),  MenubarItemFile.INSTANCE);
@@ -57,10 +80,11 @@ public class BClientRegistries
 		Registry.register(STATS_VIEW, id("mobs"),    StatsViewMobs.INSTANCE);
 		Registry.register(STATS_VIEW, id("food"),    StatsViewFood.INSTANCE);
 		Registry.register(STATS_VIEW, id("hunter"),  StatsViewHunter.INSTANCE);
-	}
-	// --------------------------------------------------
-	private static final @ApiStatus.Internal Identifier id(@NotNull String id) {
-		return fromNamespaceAndPath(MOD_ID, id);
+		if(BetterStats.getConfig().experimentsEnabled()) //FIXME - Remove experimental once feature is ready
+			Registry.register(STATS_VIEW, id("goals"), StatsViewGoals.INSTANCE);
+
+		//register mcbs goal gui-s
+		Registry.register(GOAL_GUI, id("stat_int_value"), McbsSivGoalGUI.INSTANCE);
 	}
 	// ==================================================
 }

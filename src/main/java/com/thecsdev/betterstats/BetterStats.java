@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats;
 
+import com.thecsdev.betterstats.api.registry.BRegistries;
 import com.thecsdev.betterstats.client.BetterStatsClient;
 import com.thecsdev.betterstats.command.StatisticsCommand;
 import com.thecsdev.betterstats.resource.dto.BetterStatsRestAPI;
@@ -81,11 +82,10 @@ public class BetterStats
 		//load the config
 		TUtils.uncheckedCall(CONFIG::loadFromFile);
 
-		//pre-load classes
+		//initialize and register features
+		BRegistries.bootstrap();
 		BetterStatsRestAPI.RateLimitingInfo.init();
-
-		//command registration
-		CommandEvent.INIT_COMMANDS.addListener((dispatcher, commandBuildContext, commandSelection) -> {
+		CommandEvent.INIT_COMMANDS.addListener((dispatcher, commandBuildContext, _) -> {
 			//do not register if commands are disabled
 			if(!CONFIG.canRegisterCommands()) return;
 			//otherwise register commands

@@ -6,6 +6,7 @@ import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
+import com.thecsdev.commonmc.api.client.gui.misc.TFillColorElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TCheckboxWidget;
@@ -23,10 +24,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -87,12 +90,52 @@ public final class StatsViewUtils
 		Objects.requireNonNull(text);
 
 		//create and add a new label
-		final var label = new TLabelElement();
-		label.setBounds(panel.computeNextYBounds(17, GAP));
-		label.textProperty().set(text, StatsViewUtils.class);
+		final var label = new TLabelElement(text);
+		label.wrapTextProperty().set(true, StatsViewUtils.class);
 		label.textColorProperty().set(0xFFFFFF00, StatsViewUtils.class);
+		label.setBounds(panel.computeNextYBounds(17, GAP));
+		label.setBoundsToFitText(label.getBounds().width);
+		label.setBounds(label.getBounds().add(0, 0, 0, 8));
 		panel.add(label);
 		return label;
+	}
+
+	/**
+	 * Creates and adds a "framed" label to the {@link TPanelElement}, positioned
+	 * at the bottom of the panel's {@link TElement#getContentBounds()},
+	 * and taking up full panel width.
+	 * <p>
+	 * The "frame" is a {@link TFillColorElement} with the {@link TLabelElement} as
+	 * its child.
+	 * @param panel The target {@link TPanelElement}.
+	 * @param text The label's text.
+	 * @param textScale The label's text scale.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 * @see #initGroupLabel(TPanelElement, Component)
+	 */
+	@ApiStatus.Internal
+	@ApiStatus.Experimental
+	public static final @NotNull Map.Entry<TFillColorElement, TLabelElement> initGroupLabelFramed(
+			@NotNull TPanelElement panel, @NotNull Component text, double textScale)
+			throws NullPointerException
+	{
+		//background fill-color
+		final var frame = new TFillColorElement(0xFF303030, 0xFF000000);
+		frame.setBounds(panel.computeNextYBounds(1024, GAP));
+
+		//the label
+		final var label = new TLabelElement(text);
+		label.wrapTextProperty().set(true, StatsViewUtils.class);
+		label.textScaleProperty().set(Math.max(textScale, 0.1d), StatsViewUtils.class);
+		label.textColorProperty().set(0xFFFFFF00, StatsViewUtils.class);
+		label.setBounds(frame.getBounds().add(7, 7, -14, -14));
+		label.setBoundsToFitText(label.getBounds().width);
+
+		//finalize and add elements
+		frame.setBounds(frame.getBounds().height(label.getBounds().height + 14));
+		frame.add(label);
+		panel.add(frame);
+		return Map.entry(frame, label);
 	}
 	// ==================================================
 	/**
@@ -167,9 +210,28 @@ public final class StatsViewUtils
 	 * @param context The {@link StatsView.FiltersInitContext}.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
-	public static final void initShowAllStatsFilter(final @NotNull StatsView.FiltersInitContext context) throws NullPointerException
+	public static final void initShowAllStatsFilter(final @NotNull StatsView.FiltersInitContext context) throws NullPointerException {
+		initBooleanFilter(context, FID_EMPTYSTATS, false, BLanguage.gui_statsview_filter_showAllStats());
+	}
+	// ==================================================
+	/**
+	 * Initializes a {@link TCheckboxWidget} for a given {@code boolean} type filter.
+	 * @param context The {@link StatsView.FiltersInitContext}.
+	 * @param filterId The unique {@link Identifier} for the filter.
+	 * @param defaultValue The filter's default value.
+	 * @param labelText The checkbox label text.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	public static final void initBooleanFilter(
+			final @NotNull StatsView.FiltersInitContext context,
+			final @NotNull Identifier filterId,
+			final boolean defaultValue,
+			final @NotNull Component labelText) throws NullPointerException
 	{
 		//preparation and math
+		Objects.requireNonNull(context);
+		Objects.requireNonNull(filterId);
+		Objects.requireNonNull(labelText);
 		final var panel    = context.getPanel();
 		final var nextRect = panel.computeNextYBounds(20, GAP);
 
@@ -181,15 +243,15 @@ public final class StatsViewUtils
 		//create and add the label
 		final var label    = new TLabelElement();
 		label.setBounds(nextRect.x + 25, nextRect.y, nextRect.width - 25, nextRect.height);
-		label.setText(BLanguage.gui_statsview_filter_showAllStats());
+		label.setText(labelText);
 		panel.add(label);
 
 		//set up initial value and change listeners
 		checkbox.checkedProperty().set(
-				context.getFilters().getProperty(Boolean.class, FID_EMPTYSTATS, false),
+				context.getFilters().getProperty(Boolean.class, filterId, defaultValue),
 				StatsViewUtils.class);
-		checkbox.checkedProperty().addChangeListener((p, o, n) ->
-				context.getFilters().setProperty(Boolean.class, FID_EMPTYSTATS, n));
+		checkbox.checkedProperty().addChangeListener((_, _, n) ->
+				context.getFilters().setProperty(Boolean.class, filterId, n));
 	}
 	// ==================================================
 	/**

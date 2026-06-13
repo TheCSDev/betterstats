@@ -6,23 +6,31 @@ import com.mojang.serialization.JsonOps;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.McbsStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -47,20 +55,21 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	/**
 	 * "Special" {@link McbsEditorTab} instance, specifically for interfacing with
 	 * {@link LocalPlayerStatsProvider} data.
-	 * <p>
-	 * TODO - This is marked as {@link ApiStatus.Internal} because I plan to come up
-	 *        with some other mechanism for identifying and treating "special" tabs.
 	 */
 	@ApiStatus.Internal
 	public static final McbsEditorFileTab LOCALPLAYER = new McbsEditorFileTab(new McbsFile());
 	// ==================================================
-	private final @NotNull  McbsFile          mcbsFile;
+	private final @NotNull  McbsFile                  mcbsFile;
 	// --------------------------------------------------
-	private final @NotNull  StatsView.Filters _statFilters = new Filters();
-	private       @Nullable Path              _lastSaveFile;
+	private final @NotNull  ReadOnlyStats             _roStats;
+	private final @NotNull  Map<Identifier, McbsGoal> _roGoals;
+	private final @NotNull  StatsView.Filters         _statFilters = new Filters();
+	private       @Nullable Path                      _lastSaveFile;
 	// ==================================================
 	public McbsEditorFileTab(@NotNull McbsFile mcbsFile) throws NullPointerException {
 		this.mcbsFile = Objects.requireNonNull(mcbsFile);
+		this._roStats = new ReadOnlyStats(mcbsFile.getStats());
+		this._roGoals = Collections.unmodifiableMap(mcbsFile.getGoals());
 	}
 	public McbsEditorFileTab(@NotNull Path path) throws NullPointerException, IOException {
 		this(new McbsFile());
@@ -86,15 +95,35 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	}
 	// --------------------------------------------------
 	/**
+	 * Returns the raw unfiltered {@link McbsFile} instance this MVC controller
+	 * controls.
+	 * <p>
+	 * It is generally recommended not to manually write data in there such that
+	 * it bypasses this controller. Use this for read-only operations only.
+	 * <p>
+	 * If you <b>really</b> must write, call {@link #addEditCount()} afterward.
+	 */
+	public final @UnstableApi @NotNull McbsFile getMcbsFile() { return this.mcbsFile; }
+
+	/**
 	 * Returns an {@link IStatsProvider} view of the {@link McbsStats} instance
-	 * of the {@link McbsFile} this {@link McbsEditorFileTab} is managing.
+	 * this {@link McbsEditorFileTab} is managing.
 	 * <p>
 	 * <b><u>Important API note:</u></b><br>
 	 * Intended to be <b>read-only</b>! Attempts to set stat values may and
-	 * likely will {@code throw}!
+	 * will {@code throw}!
 	 */
-	//TODO - Return an object that's truly read-only.
-	public final @NotNull IStatsProvider getStats() { return this.mcbsFile.getStats(); }
+	public final @NotNull IStatsProvider getStats() { return this._roStats; }
+
+	/**
+	 * Returns a {@link Map} view of the {@link McbsGoal} instances this
+	 * {@link McbsEditorFileTab} is managing.
+	 * <p>
+	 * <b><u>Important API note:</u></b><br>
+	 * Intended to be <b>read-only</b>! Attempts to modify the map (e.g.
+	 * adding/removing goals) will {@code throw}!
+	 */
+	public final @NotNull Map<Identifier, McbsGoal> getGoals() { return this._roGoals; }
 	// ==================================================
 	/**
 	 * Returns the {@link StatsView} instance that is currently selected for
@@ -122,6 +151,64 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	 * stats are to be shown on screen.
 	 */
 	public final @NotNull StatsView.Filters getStatFilters() { return this._statFilters; }
+	// --------------------------------------------------
+	/**
+	 * Puts an {@link McbsGoal} into {@link McbsFile#getGoals()}.
+	 * @param goal The {@link McbsGoal} to add.
+	 * @return {@code true} if the {@link McbsFile} did not already contain the goal.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final void putGoal(@NotNull McbsGoal goal) throws NullPointerException
+	{
+		//do nothing if goal is already added
+		final var goals = this.mcbsFile.getGoals();
+		if(goals.containsValue(Objects.requireNonNull(goal))) return;
+		//construct default id based on current time
+		final var id = Identifier.withDefaultNamespace("generated/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS_n")));
+		//put goal and increment edit count
+		putGoal(id, goal);
+	}
+
+	/**
+	 * Puts an {@link McbsGoal} into {@link McbsFile#getGoals()} with a specific
+	 * {@link Identifier} key.
+	 * @param id The {@link Identifier} key to associate with the goal.
+	 * @param goal The {@link McbsGoal} to add.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	public final void putGoal(@NotNull Identifier id, @NotNull McbsGoal goal)
+			throws NullPointerException {
+		final var goals = this.mcbsFile.getGoals();
+		goals.put(id, Objects.requireNonNull(goal));
+		addEditCount();
+	}
+
+	/**
+	 * Removes an {@link McbsGoal} from the {@link McbsFile}.
+	 * @param goal The {@link McbsGoal} to remove.
+	 * @return {@code true} if the goal was removed, or {@code false} if the
+	 *         {@link McbsFile} did not contain the specified goal.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	public final boolean removeGoal(@NotNull McbsGoal goal) throws NullPointerException {
+		Objects.requireNonNull(goal);
+		try { return this.mcbsFile.getGoals().values().remove(goal); }
+		finally { addEditCount(); }
+	}
+
+	/**
+	 * Removes an {@link McbsGoal} from the {@link McbsFile}.
+	 * @param id The {@link Identifier} key of the {@link McbsGoal} to remove.
+	 * @return {@code true} if the goal was removed, or {@code false} if the
+	 *         {@link McbsFile} did not contain a goal with the specified id.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 */
+	@SuppressWarnings("RedundantCollectionOperation") //sometimes, IDE is stupid
+	public final boolean removeGoal(@NotNull Identifier id) throws NullPointerException {
+		Objects.requireNonNull(id);
+		try { return this.mcbsFile.getGoals().keySet().remove(id); }
+		finally { addEditCount(); }
+	}
 	// ==================================================
 	/**
 	 * Saves the {@link McbsFile} data of this {@link McbsEditorFileTab} to the
@@ -332,6 +419,30 @@ public final class McbsEditorFileTab extends McbsEditorTab
 		public Object merge(Identifier key, Object value, BiFunction<? super Object, ? super Object, ?> remappingFunction) {
 			McbsEditorFileTab.this.addEditCount();
 			return super.merge(key, value, remappingFunction);
+		}
+		// ==================================================
+	}
+	// ================================================== ==================================================
+	//                                      ReadOnlyStats IMPLEMENTATION
+	// ================================================== ==================================================
+	/**
+	 * {@link IStatsProvider} implementation that acts as a wrapper for another
+	 * {@link IStatsProvider} instance, exposing no functions for mutability.
+	 */
+	private static final @ApiStatus.Internal class ReadOnlyStats implements IStatsProvider
+	{
+		// ==================================================
+		private final @NotNull IStatsProvider stats;
+		// ==================================================
+		public ReadOnlyStats(@NotNull IStatsProvider stats) throws NullPointerException {
+			this.stats = Objects.requireNonNull(stats);
+		}
+		// ==================================================
+		public final @Override <T> int getIntValue(Stat<T> stat) {
+			return this.stats.getIntValue(stat);
+		}
+		public final @Override <T> int getIntValue(@NotNull StatType<T> type, @NonNull T subject) throws NullPointerException {
+			return this.stats.getIntValue(type, subject);
 		}
 		// ==================================================
 	}
