@@ -374,9 +374,9 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 					BLanguage.gui_menubar_view_vanillaScreen(),
 					_ -> {
 						final @Nullable var player     = client.player;
-						final @Nullable var lastScreen = client.screen;
+						final @Nullable var lastScreen = client.gui.screen();
 						if(player == null || lastScreen == null) return; //safety - shouldn't happen
-						client.setScreen(new StatsScreen(lastScreen, player.getStats()));
+						client.gui.setScreen(new StatsScreen(lastScreen, player.getStats()));
 					});
 			initButton(
 					TSprites.gui_icon_fsFolder(),

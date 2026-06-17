@@ -81,14 +81,14 @@ public final class MenubarItemAbout extends MenubarItem
 
 		//obtain client variables stuff
 		final var client     = Objects.requireNonNull(Minecraft.getInstance());
-		final var lastScreen = client.screen;
+		final var lastScreen = client.gui.screen();
 
 		//create and set the confirmation screen
 		final var screen     = new ConfirmLinkScreen(accepted -> {
 			if(accepted) Util.getPlatform().openUri(uri);
-			client.setScreen(lastScreen);
+			client.gui.setScreen(lastScreen);
 		}, uri, isTrusted);
-		client.setScreen(screen);
+		client.gui.setScreen(screen);
 	}
 	// ==================================================
 }

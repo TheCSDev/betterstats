@@ -31,7 +31,6 @@ public final class MenubarItemView extends MenubarItem
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName() { return BLanguage.gui_menubar_view(); }
 	// --------------------------------------------------
-	@SuppressWarnings("DataFlowIssue")
 	public final @Override @NotNull TContextMenu createContextMenu(
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 	{
@@ -50,24 +49,24 @@ public final class MenubarItemView extends MenubarItem
 		//the vanilla screen button opens the vanilla stats screen
 		builder.addButton(
 				gui("statistics/item_used").append(" ").append(BLanguage.gui_menubar_view_vanillaScreen()),
-				__ -> {
+				_ -> {
 					final @Nullable var player     = client.player;
-					final @Nullable var lastScreen = client.screen;
+					final @Nullable var lastScreen = client.gui.screen();
 					if(player == null || lastScreen == null) return; //safety - shouldn't happen
-					client.setScreen(new StatsScreen(lastScreen, player.getStats()));
+					client.gui.setScreen(new StatsScreen(lastScreen, player.getStats()));
 				});
 		builder.addSeparator();
 
 		//home-page tab
 		builder.addButton(
 				gui("icon/news").append(" ").append(BLanguage.gui_menubar_view_homepage()),
-				__ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
+				_ -> mcbsEditor.addTab(McbsEditorHomepageTab.INSTANCE, true)
 		);
 
 		//local-player statistics tab
 		builder.addButton(
 				localPlayerComponent.append(" ").append(BLanguage.gui_menubar_view_localPlayerStats()),
-				__ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
+				_ -> mcbsEditor.addTab(McbsEditorFileTab.LOCALPLAYER, true)
 		);
 
 		//build and return the context menu

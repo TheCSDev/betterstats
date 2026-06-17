@@ -356,7 +356,7 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		//noinspection unchecked | open goal editing screen (if possible)
 		final @Nullable var goalGui = (McbsGoalGUI<McbsGoal>) McbsGoalGUI.findFor(goalType);
 		if(goalGui != null && goalGui.isEditable())
-			client.setScreen(goalGui.createEditScreen(client.screen, tab, newGoal));
+			client.gui.setScreen(goalGui.createEditScreen(client.gui.screen(), tab, newGoal));
 	}
 	// ================================================== ==================================================
 	//                                      ListedGoalGui IMPLEMENTATION
@@ -414,10 +414,10 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 			this.el_btnEdit.eClicked.addListener(btn -> {
 				final @NotNull  var client     = Objects.requireNonNull(btn.getClient(), "Missing 'client' instance");
 				final @Nullable var editScreen = Optional.ofNullable(this.goalGui)
-						.map(gui -> gui.createEditScreen(client.screen, tab, this.goal))
+						.map(gui -> gui.createEditScreen(client.gui.screen(), tab, this.goal))
 						.orElse(null);
 				if(editScreen != null) {
-					client.setScreen(editScreen);
+					client.gui.setScreen(editScreen);
 					tab.addEditCount();
 				} else {
 					btn.enabledProperty().set(false, ListedGoalGui.class);

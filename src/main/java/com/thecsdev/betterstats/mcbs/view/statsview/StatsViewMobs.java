@@ -127,11 +127,11 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			builder.addButton(
 					missingNo().append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewErrorInfo()),
 					_ -> {
-						final var parent = client.screen;
+						final var parent = client.gui.screen();
 						final var title  = missingNo().append(" ").append(TLanguage.misc_somethingWentWrong());
 						final var text   = literal(getStackTrace(displayError).replace("\r\n", "\n").replace("\t", "    "));
 						final var dialog = new TTextDialogScreen(parent, title, text);
-						client.setScreen(dialog.getAsScreen());
+						client.gui.setScreen(dialog.getAsScreen());
 					});
 
 		//wiki url
