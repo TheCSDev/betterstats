@@ -54,24 +54,24 @@ public final class MenubarItemFile extends MenubarItem
 		//"Open" option
 		builder.addButton(
 				gui(TSprites.gui_icon_fsFolder()).append(" ").append(BLanguage.gui_menubar_file_open()),
-				__ -> showOpenFileDialog(client, mcbsEditor));
+				_ -> showOpenFileDialog(client, mcbsEditor));
 
 		//"Save as" option
 		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab)
 			builder.addButton(air().append(" ").append(
 					BLanguage.gui_menubar_file_saveAs()),
-					__ -> showSaveFileDialog(client, mcbsEditor));
+					_ -> showSaveFileDialog(client, mcbsEditor));
 
 		//"Settings" option
 		builder.addSeparator();
 		builder.addButton(
 				gui(BSprites.gui_icon_settings()).append(" ").append(BLanguage.gui_menubar_file_settings()),
-				__ -> mcbsEditor.addTab(McbsEditorSettingsTab.INSTANCE, true));
+				_ -> mcbsEditor.addTab(McbsEditorSettingsTab.INSTANCE, true));
 
 		//"Close" option
 		builder.addButton(
 				gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
-				__ -> Optional.ofNullable(client.screen).ifPresent(Screen::onClose));
+				_ -> Optional.ofNullable(client.gui.screen()).ifPresent(Screen::onClose));
 
 		//build and return the context menu
 		return builder.build();
@@ -88,7 +88,7 @@ public final class MenubarItemFile extends MenubarItem
 			@NotNull Minecraft client, @NotNull McbsEditor mcbsEditor)
 			throws NullPointerException
 	{
-		final var lastScreen = client.screen;
+		final var lastScreen = client.gui.screen();
 		final var dialog     = new TFileChooserScreen.Builder(TFileChooserScreen.Mode.CHOOSE_FILE)
 				.setLastScreen(lastScreen)
 				.setPathFilter(TFileChooserScreen.PathFilter.extname("json"))
@@ -102,12 +102,12 @@ public final class MenubarItemFile extends MenubarItem
 			if(dialog.getResult().isCancelled()) return null;
 			final var tit  = TLanguage.misc_somethingWentWrong();
 			final var txt  = Component.literal(getStackTrace(throwable).replace("\r\n", "\n").replace("\t", "    "));
-			final var edia = new TTextDialogScreen(client.screen, tit, txt);
+			final var edia = new TTextDialogScreen(client.gui.screen(), tit, txt);
 			edia.getMessageLabel().wrapTextProperty().set(true, MenubarItemFile.class);
-			client.setScreen(edia.getAsScreen());
+			client.gui.setScreen(edia.getAsScreen());
 			return null;
 		});
-		client.setScreen(dialog.getAsScreen());
+		client.gui.setScreen(dialog.getAsScreen());
 	}
 
 	/**
@@ -126,7 +126,7 @@ public final class MenubarItemFile extends MenubarItem
 		if(fileTab == null) return;
 
 		//create and show the dialog
-		final var lastScreen = client.screen;
+		final var lastScreen = client.gui.screen();
 		final var dialog     = new TFileChooserScreen.Builder(TFileChooserScreen.Mode.CREATE_FILE)
 				.setLastScreen(lastScreen)
 				.setPathFilter(TFileChooserScreen.PathFilter.extname("json"))
@@ -140,12 +140,12 @@ public final class MenubarItemFile extends MenubarItem
 			if(dialog.getResult().isCancelled()) return null;
 			final var tit  = TLanguage.misc_somethingWentWrong();
 			final var txt  = Component.literal(getStackTrace(throwable).replace("\r\n", "\n").replace("\t", "    "));
-			final var edia = new TTextDialogScreen(client.screen, tit, txt);
+			final var edia = new TTextDialogScreen(client.gui.screen(), tit, txt);
 			edia.getMessageLabel().wrapTextProperty().set(true, MenubarItemFile.class);
-			client.setScreen(edia.getAsScreen());
+			client.gui.setScreen(edia.getAsScreen());
 			return null;
 		});
-		client.setScreen(dialog.getAsScreen());
+		client.gui.setScreen(dialog.getAsScreen());
 	}
 	// ==================================================
 }

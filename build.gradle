@@ -14,7 +14,10 @@ dependencies
 	implementation "net.fabricmc:fabric-loader:${project["fabric.loader_version"]}"
 	runtimeOnly    "net.fabricmc.fabric-api:fabric-api:${project["fabric.api_version"]}"
 
-	implementation "com.terraformersmc:modmenu:18.0.0-alpha.8"
+	implementation("com.terraformersmc:modmenu:${project["modmenu.version"]}") {
+		exclude group: "net.fabricmc", module: "fabric-loader" //causes issues, exclude it
+		exclude group: "net.fabricmc.fabric-api"               //causes issues, exclude it
+	}
 	implementation fileTree(dir: 'src/main/resources/META-INF/jarjar', include: '*.jar')
 }
 

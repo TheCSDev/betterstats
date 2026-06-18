@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title> Better Statistics Screen | Language documentation</title>
+
+		<style>
+			section {
+				padding: 1em;
+				margin-bottom: 2em;
+				background-color: #EEEEEE;
+			}
+			section p { margin-top: 0; }
+			code { background: #CCCCCC; }
+		</style>
+	</head>
+
+	<body>
+		<center><h3>Mod description for 'Mod Menu'</h3></center>
+		<center><p>Name and descriptions for this mod, that show up in <a href="https://modrinth.com/project/mOgUt4GM" target="_blank">Mod Menu</a>.</p></center>
+		<section>
+			<div>
+				<p><b>modmenu.nameTranslation.betterstats</b></p>
+				The display name of the mod within the 'Mod Menu' interface.
+			</div>
+			<hr>
+	
+			<div>
+				<p><b>modmenu.summaryTranslation.betterstats</b></p>
+				The summary description of the mod within the 'Mod Menu' interface.
+			</div>
+			<hr>
+		</section>
+
+		<center><h3>Mob categories</h3></center>
+		<center><p>
+			Much like how items have their own corresponding creative mode tabs, mobs too have their categories. The following
+			language texts aim to give those categories user-friendly names.
+		</p></center>
+		<section>
+			<div>
+				<p><b>mobCategory.monster</b></p>
+				Hostile creatures like zombies, skeletons, creepers, blazes, etc.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.creature</b></p>
+				Friendly creatures like pigs, cows, sheep, foxes, striders, etc.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.ambient</b></p>
+				As of <code>26.1.2</code>, it contains only 1 mob; bat. There could be more in the future.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.axolotls</b></p>
+				As of <code>26.1.2</code>, it contains only 1 mob; axolotl. There could be more in the future.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.underground_water_creature</b></p>
+				As of <code>26.1.2</code>, it contains only 1 mob; glow squid. There could be more in the future.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.water_creature</b></p>
+				For creatures who call the underwater their home.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.water_ambient</b></p>
+				Underwater ambient creatures, like fish.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>mobCategory.misc</b></p>
+				Miscellaneous entities, typically ones that aren't "alive". Includes stuff like boats, minecarts, armor stands,
+				snowballs, etc.
+			</div>
+			<hr>
+		</section>
+
+		<center><h3>Statistics</h3></center>
+		<section>
+			<div>
+				<p><b>stat.blocksButton</b></p>
+				The vanilla game has "General", "Items", and "Mobs" buttons/menus. This mod has an additional one; "Blocks".
+				This additional section allows users to see their statistics related specifically to blocks.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>stat.betterstats.time_since_login</b></p>
+				Name of the <code>betterstats:time_since_login</code> general/custom stat. This temporal stat tracks how long
+				the player's current session is.
+			</div>
+			<hr>
+		</section>
+		
+		<center><h3>/statistics & /stats command</h3></center>
+		<section>
+			<div>
+				<p><b>commands.statistics.edit.output</b></p>
+				Output for the <code>/statistics edit</code> command.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>commands.statistics.clear.output</b></p>
+				Output for the <code>/statistics clear</code> command.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>commands.statistics.clear.kick</b></p>
+				The <code>/statistics clear</code> command kicks players whose statistics are cleared. This mechanism
+				prevents client/server desync issues with statistics. When a player is kicked for this reason, this
+				is the message that shows up on their screen.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>commands.statistics.query.output</b></p>
+				Output for the <code>/statistics query</code> command.
+			</div>
+			<hr>
+		</section>
+		
+		<center><h3>Configurations/Settings related to this mod</h3></center>
+		<center><p>Language texts used when presenting the user with a GUI interface to configure this mod.</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.config.common.register_commands</b></p>
+				User-friendly name of the "Register commands" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.common.register_commands.tooltip</b></p>
+				User-friendly description of the "Register commands" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.common.api_endpoint</b></p>
+				User-friendly name of the "API endpoint" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.common.api_endpoint.tooltip</b></p>
+				User-friendly description of the "API endpoint" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.common.experimental_features</b></p>
+				User-friendly name of the "Experimental features" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.common.experimental_features.tooltip</b></p>
+				User-friendly description of the "Experimental features" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.client.allow_chat_psa</b></p>
+				User-friendly name of the "Allow chat PSA messages" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.client.allow_chat_psa.tooltip</b></p>
+				User-friendly description of the "Allow chat PSA messages" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.client.gui_mobs_follow_cursor</b></p>
+				User-friendly name of the "GUI mobs follow cursor" property.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.config.client.gui_mobs_follow_cursor.tooltip</b></p>
+				User-friendly description of the "GUI mobs follow cursor" property.
+			</div>
+			<hr>
+		</section>
+		
+		<center><h3>"General numeric goal" edit screen</h3></center>
+		<center><p>
+			GUI <code>Screen</code> whose job is to provide an interface for editing general numeric goals.
+		</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.gui.screen.edit_siv_goal.stat_type</b></p>
+				Label that indicates to the user that the text field below it is for defining the "stat type" of the goal.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.screen.edit_siv_goal.stat_subject</b></p>
+				Label that indicates to the user that the text field below it is for defining the "stat subject" of the goal.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.screen.edit_siv_goal.target_value_range</b></p>
+				Label that indicates to the user that the text fields below it are for defining the "target value range" of the goal.
+			</div>
+			<hr>
+		</section>
+		
+		<center><h3>Menubar</h3></center>
+		<center><p>
+			The GUI menubar panel that appears at the top of the better "Statistics" screen.
+		</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.gui.menubar.file</b></p>
+				<code>File</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.file.new</b></p>
+				<code>File > New</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.file.open</b></p>
+				<code>File > Open</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.file.save_as</b></p>
+				<code>File > Save as</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.file.settings</b></p>
+				<code>File > Settings</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.file.close</b></p>
+				<code>File > Close</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.view</b></p>
+				<code>View</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.view.vanilla_screen</b></p>
+				<code>View > Vanilla screen</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.view.homepage</b></p>
+				<code>View > Home</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.view.local_player_stats</b></p>
+				<code>View > My statistics</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.view.stats_view</b></p>
+				<code>View > Switch view</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.about</b></p>
+				<code>About</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.about.source_code</b></p>
+				<code>About > Source code</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.about.support_me</b></p>
+				<code>About > Support me</code> menubar item.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.menubar.about.legal_notices</b></p>
+				<code>About > Legal notices</code> menubar item.
+			</div>
+			<hr>
+		</section>
+
+		<center><h3>Stats view</h3></center>
+		<center><p>
+			When looking at statistics, to the left in the "Filters" menu, there is a dropdown called "Stats view" near the top
+			of the "Filters" panel. That dropdown allows users to select what is known as a "stats view". A "stats view" is
+			what determines which statistics are to be shown on screen; be it general or items or blocks or mobs etc.<br>
+			Language texts featured here are related to those "stats views", and each "view" may have its own dedicated texts.
+		</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.gui.statsview.filters</b></p>
+				The "Filters" label shown on the left side where the "Filters" panel is.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.selected_view</b></p>
+				Tooltip for the dropdown menu that allows users to select the current "stats view".
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.search</b></p>
+				Placeholder text for the text field that is used for searching.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.show_all_stats</b></p>
+				The filters checkbox whose label says "Show all stats". Ticking this checkbox shows all related
+				statistics regardless of their values.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.hide_completed_goals</b></p>
+				The filters checkbox whose label says "Hide completed goals". Ticking this checkbox hides all
+				completed goals in the "Goals" stats view.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.sort_by</b></p>
+				Tooltip text for the "Sort by" filter dropdown.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.group_by</b></p>
+				Tooltip text for the "Group by" filter dropdown.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.group_by.all</b></p>
+				"Group by" filter option that groups all statistics in one singular group.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.group_by.mod</b></p>
+				"Group by" filter option that groups statistics by the mod they originate from.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.group_by.mob_category</b></p>
+				"Group by" filter option that groups mob statistics based on mob categories.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.group_by.creative_mode_tab</b></p>
+				"Group by" filter option that groups item statistics based on the tab items appear in - in the creative mode inventory.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.distance_unit</b></p>
+				Tooltip text for the "Distance unit" filter dropdown.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.filter.time_unit</b></p>
+				Tooltip text for the "Time unit" filter dropdown.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.stats.no_stats</b></p>
+				Text that shows up when there are no statistics to show (either because the player doesn't have any or because
+				none match the given filters' criteria).
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.stats.no_goals</b></p>
+				Text that shows up when there are no goals to show (either because the player did not define any or because
+				none match the given filters' criteria).
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.stats.ctxmenu.view_error_info</b></p>
+				Sometimes, errors may occur when rendering specific statistics on screen. In such cases, right-clicking such
+				errored stats may present the user with a choice to "View error info". That choice uses this textual label.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.stats.ctxmenu.view_on_wiki</b></p>
+				Right-clicking statistics about a given thing may present the user with a choice to visit the Minecraft wiki
+				article about the corresponding thing. That choise uses this textual label.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals</b></p>
+				Name of the "Goals" stats view, as shown in the "Selected view" filter dropdown.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.alert1.prefix</b></p>
+				Prefix text for one of the "Goals"-related alerts that show up on screen.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.alert1</b></p>
+				Text for one of the "Goals"-related alerts that show up on screen.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.alert2.prefix</b></p>
+				Prefix text for one of the "Goals"-related alerts that show up on screen.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.alert2</b></p>
+				Text for one of the "Goals"-related alerts that show up on screen.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.overview</b></p>
+				Name of the "Overview" section that displays things like how many goals the player completed
+				and what their current overall progress is towards completing all goals.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.overview.completed_goals</b></p>
+				Goals "Overview" section that shows how many goals were completed.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.overview.total_progress</b></p>
+				Goals overview section that shows the total progress towards completing all goals.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.new_btn</b></p>
+				Text of the button for creating new goals.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.manage_btn</b></p>
+				Text of the button for managing existing goals.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.edit_btn</b></p>
+				Tooltip text of the button for editing a given goal.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.delete_btn</b></p>
+				Tooltip text of the button for deleting a given goal.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.delete_btn.confirm</b></p>
+				Text that (was intended to) show up when clicking the button to delete a goal. Its purpose is to prevent
+				accidental goal deletions.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.gui.statsview.mcbs_goals.no_edit_gui</b></p>
+				Placeholder text that appears on screen when clicking to edit a goal but it turns the developer of that 'goal
+				type' did not code in an editing GUI interface for said goal. It is unlikely you will ever encounter this in-game.
+			</div>
+			<hr>	
+		</section>
+
+		<center><h3>Home tab</h3></center>
+		<center><p>
+			Texts that appear on the introductory "Home" tab that is shown when the user opens the better "Statistics" screen
+			for the first time in a given session.
+		</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.gui.home_tab.featured_stats</b></p>
+				For the section featuring "Featured statistics".
+			</div>
+			<hr>
+		</section>
+		
+		<center><h3>Credits</h3></center>
+		<center><p>Texts related to "Credits" that are featured on the "Home" tab.</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.credits</b></p>
+				Generic "Credits" label. Used to indicate that a section of GUI is for crediting stuff and people.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.top_sponsors</b></p>
+				Credits section featuring top sponsors.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.top_sponsors.summary</b></p>
+				Description of the credits section featuring top sponsors.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.recent_sponsors</b></p>
+				Credits section featuring recent sponsors.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.recent_sponsors.summary</b></p>
+				Description of the credits section featuring recent sponsors.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.recent_sponsors.entry.sponsor</b></p>
+				"Call to action" button with intent to get people to click on it to sponsor the project.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.recent_sponsors.entry.sponsor.summary</b></p>
+				Description of the "call to action" button that intends to get people to sponsor the project.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.special_thanks</b></p>
+				Credits section for "Special thanks" that thanks things and people who are special.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.special_thanks.summary</b></p>
+				Description of the "Special thanks" credits section.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.special_thanks.entry.you</b></p>
+				"Special thanks" entry crediting you! Yes YOU, the one reading this. Thank you!
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.special_thanks.entry.you.summary</b></p>
+				Description of the "Special thanks" entry that credits you.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.special_thanks.entry.contributors</b></p>
+				"Special thanks" entry crediting contributors. Given you are reading this, it is likely you too
+				may end up credited here. Translate this mod for the community, and you too may be credited as
+				a contributor!
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.special_thanks.entry.contributors.summary</b></p>
+				Description of the "Special thanks" entry that credits contributors.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.contributors</b></p>
+				Title of the dedicated "Contributors" credits section that credits those who contributed to this project.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.contributors.summary</b></p>
+				Description of the dedicated "Contributors" credits section.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.contributors.entry.contribute</b></p>
+				"Call to action" button whose goal is to get people to contribute to this project.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.contributors.entry.contribute.summary</b></p>
+				Description of the "call to action" button that seeks to get people to contribute to this project.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.founder_contributors</b></p>
+				Title of the dedicated credits section crediting people who contributed to this project prior to
+				<code>v5.X</code>.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.credits.section.founder_contributors.summary</b></p>
+				Description of the "Founder contributors" credits section.
+			</div>
+			<hr>
+		</section>
+		
+		<center><h3>Goal types</h3></center>
+		<center><p>
+			Much like how statistics have their "types" (ex. "Times used" and "Times mined"), this mod's "Goals" feature
+			also features the ability to have different "types" of "goals". The following language texts are <b>names</b>
+			for each of those "goal types".
+		</p></center>
+		<section>
+			<div>
+				<p><b>betterstats.mcbsgoaltype.betterstats.stat_int_value</b></p>
+				Goal type for "General numeric goal". This type of goal allows the user to choose a target "stat type",
+				"stat subject", and "target numeric value range".<br>
+				<br>
+				For example, suppose the user picks the following;
+				<ul>
+					<li>Stat type: <code>minecraft:mined</code></li>
+					<li>Stat subject: <code>minecraft:stone</code></li>
+					<li>Target value range: <code>from 0 to 50</code></li>
+				</ul>
+				The resulting "general numeric goal" then becomes: "Mine 50 Stone."
+			</div>
+			<hr>
+		</section>
+
+		<center><h3>General numeric goal | Objective texts</h3></center>
+		<center><p>
+			Every possible "general numeric goal" instance has to have a separate text representing its "objective".<br>
+			Examples include "Mine 64 Stone", "Use 12 Apple", "Craft 128 Iron Helmet", etc.
+			<p>
+			This is where complexity explodes, as it is in theory possible to have a unique objective text for every
+			exiting thing in the game; every item, every block, every mob, etc, 10s to 100s of thousands of theoretically
+			possible translation keys, if not millions. For obvious reasons, we do not actually do that. Instead, we define
+			general texts that encompass all possible stat type/subject pairs.
+			<p>
+			For example if we take <code>minecraft:mined</code>, instead of creating a translation for each possible block
+			in the game, we create one single translation that goes "Mine %4$d %2$s", capturing all block possibilities in
+			one go. But you are more than welcome to make translations for specific stat type/subject pairs as well.
+		</p></center>
+		<section style="background-color: #CCEECC; margin-bottom: 0.25em;">
+			<p>
+				Given the complexity of texts for general numeric goal objectives, this section shall serve as tutorial on how
+				to construct your own custom translation texts for given stat type/subject pairs.
+			</p>
+			<p>
+				Before we begin, you must first be familiar with <a href="https://minecraft.wiki/w/Identifier" target="_blank">identifier</a>s.
+				Identifiers allow the game to keep track of features present in the game by assigning each feature a unique "ID".
+				An identifier consists of a "namespace" and a "path", and an example of an identifier is <code>minecraft:stone</code> where
+				<code>minecraft</code> is the namespace and <code>stone</code> is the path. So remember; <code>namespace:path</code>. That's
+				all an identifier is. So when this tutorial mentions a "namespace", it's referring to the left side of the colon character (:),
+				and "path" refers to the right side of the colon (:).
+			</p>
+			<p>
+				Next up, examples of stat type identifiers include <code>minecraft:used</code> and <code>minecraft:mined</code>, and examples
+				of stat subject identifiers include <code>minecraft:stone</code> (for a block) and <code>minecraft:apple</code> (for an item).
+				Pairing the two of them like [<code>minecraft:used</code> / <code>minecraft:apple</code>] gets us "How many apples have we used?".
+			</p>
+			<hr>
+			<p>
+				When translating an objective, there are 4 formatting arguments you can use:
+				<ul>
+					<li><b><code>%1$s</code></b> - Stat type name. Ex. "Times used", "Times mined", etc.</li>
+					<li><b><code>%2$s</code></b> - Stat subject name. Ex. "Stone", "Apple", "Iron Helmet", etc.</li>
+					<li>
+						<b><code>%3$d</code></b> - Target range value: <code>from</code>. When creating a goal, user has to define a
+						target "from / to" range. This is the <code>to</code> value. This argument is largely unused.
+					</li>
+					<li>
+						<b><code>%4$d</code></b> - Target range value: <code>to - from</code>. When creating a goal, user has to define a
+						target "from / to" range. This is the <code>to - from</code> value. Use this most of the time.
+					</li>
+				</ul>
+				So let's try making an example text with this. How about "<code>100 %1$s for %2$s.</code>". If stat type were
+				"Times mined" and stat subject were "Stone", then this would become "<code>100 Times mined for Stone</code>", which
+				is a 'botched' way of saying "Mine 100 Stone".
+			</p>
+			<hr>
+			<p>
+				Depending on the level of complexity you desire, you may pick one of the following formats to translate goal objectives:
+				<ul>
+					<li><b>betterstats.mcbsgoal.siv_objective</b></li>
+					<li><b>betterstats.mcbsgoal.siv_objective.[stat-type namespace].[stat-type path]</b></li>
+					<li><b>betterstats.mcbsgoal.siv_objective.[stat-type namespace].[stat-type path].[stat-subject namespace].[stat-subject path]</b></li>
+				</ul>
+				...where...
+				<ul>
+					<li><b>Stat type namespace</b> - Identifier namespace for the stat type.</li>
+					<li><b>Stat type path</b> - Identifier path for the stat type.</li>
+					<li><b>Stat subject namespace</b> - Identifier namespace for the stat subject.</li>
+					<li><b>Stat subject path</b> - Identifier path for the stat subject.</li>
+				</ul>
+				This gives you granular control over whether you wish to translate for a specific stat type/subject pair or for all
+				stat subjects in a given stat type or for all objectives overall.
+			</p>
+			<hr>
+			<p>
+				Let's begin our practice with the following template:<br>
+				<b>betterstats.mcbsgoal.siv_objective.[stat-type namespace].[stat-type path].[stat-subject namespace].[stat-subject path]</b><br>
+				We will translate an example stat type/subject pair. How about... [<code>minecraft:used</code> / <code>minecraft:apple</code>].<br>
+				That would then become; <code>"betterstats.mcbsgoal.siv_objective.minecraft.used.minecraft.apple": "Use %4$d apples"</code>.
+				<p></p>
+				But of-course, we do not wish to translate for every single item that could ever exist. That'd be insane. This is where the next
+				template comes in:<br>
+				<b>betterstats.mcbsgoal.siv_objective.[stat-type namespace].[stat-type path]</b><br>
+				This one encompasses all possible stat subjects for a given stat type. Let's give it a shot and see what it'd look like:<br>
+				<code>"betterstats.mcbsgoal.siv_objective.minecraft.used": "Use %4$d %2$s"</code><br>
+				This then becomes something like "Use 64 [insert stat subject here]", which is miles better!
+				<p></p>
+				And lastly, what if we do not wish to translate for any stat subjects or stat types? This is where our last fallback template comes in:<br>
+				<b>betterstats.mcbsgoal.siv_objective</b><br>
+				In practice, it usually looks something like this:<br>
+				<code>"betterstats.mcbsgoal.siv_objective": "%4$d [%1$s] for [%2$s]"</code><br>
+				...and an in-game text for this may look like "<code>64 [Times mined] for [Stone]</code>". As you can see, this fallback template
+				includes both the stat type name and the stat subject name simultaneously, which does end up looking a little weird/botched, but
+				it also gets the job done.
+			</p>
+		</section>
+
+		<section>
+			<div>
+				<p><b>betterstats.mcbsgoal.siv_objective</b></p>
+				Fallback objective text that encompasses all possible stat type/subject combinations.
+			</div>
+			<hr>
+			
+			<div>
+				<p><b>betterstats.mcbsgoal.siv_objective.betterstats.edit_this_goal</b></p>
+				Placeholder stat type/subject pair used to tell the user that a goal was just created and needs be
+				configured/edited.
+			</div>
+			<hr>
+
+			<div>
+				<p><b>betterstats.mcbsgoal.siv_objective.betterstats.edit_this_goal</b></p>
+				Placeholder stat type/subject pair used to tell the user that a goal was just created and needs be
+				configured/edited.
+			</div>
+			<hr>
+
+			<p><center><b>
+				And for the rest of 'general numeric goal' related texts, consult the tutorial above.
+			</b></center></p>
+		</section>
+	</body>
+</html>
