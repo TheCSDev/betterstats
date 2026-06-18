@@ -108,7 +108,7 @@
 
 	"betterstats.mcbsgoal.siv_objective":                            "%4$d [%1$s] for [%2$s]",
 	"betterstats.mcbsgoal.siv_objective.betterstats.edit_this_goal": "Edit this goal",
-	"betterstats.mcbsgoal.siv_objective.minecraft.custom":           "Do '%2$s' %4$d times",
+	"betterstats.mcbsgoal.siv_objective.minecraft.custom":           "Do [%2$s] %4$d times",
 	"betterstats.mcbsgoal.siv_objective.minecraft.broken":           "Break %4$d %2$s",
 	"betterstats.mcbsgoal.siv_objective.minecraft.crafted":          "Craft %4$d %2$s",
 	"betterstats.mcbsgoal.siv_objective.minecraft.dropped":          "Drop %4$d %2$s",
