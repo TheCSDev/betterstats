@@ -8,11 +8,16 @@ import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.common.util.enumerations.CompassDirection;
 import com.thecsdev.commonmc.api.client.gui.TElement;
+import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.label.TLabelElement;
+import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
+import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.text.TSimpleTextFieldWidget;
+import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import com.thecsdev.commonmc.resource.TLanguage;
+import com.thecsdev.commonmc.resource.TSprites;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
@@ -23,9 +28,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import static com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils.GAP;
+import static net.minecraft.core.registries.BuiltInRegistries.STAT_TYPE;
 
 /**
  * Goal editing screen for {@link McbsSivGoal}.
@@ -71,16 +78,41 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 		//stat type input
 		StatsViewUtils.initGroupLabel(el_panel, BLanguage.gui_screen_editSivGoal_statType());
 		final var in_statType = new TSimpleTextFieldWidget();
-		in_statType.setBounds(el_panel.computeNextYBounds(20, GAP));
+		in_statType.setBounds(el_panel.computeNextYBounds(20, GAP).add(0, 0, -25, 0));
 		in_statType.placeholderProperty().set(Component.literal("minecraft:used"), McbsSivGoalEditScreen.class);
 		in_statType.textProperty().set(goal.getStatType().toString(), McbsSivGoalEditScreen.class);
 		in_statType.textProperty().addChangeListener((_, _, n) -> {
 			try {
-				goal.setStatType(Identifier.parse(n));
+				goal.setStatType(Identifier.parse(n.trim().toLowerCase(Locale.ROOT)));
 				refreshPreview();
 			} catch (RuntimeException ignored) {}
 		});
 		el_panel.add(in_statType);
+
+		final var btn_statType = new TButtonWidget();
+		btn_statType.setBounds(
+				in_statType.getBounds().endX + 5,
+				in_statType.getBounds().y,
+				20,
+				in_statType.getBounds().height);
+		btn_statType.contextMenuProperty().set(_ ->
+		{
+			final var ctxMenu = new TContextMenu.Builder(getClient());
+			for(final var statType : STAT_TYPE)
+				ctxMenu.addButton(
+						IStatsProvider.getStatTypeName(statType),
+						_ -> in_statType.textProperty().set(
+								String.valueOf(STAT_TYPE.getKey(statType)),
+								McbsSivGoalEditScreen.class));
+			return ctxMenu.build();
+		},
+		McbsSivGoalEditScreen.class);
+		btn_statType.eClicked.addListener(TElement::showContextMenu);
+		el_panel.add(btn_statType);
+
+		final var ico_statType = new TTextureElement(TSprites.gui_widget_dropdownCollapsed());
+		ico_statType.setBounds(btn_statType.getBounds().add(3, 3, -6, -6));
+		el_panel.add(ico_statType);
 
 		//stat subject input
 		StatsViewUtils.initGroupLabel(el_panel, BLanguage.gui_screen_editSivGoal_statSubject());
@@ -90,7 +122,7 @@ public final class McbsSivGoalEditScreen extends AbstractMcbsGoalEditScreen<Mcbs
 		in_statSubject.textProperty().set(goal.getStatSubject().toString(), McbsSivGoalEditScreen.class);
 		in_statSubject.textProperty().addChangeListener((_, _, n) -> {
 			try {
-				goal.setStatSubject(Identifier.parse(n));
+				goal.setStatSubject(Identifier.parse(n.trim().toLowerCase(Locale.ROOT)));
 				refreshPreview();
 			} catch (RuntimeException ignored) {}
 		});
