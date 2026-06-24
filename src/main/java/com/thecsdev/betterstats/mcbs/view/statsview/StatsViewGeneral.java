@@ -1,10 +1,14 @@
 package com.thecsdev.betterstats.mcbs.view.statsview;
 
+import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
+import com.thecsdev.betterstats.client.gui.screen.McbsSivGoalEditScreen;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
+import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TDropdownWidget;
@@ -17,16 +21,20 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
+import net.minecraft.stats.Stats;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
+import static com.thecsdev.commonmc.resource.TComponent.gui;
 import static com.thecsdev.commonmc.resource.TComponent.item;
 import static java.util.Comparator.comparing;
+import static net.minecraft.core.registries.BuiltInRegistries.STAT_TYPE;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 import static net.minecraft.resources.Identifier.fromNamespaceAndPath;
@@ -92,6 +100,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 		//obtain stat instance
 		final var stat = widget.statProperty().get();
 		assert stat != null;
+
 		//stat formatter overrides
 		if(stat.isDistance()) {
 			final var distanceUnit = context.getFilters().getProperty(DistanceUnit.class, DistanceUnit.FID, DistanceUnit.VANILLA);
@@ -101,7 +110,54 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 			final var timeUnit = context.getFilters().getProperty(TimeUnit.class, TimeUnit.FID, TimeUnit.VANILLA);
 			widget.formatterOverrideProperty().set(timeUnit.getFormatter(), StatsViewGeneral.class);
 		}
+
+		//context menu
+		widget.contextMenuProperty().set(_ -> CTX_MENU.apply(context, widget), StatsViewGeneral.class);
 	}
+
+	/**
+	 * Constructs a context menu for a given {@link TCustomStatWidget}.
+	 */
+	private static final BiFunction<StatsInitContext, TCustomStatWidget, TContextMenu> CTX_MENU = (context, widget) ->
+	{
+		//obtain the stats data and ensure it is present
+		final var stat = widget.statProperty().get();
+		assert stat != null;
+
+		//create the context menu builder
+		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
+		final var tab     = context.getTab();
+		final var builder = new TContextMenu.Builder(client);
+
+		//"Create goal" button
+		if(BetterStats.getConfig().experimentsEnabled()) {
+			builder.addButton(
+					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
+					_ ->
+					{
+						//create and add the goal
+						final var goal = new McbsSivGoal(
+								Objects.requireNonNull(STAT_TYPE.getKey(Stats.CUSTOM)),
+								stat.getSubjectID(),
+								stat.getValue(),
+								stat.getValue() + 64);
+						tab.putGoal(goal);
+
+						//create and open the goal's editing screen
+						final var editScreen = new McbsSivGoalEditScreen(client.gui.screen(), tab, goal);
+						client.gui.setScreen(editScreen.getAsScreen());
+
+						//in the background, switch view to goals
+						tab.setCurrentView(StatsViewGoals.INSTANCE);
+					});
+		}
+
+		//close button, and then build and return a new context menu
+		builder.addButton(
+				gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
+				_ -> {});
+		return builder.build();
+	};
 	// --------------------------------------------------
 	protected final @Override @NotNull Comparator<CustomStat> getStatsSorter(@NotNull Filters filters) throws NullPointerException {
 		return filters.getProperty(SortBy.class, SortBy.FID, SortBy.ALPHABETICAL).getStatsSorter();

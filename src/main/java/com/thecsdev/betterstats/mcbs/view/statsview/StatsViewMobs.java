@@ -1,14 +1,15 @@
 package com.thecsdev.betterstats.mcbs.view.statsview;
 
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
 import com.thecsdev.betterstats.client.gui.panel.StatsSummaryPanel;
+import com.thecsdev.betterstats.client.gui.screen.McbsSivGoalEditScreen;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.util.annotations.Virtual;
-import com.thecsdev.commonmc.api.client.gui.TElement;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import com.thecsdev.commonmc.api.client.gui.misc.TTextureElement;
 import com.thecsdev.commonmc.api.client.gui.screen.TTextDialogScreen;
@@ -23,19 +24,24 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.stats.StatType;
 import net.minecraft.util.Util;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.thecsdev.betterstats.BetterStats.MOD_ID;
 import static com.thecsdev.commonmc.resource.TComponent.*;
 import static java.util.Comparator.comparing;
+import static net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE;
+import static net.minecraft.core.registries.BuiltInRegistries.STAT_TYPE;
 import static net.minecraft.network.chat.Component.literal;
 import static net.minecraft.network.chat.Component.translatable;
 import static net.minecraft.resources.Identifier.DEFAULT_NAMESPACE;
@@ -103,15 +109,16 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		//obtain stats instance
 		final var stats = widget.statsProperty().get();
 		assert stats != null;
-		//noinspection unchecked - context menu
-		widget.contextMenuProperty().set((Function<TElement, TContextMenu>)(Object) CTX_MENU, StatsViewMobs.class);
+
+		//context menu
+		widget.contextMenuProperty().set(_ -> CTX_MENU.apply(context, widget), StatsViewMobs.class);
 		widget.followsCursorProperty().set(BetterStats.getConfig().getGuiMobsFollowCursor(), StatsViewMobs.class);
 	}
 
 	/**
 	 * Constructs a context menu for a given {@link TEntityStatsWidget}.
 	 */
-	private static final Function<TEntityStatsWidget, TContextMenu> CTX_MENU = widget ->
+	private static final BiFunction<StatsInitContext, TEntityStatsWidget, TContextMenu> CTX_MENU = (context, widget) ->
 	{
 		//obtain the stats data and ensure it is present
 		final var stats = widget.statsProperty().get();
@@ -119,6 +126,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 
 		//create the context menu builder
 		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
+		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
 		//error information
@@ -140,6 +148,50 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			builder.addButton(
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
 					_ -> Util.getPlatform().openUri(url_wiki));
+		}
+
+		//"Create goal" button
+		if(BetterStats.getConfig().experimentsEnabled()) {
+			builder.addContextMenu(
+					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
+					_ ->
+					{
+						//sub-menu for "Create goal"
+						final var ctx_newGoal = new TContextMenu.Builder(client);
+
+						//sub-menu entry for each StatType
+						for(final var statType : STAT_TYPE)
+						{
+							//skip non-Item-related StatType-s
+							if(statType.getRegistry() != ENTITY_TYPE) continue;
+							//noinspection unchecked
+							final var statTypeE = (StatType<EntityType<?>>) statType;
+
+							ctx_newGoal.addButton(
+									IStatsProvider.getStatTypeName(statTypeE),
+									_ ->
+									{
+										//create and add the goal
+										final int val  = stats.getValues().getOrDefault(statTypeE.get(stats.getSubject()), 0);
+										final var goal = new McbsSivGoal(
+												Objects.requireNonNull(STAT_TYPE.getKey(statTypeE)),
+												stats.getSubjectID(),
+												val,
+												val + 64);
+										tab.putGoal(goal);
+
+										//create and open the goal's editing screen
+										final var editScreen = new McbsSivGoalEditScreen(client.gui.screen(), tab, goal);
+										client.gui.setScreen(editScreen.getAsScreen());
+
+										//in the background, switch view to goals
+										tab.setCurrentView(StatsViewGoals.INSTANCE);
+									});
+						}
+
+						//build sub-menu
+						return ctx_newGoal.build();
+					});
 		}
 
 		//close button, and then build and return a new context menu

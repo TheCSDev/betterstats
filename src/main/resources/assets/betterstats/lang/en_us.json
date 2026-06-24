@@ -67,6 +67,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "There are no goals to show yet...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "View error info",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "View on Wiki",
+	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Create goal",
 	"betterstats.gui.statsview.mcbs_goals": "Goals",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[New ✨]",
 	"betterstats.gui.statsview.mcbs_goals.alert1": "Define custom milestones to track your progress toward specific statistical targets like resource collection.",
