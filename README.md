@@ -49,7 +49,7 @@ This mod depends on some other mods that first need to be installed before this 
 Follow these steps to build the project from source.
 
 ### Prerequisites
-* **Java 25**: Ensure you have the Java Development Kit (JDK) 21 installed.
+* **Java 25**: Ensure you have the Java Development Kit (JDK) installed.
 * **Git**: Required to clone this repository.
 
 ### Instructions
