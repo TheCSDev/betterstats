@@ -168,16 +168,13 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		ibmPanel.setBounds(computeNextYBounds(255, GAP));
 
 		//featured item statistics
-		final var items = getTopStats(ItemStats.getItemStats(lpStats, null, null), 7);
-		StatsViewUtils.initItemStats(ibmPanel, null, items);
+		StatsViewUtils.initItemStats(ibmPanel, null, getTopStats(ItemStats.getItemStats(lpStats, null, null), 7));
 
 		//featured block statistics
-		final var blocks = getTopStats(BlockStats.getBlockStats(lpStats, null, null), 7);
-		StatsViewUtils.initBlockStats(ibmPanel, null, blocks);
+		StatsViewUtils.initBlockStats(ibmPanel, null, getTopStats(BlockStats.getBlockStats(lpStats, null, null), 7));
 
 		//featured mob statistics
-		final var entities = getTopStats(EntityStats.getEntityStats(lpStats, null, null), 5);
-		StatsViewUtils.initMobStats(ibmPanel, null, entities);
+		StatsViewUtils.initMobStats(ibmPanel, null, getTopStats(EntityStats.getEntityStats(lpStats, null, null), 5));
 
 		//and finally, center that panel and add it to this panel
 		ibmPanel.setBounds(ibmPanel.getContentBounds());
@@ -225,7 +222,7 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 	{
 		//check arguments
 		Objects.requireNonNull(origin);
-		if(size < 1) throw new IllegalArgumentException("size < 1.");
+		if(origin.isEmpty() || size < 1) return new ArrayList<>();
 
 		//define the priority queue that'll be used for stat ranking
 		record RankedStat<S>(S stat, int weight) {}
