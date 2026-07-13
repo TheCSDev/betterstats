@@ -23,10 +23,7 @@ import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TButtonWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TClickableWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.stats.TTextualStatWidget;
-import com.thecsdev.commonmc.api.stats.util.BlockStats;
-import com.thecsdev.commonmc.api.stats.util.CustomStat;
-import com.thecsdev.commonmc.api.stats.util.EntityStats;
-import com.thecsdev.commonmc.api.stats.util.ItemStats;
+import com.thecsdev.commonmc.api.stats.util.*;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
 import com.thecsdev.commonmc.resource.TComponent;
 import com.thecsdev.commonmc.resource.TLanguage;
@@ -38,15 +35,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
@@ -175,37 +168,15 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		ibmPanel.setBounds(computeNextYBounds(255, GAP));
 
 		//featured item statistics
-		final var items = ItemStats.getItemStats(lpStats, null, null).stream()
-				.sorted(Comparator.comparingDouble(
-						(ItemStats obj) -> obj.getValues().values().stream()
-						.mapToInt(Integer::intValue)
-						.average()
-						.orElse(0.0)).reversed())
-				.limit(7)
-				.toList();
+		final var items = getTopStats(ItemStats.getItemStats(lpStats, null, null), 7);
 		StatsViewUtils.initItemStats(ibmPanel, null, items);
 
 		//featured block statistics
-		final var blocks = BlockStats.getBlockStats(lpStats, null, null).stream()
-				.sorted(Comparator.comparingDouble(
-						(BlockStats obj) -> obj.getValues().values().stream()
-						.mapToInt(Integer::intValue)
-						.average()
-						.orElse(0.0)).reversed())
-				.limit(7)
-				.toList();
+		final var blocks = getTopStats(BlockStats.getBlockStats(lpStats, null, null), 7);
 		StatsViewUtils.initBlockStats(ibmPanel, null, blocks);
 
 		//featured mob statistics
-		final var entities = EntityStats.getEntityStats(lpStats, null, null).stream()
-				.filter(es -> es.getSubject().getCategory() != MobCategory.MISC)
-				.sorted(Comparator.comparingDouble(
-						(EntityStats obj) -> obj.getValues().values().stream()
-						.mapToInt(Integer::intValue)
-						.average()
-						.orElse(0.0)).reversed())
-				.limit(5)
-				.toList();
+		final var entities = getTopStats(EntityStats.getEntityStats(lpStats, null, null), 5);
 		StatsViewUtils.initMobStats(ibmPanel, null, entities);
 
 		//and finally, center that panel and add it to this panel
@@ -237,6 +208,56 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 		lbl_group.textAlignmentProperty().set(CompassDirection.CENTER, PersonalHomePanel.class);
 		lbl_group.textScaleProperty().set(1.1d, PersonalHomePanel.class);
 		news.forEach(section -> CreditsPanel.initSection(this, section));
+	}
+	// ==================================================
+	/**
+	 * Returns a new {@link Collection} containing the "top/largest" stats from another
+	 * collection of stats.
+	 * @param origin The origin {@link Collection}.
+	 * @param size The size of the returned {@link Collection}.
+	 * @throws NullPointerException If the argument is {@code null}.
+	 * @throws IllegalArgumentException If {@code size < 1}.
+	 * @implNote Uses an optimized sorting algorithm that avoids wasteful sort operations.
+	 */
+	private static final <S extends SubjectStats<?>> @NotNull Collection<S> getTopStats(
+			@NotNull Collection<S> origin, int size)
+			throws NullPointerException, IllegalArgumentException
+	{
+		//check arguments
+		Objects.requireNonNull(origin);
+		if(size < 1) throw new IllegalArgumentException("size < 1.");
+
+		//define the priority queue that'll be used for stat ranking
+		record RankedStat<S>(S stat, int weight) {}
+		final var queue = new PriorityQueue<RankedStat<S>>(size, Comparator.comparingInt(RankedStat::weight));
+
+		//iterate stats from origin with a single pass
+		for(final var stat : origin)
+		{
+			//calculate total "weight" the current stat is worth
+			int weight = 0;
+			for(final int statVal : stat.getValues().values()) weight += statVal;
+
+			//if the queue is full, check if the current item can fit in
+			if(queue.size() == size) {
+				//a '0' definitely will not fit in the queue
+				if(weight == 0) continue;
+				//compare the score against the lowest rank in the queue
+				final var lowestRank = queue.peek();
+				if(lowestRank != null && weight <= lowestRank.weight)
+					continue; //skip current stat if it ranks below lowest rank
+			}
+
+			//add to queue
+			queue.add(new RankedStat<>(stat, weight));
+			if(queue.size() > size) queue.poll();
+		}
+
+		//return a sorted list containing the ranked elements
+		final var stats = new ArrayList<S>(size);
+		while(stats.size() < size && !queue.isEmpty())
+			stats.add(queue.poll().stat);
+		return stats.reversed();
 	}
 	// ================================================== ==================================================
 	//                                    ModSummaryPanel IMPLEMENTATION
