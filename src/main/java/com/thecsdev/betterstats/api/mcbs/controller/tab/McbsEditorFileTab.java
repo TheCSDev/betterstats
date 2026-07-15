@@ -155,7 +155,6 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	/**
 	 * Puts an {@link McbsGoal} into {@link McbsFile#getGoals()}.
 	 * @param goal The {@link McbsGoal} to add.
-	 * @return {@code true} if the {@link McbsFile} did not already contain the goal.
 	 * @throws NullPointerException If the argument is {@code null}.
 	 */
 	public final void putGoal(@NotNull McbsGoal goal) throws NullPointerException
