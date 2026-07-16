@@ -19,6 +19,12 @@
 					"homepage_uri": "https://github.com/WForst-Breeze"
 				},
 				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/150860092?v=4",
+					"name": "Xinyang-Gao",
+					"summary": "Translated this mod to 'Simplified Chinese' and 'Traditional Chinese'.",
+					"homepage_uri": "https://github.com/Xinyang-Gao"
+				},
+				{
 					"avatar_uri": null,
 					"name": { "translate": "betterstats.credits.section.contributors.entry.contribute" },
 					"summary": { "translate": "betterstats.credits.section.contributors.entry.contribute.summary" },
