@@ -59,7 +59,7 @@
 	"betterstats.gui.statsview.filter.group_by": "Grupuj według",
 	"betterstats.gui.statsview.filter.group_by.all": "Wszystkie",
 	"betterstats.gui.statsview.filter.group_by.mod": "Nazwa moda",
-	"betterstats.gui.statsview.filter.group_by.mob_category": "Kategoria moba",
+	"betterstats.gui.statsview.filter.group_by.mob_category": "Kategorie mobów",
 	"betterstats.gui.statsview.filter.group_by.creative_mode_tab": "Grupa przedmiotu",
 	"betterstats.gui.statsview.filter.distance_unit": "Jednostka dystansu",
 	"betterstats.gui.statsview.filter.time_unit": "Jednostka czasu",
