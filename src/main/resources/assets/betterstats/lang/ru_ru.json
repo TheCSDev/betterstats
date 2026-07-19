@@ -128,7 +128,7 @@
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.climb_one_cm" : "Пролезть %4$d см",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.crouch_one_cm" : "Прокрасться %4$d см",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_absorbed" : "Поглотить %4$d урона",
-	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_blocked_by_shield" : "Заблокировать %4$d урона",
+	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_blocked_by_shield" : "Заблокировать %4$d урона с помощью щита",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_dealt" : "Нанести %4$d урона",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_dealt_absorbed" : "Нанести %4$d урона (поглощено)",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_dealt_resisted" : "Нанести %4$d урона (сопротивление)",

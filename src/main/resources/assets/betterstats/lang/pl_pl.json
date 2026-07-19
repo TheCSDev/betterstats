@@ -128,7 +128,7 @@
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.climb_one_cm":                    "Wspinaj się przez %4$d cm",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.crouch_one_cm":                   "Przejdź %4$d cm po kucaku",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_absorbed":                 "Pochłoń %4$d obrażeń",
-	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_blocked_by_shield":        "Zablokuj %4$d obrażeń",
+	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_blocked_by_shield":        "Zablokuj %4$d obrażeń przy użyciu tarczy",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_dealt":                    "Zadaj %4$d obrażeń",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_dealt_absorbed":           "Zadaj %4$d obrażeń (pochłoniętych)",
 	"betterstats.mcbsgoal.siv_objective.minecraft.custom.minecraft.damage_dealt_resisted":           "Zadaj %4$d obrażeń (odpartych)",

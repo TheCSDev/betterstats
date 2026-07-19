@@ -26,8 +26,10 @@ import com.thecsdev.commonmc.api.client.gui.widget.text.TSimpleTextFieldWidget;
 import com.thecsdev.commonmc.resource.TLanguage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,7 +95,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		initStringProperty(
 				panel,
 				BLanguage.config_common_apiEndpoint(),
-				TTooltip.of(BLanguage.config_common_apiEndpoint_tooltip()),
+				BLanguage.config_common_apiEndpoint_tooltip(),
 				bss_config.getApiEndpoint().toString(),
 				(_, _, n) -> {
 					try { bss_config.setApiEndpoint(URI.create(n));}
@@ -102,13 +104,13 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		initBooleanProperty(
 				panel,
 				BLanguage.config_common_registerCommands(),
-				TTooltip.of(BLanguage.config_common_registerCommands_tooltip()),
+				BLanguage.config_common_registerCommands_tooltip(),
 				bss_config.canRegisterCommands(),
 				(_, _, n) -> bss_config.setRegisterCommands(n));
 		initBooleanProperty(
 				panel,
 				BLanguage.config_common_experiments(),
-				TTooltip.of(BLanguage.config_common_experiments_tooltip()),
+				BLanguage.config_common_experiments_tooltip(),
 				bss_config.experimentsEnabled(),
 				(_, _, n) -> bss_config.setExperimentsEnabled(n));
 
@@ -117,13 +119,13 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		initBooleanProperty(
 				panel,
 				BLanguage.config_client_guiMobsFollowCursor(),
-				TTooltip.of(BLanguage.config_client_guiMobsFollowCursor_tooltip()),
+				BLanguage.config_client_guiMobsFollowCursor_tooltip(),
 				bss_config.getGuiMobsFollowCursor(),
 				(_, _, n) -> bss_config.setGuiMobsFollowCursor(n));
 		initBooleanProperty(
 				panel,
 				BLanguage.config_client_allowChatPsa(),
-				TTooltip.of(BLanguage.config_client_allowChatPsa_tooltip()),
+				BLanguage.config_client_allowChatPsa_tooltip(),
 				bss_config.allowsChatPsaMessages(),
 				(_, _, n) -> bss_config.setAllowChatPsaMessages(n));
 
@@ -144,7 +146,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		initBooleanProperty(
 				panel,
 				TLanguage.config_client_updateItemGroupsOnJoin(),
-				TTooltip.of(TLanguage.config_client_updateItemGroupsOnJoin_tooltip()),
+				TLanguage.config_client_updateItemGroupsOnJoin_tooltip(),
 				tcd_config.updateItemGroupsOnJoin(),
 				(_, _, n) -> tcd_config.setUpdateItemGroupsOnJoin(n));
 
@@ -204,6 +206,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	 * Initializes a blank setting slot that has no setting there.
 	 * @param panel The target {@link TPanelElement}.
 	 */
+	@ApiStatus.Internal
 	private static final void initNothingSetting(@NotNull TPanelElement panel)
 	{
 		//background color element
@@ -224,15 +227,27 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	 * Initializes a boolean property setting.
 	 * @param panel The panel where the setting is to be initialized.
 	 * @param name The display name label text.
-	 * @param tooltip The tooltip text.
+	 * @param tooltipText The tooltip text.
 	 * @param value The current value of the setting.
 	 * @param changeListener Use this to apply setting value changes.
 	 */
+	@ApiStatus.Internal
 	private static final void initBooleanProperty(
 			@NotNull TPanelElement panel,
-			@NotNull Component name, @Nullable TTooltip tooltip,
+			@NotNull Component name, @Nullable Component tooltipText,
 			boolean value, @NotNull IChangeListener<Boolean> changeListener)
 	{
+		//preparation
+		if(tooltipText != null)
+			tooltipText = Component.literal("")
+					.append(Component.literal("").append(name).withStyle(ChatFormatting.YELLOW))
+					.append("\n")
+					.append(Component.literal("").append(tooltipText).withStyle(ChatFormatting.GRAY));
+		else
+			tooltipText = Component.literal("")
+					.append(Component.literal("").append(name).withStyle(ChatFormatting.YELLOW));
+		final var tooltip = TTooltip.of(tooltipText);
+
 		//background color element
 		final var el_bg = new TFillColorElement.Flat((panel.size() % 2 == 0) ? 0x33000000 : 0x44000000, 0);
 		el_bg.hoverableProperty().set(true, BetterStatsConfigScreen.class);
@@ -258,15 +273,27 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 	 * Initializes a string property setting.
 	 * @param panel The panel where the setting is to be initialized.
 	 * @param name The display name label text.
-	 * @param tooltip The tooltip text.
+	 * @param tooltipText The tooltip text.
 	 * @param value The current value of the setting.
 	 * @param changeListener Use this to apply setting value changes.
 	 */
+	@ApiStatus.Internal
 	private static final void initStringProperty(
 			@NotNull TPanelElement panel,
-			@NotNull Component name, @Nullable TTooltip tooltip,
+			@NotNull Component name, @Nullable Component tooltipText,
 			@NotNull String value, @NotNull IChangeListener<String> changeListener)
 	{
+		//preparation
+		if(tooltipText != null)
+			tooltipText = Component.literal("")
+					.append(Component.literal("").append(name).withStyle(ChatFormatting.YELLOW))
+					.append("\n")
+					.append(Component.literal("").append(tooltipText).withStyle(ChatFormatting.GRAY));
+		else
+			tooltipText = Component.literal("")
+				.append(Component.literal("").append(name).withStyle(ChatFormatting.YELLOW));
+		final var tooltip = TTooltip.of(tooltipText);
+
 		//background color element
 		final var el_bg = new TFillColorElement.Flat((panel.size() % 2 == 0) ? 0x33000000 : 0x44000000, 0);
 		el_bg.hoverableProperty().set(true, BetterStatsConfigScreen.class);
