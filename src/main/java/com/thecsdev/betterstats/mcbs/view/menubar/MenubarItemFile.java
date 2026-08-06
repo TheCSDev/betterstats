@@ -54,24 +54,24 @@ public final class MenubarItemFile extends MenubarItem
 		//"Open" option
 		builder.addButton(
 				gui(TSprites.gui_icon_fsFolder()).append(" ").append(BLanguage.gui_menubar_file_open()),
-				__ -> showOpenFileDialog(client, mcbsEditor));
+				_ -> showOpenFileDialog(client, mcbsEditor));
 
 		//"Save as" option
 		if(mcbsEditor.getCurrentTab() instanceof McbsEditorFileTab)
 			builder.addButton(air().append(" ").append(
 					BLanguage.gui_menubar_file_saveAs()),
-					__ -> showSaveFileDialog(client, mcbsEditor));
+					_ -> showSaveFileDialog(client, mcbsEditor));
 
 		//"Settings" option
 		builder.addSeparator();
 		builder.addButton(
 				gui(BSprites.gui_icon_settings()).append(" ").append(BLanguage.gui_menubar_file_settings()),
-				__ -> mcbsEditor.addTab(McbsEditorSettingsTab.INSTANCE, true));
+				_ -> mcbsEditor.addTab(McbsEditorSettingsTab.INSTANCE, true));
 
 		//"Close" option
 		builder.addButton(
 				gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
-				__ -> Optional.ofNullable(client.screen).ifPresent(Screen::onClose));
+				_ -> Optional.ofNullable(client.screen).ifPresent(Screen::onClose));
 
 		//build and return the context menu
 		return builder.build();

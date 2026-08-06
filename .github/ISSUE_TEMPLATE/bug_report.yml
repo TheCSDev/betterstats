@@ -20,8 +20,8 @@ body:
 
 
         **Version format:** v[mod_version]+[mod_loader]-[minecraft_version]  
-         **Version example:** v5.0+fabric-1.26  
-        **Title example:** [v5.3.1+neoforge-1.26.2] Red "Do not click" button
+         **Version example:** v5.0+fabric-26  
+        **Title example:** [v5.3.1+neoforge-26.1.2] Red "Do not click" button
         crashes the game when clicked
   - type: textarea
     id: description
@@ -69,9 +69,8 @@ body:
         mod-pack. This helps project maintainers reproduce the issue, as other
         mods often can and do cause issues.
       placeholder: >-
-        Name a list of mods or link a mod-pack here. Please do not expect
-        project maintainers to manually download and install like 300 separate
-        mods.
+        Name a list of mods or link a mod-pack here. To rule out mod conflicts, it is
+        advised to reproduce the issue without other mods present (except for dependencies).
     validations:
       required: true
   - type: checkboxes

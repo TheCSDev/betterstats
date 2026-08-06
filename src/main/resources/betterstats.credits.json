@@ -7,10 +7,34 @@
 			"entries":
 			[
 				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/131694536?v=4",
+					"name": "ADevnin",
+					"summary": "Translated this mod to 'Russian'.",
+					"homepage_uri": "https://github.com/ADevnin"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/268278061?v=4",
+					"name": "JustShadow78",
+					"summary": "Translated this mod to 'Polish'.",
+					"homepage_uri": "https://github.com/JustShadow78"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/306860017?v=4",
+					"name": "Ultra0641",
+					"summary": "Translated this mod to 'German'.",
+					"homepage_uri": "https://github.com/Ultra0641"
+				},
+				{
 					"avatar_uri": "https://avatars.githubusercontent.com/u/110760354?v=4",
 					"name": "WForst-Breeze",
 					"summary": "Translated this mod to 'Simplified Chinese'.",
 					"homepage_uri": "https://github.com/WForst-Breeze"
+				},
+				{
+					"avatar_uri": "https://avatars.githubusercontent.com/u/150860092?v=4",
+					"name": "Xinyang-Gao",
+					"summary": "Translated this mod to 'Simplified Chinese' and 'Traditional Chinese'.",
+					"homepage_uri": "https://github.com/Xinyang-Gao"
 				},
 				{
 					"avatar_uri": null,

@@ -37,14 +37,15 @@ public final class McbsStats implements IStatsProvider
 	// ==================================================
 	/**
 	 * Clears redundant statistic data like zero-value entries and empty maps.
+	 * @apiNote Costly operation. Avoid frequent calls!
 	 */
 	private final @ApiStatus.Internal void cleanUp()
 	{
 		//remove zero-value statistic entries
-		for(final var statTypeEntry : this.intStats.entrySet())
-			statTypeEntry.getValue().entrySet().removeIf(e -> e.getValue() == 0);
+		for(final var statTypeEntry : this.intStats.values())
+			statTypeEntry.values().removeIf(e -> e == 0);
 		//remove empty stat-type maps
-		this.intStats.entrySet().removeIf(e -> e.getValue().isEmpty());
+		this.intStats.values().removeIf(ConcurrentHashMap::isEmpty);
 	}
 	// ==================================================
 	/**
@@ -52,7 +53,6 @@ public final class McbsStats implements IStatsProvider
 	 * integer-based statistics values.
 	 */
 	public final @NotNull ConcurrentHashMap<Identifier, ConcurrentHashMap<Identifier, Integer>> getIntValues() {
-		cleanUp();
 		return this.intStats;
 	}
 
@@ -66,8 +66,7 @@ public final class McbsStats implements IStatsProvider
 			@NotNull Identifier type) throws NullPointerException
 	{
 		Objects.requireNonNull(type);
-		cleanUp();
-		return this.intStats.computeIfAbsent(type, __ -> new ConcurrentHashMap<>());
+		return this.intStats.computeIfAbsent(type, _ -> new ConcurrentHashMap<>());
 	}
 	// ==================================================
 	/**
@@ -226,7 +225,6 @@ public final class McbsStats implements IStatsProvider
 	public final void forEach(@NotNull McbsStats.IntValueConsumer consumer) throws NullPointerException
 	{
 		Objects.requireNonNull(consumer);
-		cleanUp();
 		for(final var statTypeEntry : this.intStats.entrySet()) {
 			final var statTypeId = statTypeEntry.getKey();
 			for(final var statSubjectEntry : statTypeEntry.getValue().entrySet()) {
@@ -274,6 +272,8 @@ public final class McbsStats implements IStatsProvider
 	 * {@link Codec} implementation for {@link McbsStats}.
 	 */
 	@ApiStatus.Internal
-	static final Codec<McbsStats> CODEC = CODEC_INT_STATS.xmap(McbsStats::new, McbsStats::getIntValues);
+	static final Codec<McbsStats> CODEC = CODEC_INT_STATS.xmap(
+			McbsStats::new,
+			stats -> { stats.cleanUp(); return stats.getIntValues(); });
 	// ================================================== ==================================================
 }

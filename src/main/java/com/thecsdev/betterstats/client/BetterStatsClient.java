@@ -41,6 +41,36 @@ public class BetterStatsClient extends BetterStats
 		//keep track of last login time
 		ClientEvent.PLAYER_JOIN.addListener(_ -> LAST_LOGIN_TIME = System.currentTimeMillis());
 		ClientEvent.PLAYER_QUIT.addListener(_ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+
+		//FIXME - REMOVE TEST CODE THAT POPULATES STATS WITH ARBITRARY NUMBERS:
+		/*
+		ClientEvent.PLAYER_JOIN.addListener(_ ->
+		{
+			//obtain singleplayer server
+			final var server = Minecraft.getInstance().getSingleplayerServer();
+			if(server == null) return;
+
+			//continue execution on server-side
+			server.execute(() ->
+			{
+				//obtain the first player (who is usually the main player)
+				final var player = server.getPlayerList().getPlayers().stream().findFirst().orElse(null);
+				if(player == null) return;
+				final var stats  = player.getStats();
+				final var rng    = new Random();
+
+				//noinspection unchecked | award every single stat in the game to the player
+				for(final var statType : (Registry<StatType<Object>>)(Object) BuiltInRegistries.STAT_TYPE)
+				{
+					//skip "custom/general" statistics
+					if(((Object) statType) == Stats.CUSTOM) continue;
+					//populate all other stat types
+					for(final var statSubject : statType.getRegistry())
+						stats.setValue(player, statType.get(statSubject), rng.nextInt(0, 1024));
+				}
+			});
+		});
+		*/
 	}
 	// ==================================================
 	/**

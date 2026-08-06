@@ -115,6 +115,7 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_noGoals() { return translatable("betterstats.gui.statsview.stats.no_goals"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewErrorInfo() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_error_info"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
+	public static final MutableComponent gui_statsview_stats_ctxMenu_createGoal() { return translatable("betterstats.gui.statsview.stats.ctxmenu.create_goal"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1Prefix() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1.prefix"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1"); }
