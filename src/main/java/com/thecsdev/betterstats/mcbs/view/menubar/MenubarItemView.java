@@ -51,9 +51,9 @@ public final class MenubarItemView extends MenubarItem
 				gui("statistics/item_used").append(" ").append(BLanguage.gui_menubar_view_vanillaScreen()),
 				_ -> {
 					final @Nullable var player     = client.player;
-					final @Nullable var lastScreen = client.gui.screen();
+					final @Nullable var lastScreen = client.screen;
 					if(player == null || lastScreen == null) return; //safety - shouldn't happen
-					client.gui.setScreen(new StatsScreen(lastScreen, player.getStats()));
+					client.setScreen(new StatsScreen(lastScreen, player.getStats()));
 				});
 		builder.addSeparator();
 

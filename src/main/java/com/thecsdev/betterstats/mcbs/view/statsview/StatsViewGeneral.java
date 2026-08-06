@@ -144,8 +144,8 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 						tab.putGoal(goal);
 
 						//create and open the goal's editing screen
-						final var editScreen = new McbsSivGoalEditScreen(client.gui.screen(), tab, goal);
-						client.gui.setScreen(editScreen.getAsScreen());
+						final var editScreen = new McbsSivGoalEditScreen(client.screen, tab, goal);
+						client.setScreen(editScreen.getAsScreen());
 
 						//in the background, switch view to goals
 						tab.setCurrentView(StatsViewGoals.INSTANCE);

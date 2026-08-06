@@ -34,7 +34,7 @@ public class BetterStatsClient extends BetterStats
 			//else open the Better Statistics Screen
 			else {
 				final var client = Minecraft.getInstance();
-				client.gui.setScreen(new BetterStatsScreen(client.gui.screen()).getAsScreen());
+				client.setScreen(new BetterStatsScreen(client.screen).getAsScreen());
 			}
 		});
 
