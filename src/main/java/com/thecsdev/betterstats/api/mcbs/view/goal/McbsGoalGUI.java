@@ -12,6 +12,7 @@ import com.thecsdev.commonmc.api.client.gui.screen.TTextDialogScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -63,7 +64,7 @@ public abstract class McbsGoalGUI<T extends McbsGoal>
 	public @Virtual void initIcon(@Nullable T goal, @NotNull TElement onto, int preferredPadding)
 			throws NullPointerException
 	{
-		final var ico = new TTextureElement(TextureManager.INTENTIONAL_MISSING_TEXTURE);
+		final var ico = new TTextureElement(MissingTextureAtlasSprite.getLocation());
 		ico.setBounds(onto.getBounds().add(
 				preferredPadding, preferredPadding,
 				-preferredPadding * 2, -preferredPadding * 2));

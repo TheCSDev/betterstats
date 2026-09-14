@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats.mcbs.view.statsview;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
@@ -25,13 +26,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatType;
-import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URI;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -147,7 +148,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
-					_ -> Util.getPlatform().openUri(url_wiki));
+					_ -> Blaze3D.openUri(URI.create(url_wiki)));
 		}
 
 		//"Create goal" button
