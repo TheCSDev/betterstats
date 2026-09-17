@@ -1,5 +1,6 @@
 package com.thecsdev.betterstats.mcbs.view.menubar;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
@@ -12,10 +13,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
 import java.util.Objects;
 
 import static com.thecsdev.commonmc.resource.TComponent.*;
@@ -43,24 +44,24 @@ public final class MenubarItemAbout extends MenubarItem
 		return new TContextMenu.Builder(Objects.requireNonNull(client))
 				.addButton(
 						item("item/filled_map").append(" ").append(BLanguage.gui_menubar_about_sourceCode()),
-						__ -> showUriScreen(BetterStats.getProperty("mod.link.sources"), true))
+						_ -> showUriScreen(BetterStats.getProperty("mod.link.sources"), true))
 				.addButton(
 						head("MHF_Spider").append(" ").append(translatable("menu.reportBugs")),
-						__ -> showUriScreen(BetterStats.getProperty("mod.link.issues"), true))
+						_ -> showUriScreen(BetterStats.getProperty("mod.link.issues"), true))
 				.addButton(
 						item("item/paper").append(" ").append(BLanguage.gui_menubar_about_legalNotices()),
-						__ -> showUriScreen(BetterStats.getProperty("mod.link.legal"), true))
+						_ -> showUriScreen(BetterStats.getProperty("mod.link.legal"), true))
 				.addSeparator()
 				.addButton(
 						gui(BSprites.gui_icon_faviconCf()).append(" ").append(literal("CurseForge")),
-						__ -> showUriScreen(BetterStats.getProperty("mod.link.curseforge"), true))
+						_ -> showUriScreen(BetterStats.getProperty("mod.link.curseforge"), true))
 				.addButton(
 						gui(BSprites.gui_icon_faviconMr()).append(" ").append(literal("Modrinth")),
-						__ -> showUriScreen(BetterStats.getProperty("mod.link.modrinth"), true))
+						_ -> showUriScreen(BetterStats.getProperty("mod.link.modrinth"), true))
 				.addSeparator()
 				.addButton(
 						gui(BSprites.gui_icon_heart()).append(" ").append(BLanguage.gui_menubar_about_supportMe().withStyle(ChatFormatting.YELLOW)),
-						__ -> showUriScreen(BetterStats.getProperty("mod.link.support_me"), true))
+						_ -> showUriScreen(BetterStats.getProperty("mod.link.support_me"), true))
 				.build();
 	}
 	// ==================================================
@@ -70,14 +71,16 @@ public final class MenubarItemAbout extends MenubarItem
 	 * @param uri The URI to show.
 	 * @param isTrusted Whether the URI is trusted.
 	 * @throws NullPointerException If the argument is {@code null}.
+	 * @throws IllegalArgumentException If the URI string is not a valid {@link URI}.
 	 */
 	@ApiStatus.Internal
 	@SuppressWarnings("SameParameterValue")
 	public static final void showUriScreen(@NotNull String uri, boolean isTrusted)
-			throws NullPointerException
+			throws NullPointerException, IllegalArgumentException
 	{
 		//argument validity assertion
 		Objects.requireNonNull(uri);
+		final var toUri = URI.create(uri);
 
 		//obtain client variables stuff
 		final var client     = Objects.requireNonNull(Minecraft.getInstance());
@@ -85,9 +88,9 @@ public final class MenubarItemAbout extends MenubarItem
 
 		//create and set the confirmation screen
 		final var screen     = new ConfirmLinkScreen(accepted -> {
-			if(accepted) Util.getPlatform().openUri(uri);
+			if(accepted) Blaze3D.openUri(toUri);
 			client.gui.setScreen(lastScreen);
-		}, uri, isTrusted);
+		}, toUri, isTrusted);
 		client.gui.setScreen(screen);
 	}
 	// ==================================================
