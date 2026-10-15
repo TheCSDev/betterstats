@@ -8,6 +8,7 @@ import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
 import com.thecsdev.betterstats.client.gui.panel.StatsSummaryPanel;
 import com.thecsdev.betterstats.client.gui.screen.McbsSivGoalEditScreen;
+import com.thecsdev.betterstats.client.gui.hud.BHudUtils;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.common.util.annotations.Virtual;
@@ -152,6 +153,10 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
 					_ -> Blaze3D.openUri(URI.create(url_wiki)));
 		}
+
+		//pin to hud
+		if(BetterStats.getConfig().experimentsEnabled())
+			BHudUtils.addPinToHudButton(builder, stats);
 
 		//"Create goal" button
 		if(BetterStats.getConfig().experimentsEnabled()) {

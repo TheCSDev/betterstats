@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.mcbs.view.statsview;
 
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Iterators;
+import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.model.McbsFile;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsGoal;
@@ -10,6 +11,7 @@ import com.thecsdev.betterstats.api.mcbs.view.goal.McbsGoalGUI;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.api.registry.BRegistries;
+import com.thecsdev.betterstats.client.gui.hud.BHudUtils;
 import com.thecsdev.betterstats.client.gui.widget.BGoalProgressBar;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
@@ -279,8 +281,12 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		if(!goals.isEmpty()) {
 			//initialize gui for each goal entry
 			for(final var goal : goals) {
+				//create listed goal element
 				final var el_goal = new ListedGoalGui<>(context, goal);
 				el_goal.setBounds(panel.computeNextYBounds(40, 4));
+				//set up context menu for the listed goal element
+				el_goal.contextMenuProperty().set(_ -> buildGoalCtxMenu(context, goal), StatsViewGoals.class);
+				//add the goal to the panel
 				panel.add(el_goal);
 			}
 		} else {
@@ -292,6 +298,37 @@ public final @ApiStatus.Internal class StatsViewGoals extends StatsView
 		}
 	}
 	// ==================================================
+	/**
+	 * Builds a {@link TContextMenu} for a listed {@link McbsGoal} entry.
+	 * @param context The {@link StatsInitContext} the goal entry is in.
+	 * @param goal The {@link McbsGoal} the entry represents.
+	 * @throws NullPointerException If an argument is {@code null}.
+	 */
+	private static final @NotNull TContextMenu buildGoalCtxMenu(
+			@NotNull StatsInitContext context, @NotNull McbsGoal goal)
+			throws NullPointerException
+	{
+		//preparation and create the context menu builder
+		Objects.requireNonNull(context);
+		Objects.requireNonNull(goal);
+		final var ctxMenu = new TContextMenu.Builder(Minecraft.getInstance());
+
+		//pin the goal's progress to the HUD
+		if(BetterStats.getConfig().experimentsEnabled())
+			ctxMenu.addButton(
+					gui(BSprites.gui_icon_pin()).append(" ").append(BLanguage.gui_hud_pinToHud()),
+					_ -> {
+						BHudUtils.pinGoal(goal, context.getTab());
+						BHudUtils.openCanvas();
+					});
+
+		//close button, and then build and return a new context menu
+		ctxMenu.addButton(
+				gui(BSprites.gui_icon_close()).append(" ").append(BLanguage.gui_menubar_file_close()),
+				_ -> {});
+		return ctxMenu.build();
+	}
+	// --------------------------------------------------
 	/**
 	 * Builds a {@link TContextMenu} for the "New goal" button.
 	 * @param filtersContext The {@link StatsView.FiltersInitContext}.

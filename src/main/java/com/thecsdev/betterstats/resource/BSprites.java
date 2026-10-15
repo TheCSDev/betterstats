@@ -46,6 +46,7 @@ public final class BSprites
 	public static final Identifier gui_icon_heart() { return fromNamespaceAndPath(MOD_ID, "icon/heart"); }
 	public static final Identifier gui_icon_heartBss() { return fromNamespaceAndPath(MOD_ID, "icon/heart_bss"); }
 	public static final Identifier gui_icon_pencil() { return fromNamespaceAndPath(MOD_ID, "icon/pencil"); }
+	public static final Identifier gui_icon_pin() { return fromNamespaceAndPath(MOD_ID, "icon/pin"); }
 	public static final Identifier gui_icon_trash() { return fromNamespaceAndPath(MOD_ID, "icon/trash"); }
 	public static final Identifier gui_icon_trashRed() { return fromNamespaceAndPath(MOD_ID, "icon/trash_red"); }
 	// -

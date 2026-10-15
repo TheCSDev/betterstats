@@ -42,6 +42,7 @@
 	"betterstats.gui.menubar.file.close": "Закрити",
 	"betterstats.gui.menubar.view": "Вигляд",
 	"betterstats.gui.menubar.view.vanilla_screen": "Стандартний екран Minecraft",
+	"betterstats.gui.menubar.view.hud_stats": "HUD stats",
 	"betterstats.gui.menubar.view.homepage": "Головна",
 	"betterstats.gui.menubar.view.local_player_stats": "Моя статистика",
 	"betterstats.gui.menubar.view.stats_view": "Змінити подання",
@@ -82,6 +83,9 @@
 	"betterstats.gui.statsview.mcbs_goals.delete_btn": "Видалити ціль",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn.confirm": "Ви впевнені?",
 	"betterstats.gui.statsview.mcbs_goals.no_edit_gui": "Для цього типу цілі немає інтерфейсу редагування.",
+
+	"betterstats.gui.hud.unsupported_stat": "Unsupported statistic",
+	"betterstats.gui.hud.pin_to_hud": "Pin to HUD",
 
 	"betterstats.gui.home_tab.featured_stats": "Вибрані статистичні показники",
 

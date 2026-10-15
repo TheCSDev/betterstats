@@ -42,6 +42,7 @@
 	"betterstats.gui.menubar.file.close": "Schließen",
 	"betterstats.gui.menubar.view": "Ansicht",
 	"betterstats.gui.menubar.view.vanilla_screen": "Vanilla-Bildschirm",
+	"betterstats.gui.menubar.view.hud_stats": "HUD stats",
 	"betterstats.gui.menubar.view.homepage": "Startseite",
 	"betterstats.gui.menubar.view.local_player_stats": "Meine statistiken",
 	"betterstats.gui.menubar.view.stats_view": "Ansicht wechseln",
@@ -82,6 +83,9 @@
 	"betterstats.gui.statsview.mcbs_goals.delete_btn": "Ziel löschen",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn.confirm": "Bist du sicher?",
 	"betterstats.gui.statsview.mcbs_goals.no_edit_gui": "Dieser Zieltyp verfügt über keine Berarbeitungsoberfläche.",
+
+	"betterstats.gui.hud.pin_to_hud": "Pin to HUD",
+	"betterstats.gui.hud.unsupported_stat": "Unsupported statistic",
 
 	"betterstats.gui.home_tab.featured_stats": "Empfohlene Statistiken",
 

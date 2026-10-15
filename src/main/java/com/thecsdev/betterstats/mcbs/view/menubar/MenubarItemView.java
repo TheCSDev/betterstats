@@ -1,10 +1,13 @@
 package com.thecsdev.betterstats.mcbs.view.menubar;
 
+import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.mcbs.controller.McbsEditor;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorHomepageTab;
 import com.thecsdev.betterstats.api.mcbs.view.menubar.MenubarItem;
+import com.thecsdev.betterstats.client.gui.hud.BHudUtils;
 import com.thecsdev.betterstats.resource.BLanguage;
+import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -55,6 +58,12 @@ public final class MenubarItemView extends MenubarItem
 					if(player == null || lastScreen == null) return; //safety - shouldn't happen
 					client.gui.setScreen(new StatsScreen(lastScreen, player.getStats()));
 				});
+
+		//the hud stats button opens the hud canvas, where pinned stats are managed
+		if(BetterStats.getConfig().experimentsEnabled())
+			builder.addButton(
+					gui(BSprites.gui_icon_pin()).append(" ").append(BLanguage.gui_menubar_view_hudStats()),
+					_ -> BHudUtils.openCanvas());
 		builder.addSeparator();
 
 		//home-page tab

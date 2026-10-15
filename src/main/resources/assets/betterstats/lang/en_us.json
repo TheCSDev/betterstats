@@ -42,6 +42,7 @@
 	"betterstats.gui.menubar.file.close": "Close",
 	"betterstats.gui.menubar.view": "View",
 	"betterstats.gui.menubar.view.vanilla_screen": "Vanilla screen",
+	"betterstats.gui.menubar.view.hud_stats": "HUD stats",
 	"betterstats.gui.menubar.view.homepage": "Home",
 	"betterstats.gui.menubar.view.local_player_stats": "My statistics",
 	"betterstats.gui.menubar.view.stats_view": "Switch view",
@@ -82,6 +83,9 @@
 	"betterstats.gui.statsview.mcbs_goals.delete_btn": "Delete goal",
 	"betterstats.gui.statsview.mcbs_goals.delete_btn.confirm": "Are you sure?",
 	"betterstats.gui.statsview.mcbs_goals.no_edit_gui": "This goal type does not have an editing interface.",
+
+	"betterstats.gui.hud.unsupported_stat": "Unsupported statistic",
+	"betterstats.gui.hud.pin_to_hud": "Pin to HUD",
 
 	"betterstats.gui.home_tab.featured_stats": "Featured statistics",
 

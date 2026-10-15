@@ -4,10 +4,16 @@ import com.thecsdev.betterstats.BetterStats;
 import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsScreen;
 import com.thecsdev.betterstats.api.client.registry.BClientRegistries;
 import com.thecsdev.betterstats.api.mcbs.view.tab.McbsEditorTabGUI;
+import com.thecsdev.betterstats.client.gui.hud.BHudElementTypes;
+import com.thecsdev.betterstats.client.gui.hud.BHudUtils;
+import com.thecsdev.common.util.TUtils;
 import com.thecsdev.commonmc.api.client.events.ClientEvent;
+import com.thecsdev.commonmc.api.client.gui.screen.hud.THudCanvasScreen;
 import com.thecsdev.commonmc.api.client.gui.util.TGuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
+
+import java.io.IOException;
 
 import static com.thecsdev.commonmc.api.client.hooks.GuiHooks.registerVanillaButtonMod;
 import static net.minecraft.network.chat.Component.translatable;
@@ -26,6 +32,7 @@ public class BetterStatsClient extends BetterStats
 		//initialize and register features
 		BClientRegistries.bootstrap();
 		McbsEditorTabGUI.bootstrap();
+		BHudElementTypes.bootstrap();
 
 		//modify the "Statistics" button on the game's pause screen
 		registerVanillaButtonMod(PauseScreen.class, translatable("gui.stats"), (_, vanillaOnClick) -> {
@@ -41,6 +48,24 @@ public class BetterStatsClient extends BetterStats
 		//keep track of last login time
 		ClientEvent.PLAYER_JOIN.addListener(_ -> LAST_LOGIN_TIME = System.currentTimeMillis());
 		ClientEvent.PLAYER_QUIT.addListener(_ -> LAST_LOGIN_TIME = System.currentTimeMillis());
+
+		//FIXME - IMPLEMENT SAVE/LOAD EVENTUALLY
+		//load the HUD canvas contents from disk, and keep them saved
+		/*
+		{
+			//obtain the file where save/load of hud stats takes place
+			final var file = BHudUtils.SAVE_FILE;
+
+			//load the contents on startup, ignoring any and all failures
+			try { THudCanvasScreen.INSTANCE.loadFromFile(file); }
+			catch (IOException e) {} //exception ignored
+
+			//and save them whenever the player leaves a world
+			ClientEvent.PLAYER_QUIT.addListener(_ -> {
+				try { THudCanvasScreen.INSTANCE.saveToFile(file); }
+				catch (IOException e) {} //exception ignored
+			});
+		}*/
 
 		//FIXME - REMOVE TEST CODE THAT POPULATES STATS WITH ARBITRARY NUMBERS:
 		/*

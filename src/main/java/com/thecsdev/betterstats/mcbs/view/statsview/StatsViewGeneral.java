@@ -6,6 +6,7 @@ import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
 import com.thecsdev.betterstats.client.gui.panel.StatsPageChooser;
 import com.thecsdev.betterstats.client.gui.screen.McbsSivGoalEditScreen;
+import com.thecsdev.betterstats.client.gui.hud.BHudUtils;
 import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.betterstats.resource.BSprites;
 import com.thecsdev.commonmc.api.client.gui.ctxmenu.TContextMenu;
@@ -128,6 +129,10 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
+
+		//pin to hud
+		if(BetterStats.getConfig().experimentsEnabled())
+			BHudUtils.addPinToHudButton(builder, stat);
 
 		//"Create goal" button
 		if(BetterStats.getConfig().experimentsEnabled()) {

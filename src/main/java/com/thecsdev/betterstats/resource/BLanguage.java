@@ -93,6 +93,7 @@ public final class BLanguage
 	public static final MutableComponent gui_menubar_view_homepage() { return translatable("betterstats.gui.menubar.view.homepage"); }
 	public static final MutableComponent gui_menubar_view_localPlayerStats() { return translatable("betterstats.gui.menubar.view.local_player_stats"); }
 	public static final MutableComponent gui_menubar_view_statsView() { return translatable("betterstats.gui.menubar.view.stats_view"); }
+	public static final MutableComponent gui_menubar_view_hudStats() { return translatable("betterstats.gui.menubar.view.hud_stats"); }
 	public static final MutableComponent gui_menubar_about() { return translatable("betterstats.gui.menubar.about"); }
 	public static final MutableComponent gui_menubar_about_sourceCode() { return translatable("betterstats.gui.menubar.about.source_code"); }
 	public static final MutableComponent gui_menubar_about_supportMe() { return translatable("betterstats.gui.menubar.about.support_me"); }
@@ -130,6 +131,9 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_deleteBtn_confirm() { return translatable("betterstats.gui.statsview.mcbs_goals.delete_btn.confirm"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_noEditGui() { return translatable("betterstats.gui.statsview.mcbs_goals.no_edit_gui"); }
+	// --------------------------------------------------
+	public static final MutableComponent gui_hud_pinToHud() { return translatable("betterstats.gui.hud.pin_to_hud"); }
+	public static final MutableComponent gui_hud_unsupportedStat() { return translatable("betterstats.gui.hud.unsupported_stat"); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_homeTab_featuredStats() { return translatable("betterstats.gui.home_tab.featured_stats"); }
 	// ==================================================
