@@ -2,6 +2,7 @@ package com.thecsdev.betterstats.mcbs.view.statsview;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.thecsdev.betterstats.BetterStats;
+import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.betterstats.api.mcbs.model.goal.McbsSivGoal;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsView;
 import com.thecsdev.betterstats.api.mcbs.view.statsview.StatsViewUtils;
@@ -152,8 +153,8 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 					_ -> Blaze3D.openUri(URI.create(url_wiki)));
 		}
 
-		//pin to hud
-		if(BetterStats.getConfig().experimentsEnabled())
+		//pin to hud (can't pin stats from non-localplayer tab + and that could cause "mem. leak")
+		if(context.getTab() == McbsEditorFileTab.LOCALPLAYER && BetterStats.getConfig().experimentsEnabled())
 			BHudUtils.addPinToHudButton(builder, stats);
 
 		//"Create goal" button
