@@ -12,6 +12,7 @@ import com.thecsdev.betterstats.resource.BLanguage;
 import com.thecsdev.commonmc.api.client.stats.LocalPlayerStatsProvider;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import io.netty.util.internal.UnstableApi;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
@@ -30,10 +31,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -86,10 +84,19 @@ public final class McbsEditorFileTab extends McbsEditorTab
 	// ==================================================
 	public final @Override @NotNull Component getDisplayName()
 	{
-		if(this == LOCALPLAYER)
-			return head("Steve").append(" ").append(BLanguage.gui_menubar_view_localPlayerStats());
+		//display name for local player's statistics
+		if(this == LOCALPLAYER) {
+			final var playerName = Optional.ofNullable(Minecraft.getInstance().player)
+					.map(p -> p.nameAndId().name())
+					.orElse("Steve");
+			return head(playerName).append(" ").append(BLanguage.gui_menubar_view_localPlayerStats());
+		}
+
+		//display name for statistics from a saved file
 		else if(this._lastSaveFile != null)
 			return head("Steve").append(" ").append(literal(this._lastSaveFile.getFileName().toString()));
+
+			//display name for an anonymous instance of statistics
 		else
 			return head("Steve").append(" ").append(literal(getClass().getSimpleName() + "@" + hashCode()));
 	}

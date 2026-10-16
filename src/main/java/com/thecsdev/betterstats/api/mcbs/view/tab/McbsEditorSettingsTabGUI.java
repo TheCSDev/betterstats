@@ -4,7 +4,6 @@ import com.thecsdev.betterstats.api.client.gui.screen.BetterStatsConfigScreen;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorSettingsTab;
 import com.thecsdev.common.math.UDim2;
 import com.thecsdev.commonmc.api.client.gui.panel.TPanelElement;
-import com.thecsdev.commonmc.api.client.gui.widget.TScrollBarWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.NotNull;
@@ -22,17 +21,11 @@ public final class McbsEditorSettingsTabGUI extends McbsEditorTabGUI<McbsEditorS
 	// ==================================================
 	protected final @Override void initTabGuiCallback()
 	{
-		//initialize the panel where the settings gui will go
+		//initialize the container panel where the settings gui will go
 		final var panel = new TPanelElement.Paintable(0, 0, 0x33FFFFFF);
-		panel.scrollPaddingProperty().set(10, McbsEditorSettingsTabGUI.class);
 		add(panel);
-		panel.setBounds(new UDim2(0.1, 0, 0, 0), new UDim2(0.8, -8, 1, 0));
-
-		//initialize a scroll-bar for the panel
-		final var pbb    = panel.getBounds();
-		final var scroll = new TScrollBarWidget.Flat(panel);
-		scroll.setBounds(pbb.endX, pbb.y, 8, pbb.height);
-		add(scroll);
+		//panel.setBounds(new UDim2(0.1, 0, 0, 0), new UDim2(0.8, 0, 1, 0)); -- old bounding box
+		panel.setBounds(new UDim2(0, 0, 0, 0), new UDim2(1, 0, 1, 0));
 
 		//initialize the settings gui
 		BetterStatsConfigScreen.initConfigGui(panel);
