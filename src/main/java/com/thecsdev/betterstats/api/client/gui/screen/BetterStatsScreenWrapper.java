@@ -3,7 +3,11 @@ package com.thecsdev.betterstats.api.client.gui.screen;
 import com.thecsdev.betterstats.api.mcbs.controller.tab.McbsEditorFileTab;
 import com.thecsdev.common.util.TUtils;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreenWrapper;
+import io.netty.util.internal.UnstableApi;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.nio.file.Path;
@@ -16,10 +20,19 @@ import static com.thecsdev.betterstats.BetterStats.LOGGER;
 
 /**
  * {@link TScreenWrapper} implementation for {@link BetterStatsScreen}.
+ *
+ * @apiNote Since {@code v5.7.1}, this class has been made {@code public} and a constructor
+ * was added, solely to make this screen accessible to {@code FancyMenu}. It is not intended
+ * to be used directly as a Java API. May change at any time.
  */
-final @ApiStatus.Internal class BetterStatsScreenWrapper extends TScreenWrapper<BetterStatsScreen>
+@UnstableApi
+@ApiStatus.Internal
+public final class BetterStatsScreenWrapper extends TScreenWrapper<BetterStatsScreen>
 {
 	// ==================================================
+	public BetterStatsScreenWrapper() { this(Minecraft.getInstance().gui.screen()); }
+	public BetterStatsScreenWrapper(@Nullable Screen lastScreen) { super(new BetterStatsScreen(lastScreen)); }
+	// --------------------------------------------------
 	BetterStatsScreenWrapper(@NonNull BetterStatsScreen target) { super(target); }
 	// ==================================================
 	/**
