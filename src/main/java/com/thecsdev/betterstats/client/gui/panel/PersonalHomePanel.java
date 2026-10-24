@@ -30,6 +30,7 @@ import com.thecsdev.commonmc.resource.TLanguage;
 import com.thecsdev.commonmc.resource.TSprites;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.achievement.StatsScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -384,7 +385,11 @@ public final class PersonalHomePanel extends TPanelElement.Paintable
 					null,
 					BLanguage.gui_menubar_view_localPlayerStats(),
 					_ -> editor.addTab(McbsEditorFileTab.LOCALPLAYER, true));
-			btn_myStats.getLabel().setText(TComponent.head("Steve"));
+			btn_myStats.getLabel().setText(TComponent.head(
+					Optional.ofNullable(Minecraft.getInstance().player)
+							.map(p -> p.nameAndId().name())
+							.orElse("Steve")
+			));
 			btn_myStats.getLabel().textAlignmentProperty().set(CompassDirection.CENTER, QuickAccessPanel.class);
 			btn_myStats.getLabel().textScaleProperty().set(1.5d, QuickAccessPanel.class);
 			initButton(

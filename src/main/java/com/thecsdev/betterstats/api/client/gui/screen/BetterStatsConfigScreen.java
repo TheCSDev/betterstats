@@ -22,6 +22,7 @@ import com.thecsdev.commonmc.api.client.gui.render.TGuiGraphics;
 import com.thecsdev.commonmc.api.client.gui.screen.ILastScreenProvider;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreen;
 import com.thecsdev.commonmc.api.client.gui.screen.TScreenPlus;
+import com.thecsdev.commonmc.api.client.gui.screen.TScreenWrapper;
 import com.thecsdev.commonmc.api.client.gui.tooltip.TTooltip;
 import com.thecsdev.commonmc.api.client.gui.widget.TCheckboxWidget;
 import com.thecsdev.commonmc.api.client.gui.widget.TClickableWidget;
@@ -102,6 +103,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 		this.lastScreen = lastScreen;
 	}
 	// ==================================================
+	protected final @Override @NotNull TScreenWrapper<?> createWrapperScreen() { return new BetterStatsConfigScreenWrapper(this); }
 	public final @Override @Nullable Screen getLastScreen() { return this.lastScreen; }
 	public final @Override boolean isAllowingInGameHud() { return false; }
 	// ==================================================
