@@ -67,6 +67,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "Nie ma jeszcze celi do pokazania...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Wyświetl Informacje o błędzie",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Wyświetl w Wiki",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "View in REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Utwórz cel",
 	"betterstats.gui.statsview.mcbs_goals": "Cele",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[Nowy ✨]",

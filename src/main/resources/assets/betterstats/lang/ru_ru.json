@@ -67,6 +67,7 @@
 	"betterstats.gui.statsview.stats.no_goals" : "Цели пока отсутствуют...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info" : "Просмотр информации об ошибке",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki" : "Просмотр на Wiki",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "View in REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal" : "Создать цель",
 	"betterstats.gui.statsview.mcbs_goals" : "Цели",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix" : "[Новое ✨]",

@@ -67,6 +67,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "暂无可显示的目标……",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "查看错误信息",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "在 Wiki 上查看",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "View in REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "创建目标",
 	"betterstats.gui.statsview.mcbs_goals": "目标",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[新功能 ✨]",

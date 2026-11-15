@@ -19,6 +19,8 @@ import com.thecsdev.commonmc.api.client.gui.widget.stats.TItemStatsWidget;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import com.thecsdev.commonmc.api.stats.util.ItemStats;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
+import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -119,7 +121,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 	{
 		//obtain the stats data and ensure it is present
 		final var stats = widget.statsProperty().get();
-		assert stats != null;
+		assert (stats != null);
 
 		//create the context menu builder
 		final var client  = Objects.requireNonNull(widget.getClient(), "Missing 'client' instance");
@@ -145,12 +147,24 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 					});
 		});
 
-		//wiki url
+		//"View on Wiki" button
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
 					_ -> Blaze3D.openUri(URI.create(url_wiki)));
+		}
+
+		//"View in REI" button
+		assert (ModInfoProvider.getInstance() != null);
+		if(ModInfoProvider.getInstance().isModLoaded("roughlyenoughitems")) {
+			builder.addButton(gui(BSprites.gui_icon_rei()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewInREI()), _ -> {
+				final var stacks = EntryStacks.of(stats.getSubject());
+				ViewSearchBuilder.builder()
+						.addRecipesFor(stacks)
+						.addUsagesFor(stacks)
+						.open();
+			});
 		}
 
 		//"Create goal" button

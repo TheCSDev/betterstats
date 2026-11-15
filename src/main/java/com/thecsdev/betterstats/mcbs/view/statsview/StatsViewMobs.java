@@ -143,7 +143,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 						client.gui.setScreen(dialog.getAsScreen());
 					});
 
-		//wiki url
+		//"View on Wiki" button
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(

@@ -67,6 +67,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "Još nema ciljeva za prikaz...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Prikaži informacije o grešci",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Pogledaj na Wikiju",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "Pogledaj u REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Kreiraj cilj",
 	"betterstats.gui.statsview.mcbs_goals": "Ciljevi",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[Novo ✨]",

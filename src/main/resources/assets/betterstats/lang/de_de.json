@@ -67,6 +67,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "Es gibt noch keine Ziele die angezeigt werden können...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Fehlerinformationen anzeigen",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Im Wiki ansehen",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "View in REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Ziel erstellen",
 	"betterstats.gui.statsview.mcbs_goals": "Ziele",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[Neu ✨]",
