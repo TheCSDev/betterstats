@@ -129,6 +129,9 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
+		// ---------- actions
+		builder.addSeparator();
+
 		//"Create goal" button
 		if(BetterStats.getConfig().experimentsEnabled()) {
 			builder.addButton(
@@ -151,6 +154,9 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 						tab.setCurrentView(StatsViewGoals.INSTANCE);
 					});
 		}
+
+		// ---------- finish
+		builder.addSeparator();
 
 		//close button, and then build and return a new context menu
 		builder.addButton(

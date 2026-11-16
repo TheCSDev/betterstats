@@ -130,6 +130,9 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
+		// ---------- inspections
+		builder.addSeparator();
+
 		//error information
 		final @Nullable var displayError = widget.getDisplayError();
 		if(displayError != null)
@@ -150,6 +153,9 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
 					_ -> Blaze3D.openUri(URI.create(url_wiki)));
 		}
+
+		// ---------- actions
+		builder.addSeparator();
 
 		//"Create goal" button
 		if(BetterStats.getConfig().experimentsEnabled()) {
@@ -194,6 +200,9 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 						return ctx_newGoal.build();
 					});
 		}
+
+		// ---------- finish
+		builder.addSeparator();
 
 		//close button, and then build and return a new context menu
 		builder.addButton(

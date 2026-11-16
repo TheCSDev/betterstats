@@ -128,24 +128,8 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
-		//give command
-		Optional.ofNullable(client.player).ifPresent(player ->
-		{
-			//do not show this if player has insufficient permissions
-			if(!player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
-				return;
-
-			//add the entry
-			builder.addButton(
-					block("block/command_block_front").append(" /give @s"),
-					_ -> {
-						try {
-							final var id = stats.getSubjectID().toString();
-							final var ss = stats.getSubject().getDefaultMaxStackSize();
-							player.connection.sendCommand("give @s " + id + " " + ss);
-						} catch(Exception ignored) { /*ignored*/ }
-					});
-		});
+		// ---------- inspections
+		builder.addSeparator();
 
 		//"View on Wiki" button
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
@@ -166,6 +150,28 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 						.open();
 			});
 		}
+
+		// ---------- actions
+		builder.addSeparator();
+
+		//give command
+		Optional.ofNullable(client.player).ifPresent(player ->
+		{
+			//do not show this if player has insufficient permissions
+			if(!player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+				return;
+
+			//add the entry
+			builder.addButton(
+					block("block/command_block_front").append(" /give @s"),
+					_ -> {
+						try {
+							final var id = stats.getSubjectID().toString();
+							final var ss = stats.getSubject().getDefaultMaxStackSize();
+							player.connection.sendCommand("give @s " + id + " " + ss);
+						} catch(Exception ignored) { /*ignored*/ }
+					});
+		});
 
 		//"Create goal" button
 		if(BetterStats.getConfig().experimentsEnabled()) {
@@ -210,6 +216,9 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 						return ctx_newGoal.build();
 					});
 		}
+
+		// ---------- finish
+		builder.addSeparator();
 
 		//close button, and then build and return a new context menu
 		builder.addButton(
