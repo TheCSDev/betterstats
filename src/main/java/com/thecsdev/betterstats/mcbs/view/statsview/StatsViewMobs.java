@@ -25,9 +25,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.SpawnEggItem;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -156,6 +158,20 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 
 		// ---------- actions
 		builder.addSeparator();
+
+		//give command
+		{
+			final @Nullable var player = client.player;
+			final @Nullable var egg    = SpawnEggItem.byId(stats.getSubject()).orElse(null);
+			if(egg != null && player != null && player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+				builder.addButton(
+						block("block/command_block_front").append(" /give @s"),
+						_ -> player.connection.sendCommand(
+								"give @s " +
+								egg.unwrapKey().orElseThrow().identifier() + " " +
+								egg.value().getDefaultMaxStackSize()
+						));
+		}
 
 		//"Create goal" button
 		if(BetterStats.getConfig().experimentsEnabled()) {
