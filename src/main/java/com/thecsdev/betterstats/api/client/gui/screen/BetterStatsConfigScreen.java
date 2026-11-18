@@ -261,6 +261,11 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 						BLanguage.config_client_allowChatPsa_tooltip(),
 						config.getAllowsChatPsaMessages(),
 						(_, _, n) -> config.setAllowChatPsaMessages(n))
+				.addBooleanRow(
+						BLanguage.config_client_reducedGui(),
+						BLanguage.config_client_reducedGui_tooltip(),
+						config.getReducedGui(),
+						(_, _, n) -> config.setReducedGui(n))
 				.finish();
 
 		//server-sided settings

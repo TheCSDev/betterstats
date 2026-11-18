@@ -86,7 +86,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 				getStatsPredicate(context.getFilters()),
 				getStatsSorter(context.getFilters()));
 		if(allStats.isEmpty()) return; //nothing to show
-		final int perPage    = 200;
+		final int perPage    = BetterStats.getConfig().getReducedGui() ? 100 : 200;
 		final var pagedStats = StatsPageChooser.applyFilter(allStats, context.getFilters(), perPage);
 
 		//group stats and initialize each group

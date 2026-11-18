@@ -72,6 +72,8 @@ public final class BLanguage
 	public static final MutableComponent config_client_allowChatPsa_tooltip() { return translatable("betterstats.config.client.allow_chat_psa.tooltip"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor_tooltip() { return translatable("betterstats.config.client.gui_mobs_follow_cursor.tooltip"); }
+	public static final MutableComponent config_client_reducedGui() { return translatable("betterstats.config.client.reduced_gui"); }
+	public static final MutableComponent config_client_reducedGui_tooltip() { return translatable("betterstats.config.client.reduced_gui.tooltip"); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_screen_editSivGoal_statType() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_type"); }
 	public static final MutableComponent gui_screen_editSivGoal_statSubject() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_subject"); }

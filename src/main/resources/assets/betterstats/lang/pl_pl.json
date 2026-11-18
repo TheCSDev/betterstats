@@ -29,6 +29,8 @@
 	"betterstats.config.client.allow_chat_psa.tooltip": "Pozwala rzadkim wiadomościom informacyjnym od dewelopera tego moda na pojawianie się na czacie. Wyłącz to ustawienie, aby ukryć wszystkie takie powiadomienia.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "Moby w Interfejsie Graficznym Użytkownika podążają za kursorem",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Moby w Interfejsie Graficznym Użytkownika wizualnie podążają za pozycją kursora.",
+	"betterstats.config.client.reduced_gui": "Reduced GUI",
+	"betterstats.config.client.reduced_gui.tooltip": "Reduces the number of visual and GUI elements on-screen. May be useful on lower-end devices.",
 
 	"betterstats.gui.screen.edit_siv_goal.stat_type": "Typ statystyki (Działanie)",
 	"betterstats.gui.screen.edit_siv_goal.stat_subject": "Przedmiot statystyki (Przedmiot/Byt/Itp.)",

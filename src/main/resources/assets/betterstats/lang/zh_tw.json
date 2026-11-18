@@ -29,6 +29,8 @@
 	"betterstats.config.client.allow_chat_psa.tooltip": "允許來自此模組開發者的罕見資訊性 PSA 訊息顯示在聊天欄中。關閉此選項以封鎖所有此類通知。",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI 生物看向游標",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "實體統計資訊 GUI 中的生物會始終看向游標位置。",
+	"betterstats.config.client.reduced_gui": "Reduced GUI",
+	"betterstats.config.client.reduced_gui.tooltip": "Reduces the number of visual and GUI elements on-screen. May be useful on lower-end devices.",
 
 	"betterstats.gui.screen.edit_siv_goal.stat_type": "統計類型（活動）",
 	"betterstats.gui.screen.edit_siv_goal.stat_subject": "統計主題（物品/實體等）",
