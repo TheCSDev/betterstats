@@ -240,12 +240,12 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				.addBooleanRow(
 						BLanguage.config_common_registerCommands(),
 						BLanguage.config_common_registerCommands_tooltip(),
-						config.canRegisterCommands(),
+						config.getCanRegisterCommands(),
 						(_, _, n) -> config.setRegisterCommands(n))
 				.addBooleanRow(
 						BLanguage.config_common_experiments(),
 						BLanguage.config_common_experiments_tooltip(),
-						config.experimentsEnabled(),
+						config.getExperimentsEnabled(),
 						(_, _, n) -> config.setExperimentsEnabled(n))
 				.finish();
 
@@ -259,7 +259,7 @@ public final class BetterStatsConfigScreen extends TScreenPlus implements ILastS
 				.addBooleanRow(
 						BLanguage.config_client_allowChatPsa(),
 						BLanguage.config_client_allowChatPsa_tooltip(),
-						config.allowsChatPsaMessages(),
+						config.getAllowsChatPsaMessages(),
 						(_, _, n) -> config.setAllowChatPsaMessages(n))
 				.finish();
 

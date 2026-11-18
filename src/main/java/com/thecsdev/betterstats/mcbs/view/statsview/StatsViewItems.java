@@ -174,7 +174,7 @@ public sealed @ApiStatus.Internal class StatsViewItems extends SubjectStatsView<
 		});
 
 		//"Create goal" button
-		if(BetterStats.getConfig().experimentsEnabled()) {
+		if(BetterStats.getConfig().getExperimentsEnabled()) {
 			builder.addContextMenu(
 					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
 					_ ->

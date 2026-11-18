@@ -133,7 +133,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 		builder.addSeparator();
 
 		//"Create goal" button
-		if(BetterStats.getConfig().experimentsEnabled()) {
+		if(BetterStats.getConfig().getExperimentsEnabled()) {
 			builder.addButton(
 					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
 					_ ->

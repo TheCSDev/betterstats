@@ -22,6 +22,8 @@ public final class BetterStatsConfig extends ModConfig
 	private @Expose @SerializedName("common-registerCommands")     boolean commands         = true;
 	private @Expose @SerializedName("common-apiEndpoint")          String  apiEndpointStr   = "https://api.thecsdev.com/";
 	private @Expose @SerializedName("common-experimentalFeatures") boolean experiments      = false;
+	private @Expose @SerializedName("common-reducedGui")           boolean reducedGui       = false;
+	// --------------------------------------------------
 	private @Expose @SerializedName("client-allowChatPsaMessages") boolean allowChatPsa     = true;
 	private @Expose @SerializedName("client-guiMobsFollowCursor")  boolean mobsFollowCursor = true;
 	// --------------------------------------------------
@@ -32,10 +34,22 @@ public final class BetterStatsConfig extends ModConfig
 		this.apiEndpoint = URI.create(this.apiEndpointStr);
 	}
 	// ==================================================
+	protected final @Override void onLoad(@NonNull JsonObject from)
+	{
+		//attempt to parse the api endpoint URI instance
+		//(use default value if parsing fails)
+		try {
+			this.apiEndpoint = URI.create(this.apiEndpointStr);
+		} catch(RuntimeException e) {
+			this.apiEndpoint    = new BetterStatsConfig().apiEndpoint;
+			this.apiEndpointStr = this.apiEndpoint.toString();
+		}
+	}
+	// ==================================================
 	/**
 	 * Whether this mod's commands are to be registered.
 	 */
-	public final boolean canRegisterCommands() { return this.commands; }
+	public final boolean getCanRegisterCommands() { return this.commands; }
 
 	/**
 	 * The HTTP rest API endpoint {@link URI} used by this mod.
@@ -52,14 +66,19 @@ public final class BetterStatsConfig extends ModConfig
 	 * Whether this mod is allowed to display public-service-announcement
 	 * messages in chat.
 	 */
-	public final boolean allowsChatPsaMessages() { return this.allowChatPsa; }
+	public final boolean getAllowsChatPsaMessages() { return this.allowChatPsa; }
 
 	/**
 	 * Whether experimental features are allowed to show up in-game.
 	 */
-	public final boolean experimentsEnabled() {
+	public final boolean getExperimentsEnabled() {
 		return TCDCommonsConfig.FLAG_DEV_ENV || this.experiments;
 	}
+
+	/**
+	 * Whether the amount GUI elements on screen should be reduced.
+	 */
+	public final boolean getReducedGui() { return this.reducedGui; }
 	// ==================================================
 	/**
 	 * Sets whether this mod's commands are to be registered.
@@ -93,17 +112,10 @@ public final class BetterStatsConfig extends ModConfig
 	 * Sets whether experimental features are allowed to show up in-game.
 	 */
 	public final void setExperimentsEnabled(boolean value) { this.experiments = value; }
-	// ==================================================
-	protected final @Override void onLoad(@NonNull JsonObject from)
-	{
-		//attempt to parse the api endpoint URI instance
-		//(use default value if parsing fails)
-		try {
-			this.apiEndpoint = URI.create(this.apiEndpointStr);
-		} catch(RuntimeException e) {
-			this.apiEndpoint    = new BetterStatsConfig().apiEndpoint;
-			this.apiEndpointStr = this.apiEndpoint.toString();
-		}
-	}
+
+	/**
+	 * Sets the value of {@link #getReducedGui()}.
+	 */
+	public final void setReducedGui(boolean value) { this.reducedGui = value; }
 	// ==================================================
 }
