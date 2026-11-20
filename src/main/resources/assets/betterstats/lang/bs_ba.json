@@ -29,6 +29,8 @@
 	"betterstats.config.client.allow_chat_psa.tooltip": "Dozvoljava da se u chatu povremeno prikazuju informativne \"PSA\" poruke autora ovog moda. Isključite ovu opciju da biste onemogućili sva takva obavještenja.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "Mobovi u GUI-ju prate kursor",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Mobovi prikazani u GUI-ju statistike entiteta vizuelno prate položaj kursora.",
+	"betterstats.config.client.reduced_gui": "Jednostaveniji interfejs",
+	"betterstats.config.client.reduced_gui.tooltip": "Smanjuje broj interfejs elemenata na ekranu. Može biti korisno na slabijim uređajima.",
 
 	"betterstats.gui.screen.edit_siv_goal.stat_type": "Tip statistike (aktivnost)",
 	"betterstats.gui.screen.edit_siv_goal.stat_subject": "Subjekat statistike (predmet/entitet/itd.)",
@@ -67,6 +69,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "Još nema ciljeva za prikaz...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Prikaži informacije o grešci",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Pogledaj na Wikiju",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "Pogledaj u REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Kreiraj cilj",
 	"betterstats.gui.statsview.mcbs_goals": "Ciljevi",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[Novo ✨]",

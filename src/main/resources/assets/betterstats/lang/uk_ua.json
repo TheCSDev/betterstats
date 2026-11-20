@@ -29,6 +29,8 @@
 	"betterstats.config.client.allow_chat_psa.tooltip": "Дозволяє час від часу показувати в чаті інформаційні повідомлення PSA від розробника цього моду. Вимкніть цю опцію, щоб приховати всі такі сповіщення.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "Моби в інтерфейсі стежать за курсором",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Зображення мобів у статистиці сутностей візуально стежать за положенням курсора.",
+	"betterstats.config.client.reduced_gui": "Reduced GUI",
+	"betterstats.config.client.reduced_gui.tooltip": "Reduces the number of visual and GUI elements on-screen. May be useful on lower-end devices.",
 
 	"betterstats.gui.screen.edit_siv_goal.stat_type": "Тип статистики (дія)",
 	"betterstats.gui.screen.edit_siv_goal.stat_subject": "Об’єкт статистики (предмет/сутність/тощо)",
@@ -67,6 +69,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "Поки що немає цілей для відображення...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Переглянути відомості про помилку",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Переглянути у вікі",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "View in REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Створити ціль",
 	"betterstats.gui.statsview.mcbs_goals": "Цілі",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[Нове ✨]",

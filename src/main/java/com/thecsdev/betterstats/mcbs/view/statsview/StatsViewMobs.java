@@ -25,9 +25,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.SpawnEggItem;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -84,7 +86,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 				getStatsPredicate(context.getFilters()),
 				getStatsSorter(context.getFilters()));
 		if(allStats.isEmpty()) return; //nothing to show
-		final int perPage    = 200;
+		final int perPage    = BetterStats.getConfig().getReducedGui() ? 100 : 200;
 		final var pagedStats = StatsPageChooser.applyFilter(allStats, context.getFilters(), perPage);
 
 		//group stats and initialize each group
@@ -130,6 +132,9 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
+		// ---------- inspections
+		builder.addSeparator();
+
 		//error information
 		final @Nullable var displayError = widget.getDisplayError();
 		if(displayError != null)
@@ -143,7 +148,7 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 						client.gui.setScreen(dialog.getAsScreen());
 					});
 
-		//wiki url
+		//"View on Wiki" button
 		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
 			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
 			builder.addButton(
@@ -151,8 +156,25 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 					_ -> Blaze3D.openUri(URI.create(url_wiki)));
 		}
 
+		// ---------- actions
+		builder.addSeparator();
+
+		//give command
+		{
+			final @Nullable var player = client.player;
+			final @Nullable var egg    = SpawnEggItem.byId(stats.getSubject()).orElse(null);
+			if(egg != null && player != null && player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+				builder.addButton(
+						block("block/command_block_front").append(" /give @s"),
+						_ -> player.connection.sendCommand(
+								"give @s " +
+								egg.unwrapKey().orElseThrow().identifier() + " " +
+								egg.value().getDefaultMaxStackSize()
+						));
+		}
+
 		//"Create goal" button
-		if(BetterStats.getConfig().experimentsEnabled()) {
+		if(BetterStats.getConfig().getExperimentsEnabled()) {
 			builder.addContextMenu(
 					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
 					_ ->
@@ -194,6 +216,9 @@ public sealed @ApiStatus.Internal class StatsViewMobs extends SubjectStatsView<E
 						return ctx_newGoal.build();
 					});
 		}
+
+		// ---------- finish
+		builder.addSeparator();
 
 		//close button, and then build and return a new context menu
 		builder.addButton(

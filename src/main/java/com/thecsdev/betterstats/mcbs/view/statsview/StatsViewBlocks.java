@@ -19,6 +19,8 @@ import com.thecsdev.commonmc.api.client.gui.widget.stats.TBlockStatsWidget;
 import com.thecsdev.commonmc.api.stats.IStatsProvider;
 import com.thecsdev.commonmc.api.stats.util.BlockStats;
 import com.thecsdev.commonmc.api.util.modinfo.ModInfoProvider;
+import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -80,7 +82,7 @@ public final @ApiStatus.Internal class StatsViewBlocks extends SubjectStatsView<
                 getStatsPredicate(context.getFilters()),
                 getStatsSorter(context.getFilters()));
         if(allStats.isEmpty()) return; //nothing to show
-        final int perPage    = 1550;
+        final int perPage    = BetterStats.getConfig().getReducedGui() ? 500 : 1550;
         final var pagedStats = StatsPageChooser.applyFilter(allStats, context.getFilters(), perPage);
 
         //group stats and initialize each group
@@ -127,6 +129,32 @@ public final @ApiStatus.Internal class StatsViewBlocks extends SubjectStatsView<
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
+		// ---------- inspections
+		builder.addSeparator();
+
+		//"View on Wiki" button
+		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
+			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
+			builder.addButton(
+					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
+					_ -> Blaze3D.openUri(URI.create(url_wiki)));
+		}
+
+		//"View in REI" button
+		assert (ModInfoProvider.getInstance() != null);
+		if(ModInfoProvider.getInstance().isModLoaded("roughlyenoughitems")) {
+			builder.addButton(gui(BSprites.gui_icon_rei()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewInREI()), _ -> {
+				final var stacks = EntryStacks.of(stats.getSubject());
+				ViewSearchBuilder.builder()
+						.addRecipesFor(stacks)
+						.addUsagesFor(stacks)
+						.open();
+			});
+		}
+
+		// ---------- actions
+		builder.addSeparator();
+
 		//give command
 		Optional.ofNullable(client.player).ifPresent(player ->
 		{
@@ -152,16 +180,8 @@ public final @ApiStatus.Internal class StatsViewBlocks extends SubjectStatsView<
 					});
 		});
 
-		//wiki url
-		if(Objects.equals(stats.getSubjectID().getNamespace(), DEFAULT_NAMESPACE)) {
-			final var url_wiki = String.format("https://minecraft.wiki/w/%s", stats.getSubjectID().getPath());
-			builder.addButton(
-					gui(BSprites.gui_icon_faviconWiki()).append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_viewOnWiki()),
-					_ -> Blaze3D.openUri(URI.create(url_wiki)));
-		}
-
 		//"Create goal" button
-		if(BetterStats.getConfig().experimentsEnabled()) {
+		if(BetterStats.getConfig().getExperimentsEnabled()) {
 			builder.addContextMenu(
 					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
 					_ ->
@@ -203,6 +223,9 @@ public final @ApiStatus.Internal class StatsViewBlocks extends SubjectStatsView<
 						return ctx_newGoal.build();
 					});
 		}
+
+		// ---------- finish
+		builder.addSeparator();
 
 		//close button, and then build and return a new context menu
 		builder.addButton(

@@ -6,19 +6,24 @@ repositories
 {
 	mavenCentral()
 	maven { url = "https://maven.terraformersmc.com/releases/" }
+	maven { url = "https://maven.architectury.dev/" }
+	maven { url = "https://maven.shedaniel.me/" }
 }
 
 dependencies
 {
+	//baseline dependencies
 	minecraft      "com.mojang:minecraft:${project["minecraft.version"]}"
 	implementation "net.fabricmc:fabric-loader:${project["fabric.loader_version"]}"
 	runtimeOnly    "net.fabricmc.fabric-api:fabric-api:${project["fabric.api_version"]}"
 
-	compileOnly("com.terraformersmc:modmenu:${project["modmenu.version"]}") {
-		exclude group: "net.fabricmc", module: "fabric-loader" //causes issues, exclude it
-		exclude group: "net.fabricmc.fabric-api"               //causes issues, exclude it
-	}
+	//nested "jar-in-a-jar" / first-party dependencies
 	implementation fileTree(dir: 'src/main/resources/META-INF/jarjar', include: '*.jar')
+
+	//third-party mod dependencies
+	compileOnly("com.terraformersmc:modmenu:${project["modmenu.version"]}") { transitive = false }
+	compileOnly("dev.architectury:architectury-fabric:${project["architectury.version"]}") { transitive = false }
+	compileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project["roughlyenoughitems.version"]}") { transitive = false }
 }
 
 apply from: "buildsc.resources.gradle"

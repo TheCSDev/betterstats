@@ -29,6 +29,8 @@
 	"betterstats.config.client.allow_chat_psa.tooltip": "Ermöglicht die Anzeige seltener informativer Nachichten (PSAs) des Mod-Entwicklers im Chat. Deaktivieren Sie diese Option, um alle derartigen Benachrichtigungen zu underdrücken.",
 	"betterstats.config.client.gui_mobs_follow_cursor": "GUI-Mobs folgen folgen dem Cursor",
 	"betterstats.config.client.gui_mobs_follow_cursor.tooltip": "Die GUI für die Entitätsstatistiken folgt visuell der Cursor-Position.",
+	"betterstats.config.client.reduced_gui": "Reduced GUI",
+	"betterstats.config.client.reduced_gui.tooltip": "Reduces the number of visual and GUI elements on-screen. May be useful on lower-end devices.",
 
 	"betterstats.gui.screen.edit_siv_goal.stat_type": "Statistiktyp (Aktivität)",
 	"betterstats.gui.screen.edit_siv_goal.stat_subject": "Statistikobjekt (Item/Entität/usw.)",
@@ -67,6 +69,7 @@
 	"betterstats.gui.statsview.stats.no_goals": "Es gibt noch keine Ziele die angezeigt werden können...",
 	"betterstats.gui.statsview.stats.ctxmenu.view_error_info": "Fehlerinformationen anzeigen",
 	"betterstats.gui.statsview.stats.ctxmenu.view_on_wiki": "Im Wiki ansehen",
+	"betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems": "View in REI",
 	"betterstats.gui.statsview.stats.ctxmenu.create_goal": "Ziel erstellen",
 	"betterstats.gui.statsview.mcbs_goals": "Ziele",
 	"betterstats.gui.statsview.mcbs_goals.alert1.prefix": "[Neu ✨]",

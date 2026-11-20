@@ -75,7 +75,7 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 				getStatsPredicate(context.getFilters()),
 				getStatsSorter(context.getFilters()));
 		if(allStats.isEmpty()) return; //nothing to show
-		final int perPage    = 200;
+		final int perPage    = BetterStats.getConfig().getReducedGui() ? 100 : 200;
 		final var pagedStats = StatsPageChooser.applyFilter(allStats, context.getFilters(), perPage);
 
 		//group stats and initialize each group
@@ -129,8 +129,11 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 		final var tab     = context.getTab();
 		final var builder = new TContextMenu.Builder(client);
 
+		// ---------- actions
+		builder.addSeparator();
+
 		//"Create goal" button
-		if(BetterStats.getConfig().experimentsEnabled()) {
+		if(BetterStats.getConfig().getExperimentsEnabled()) {
 			builder.addButton(
 					gui("container/cartography_table/map").append(" ").append(BLanguage.gui_statsview_stats_ctxMenu_createGoal()),
 					_ ->
@@ -151,6 +154,9 @@ public final @ApiStatus.Internal class StatsViewGeneral extends SubjectStatsView
 						tab.setCurrentView(StatsViewGoals.INSTANCE);
 					});
 		}
+
+		// ---------- finish
+		builder.addSeparator();
 
 		//close button, and then build and return a new context menu
 		builder.addButton(

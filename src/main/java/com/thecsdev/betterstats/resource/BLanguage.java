@@ -72,6 +72,8 @@ public final class BLanguage
 	public static final MutableComponent config_client_allowChatPsa_tooltip() { return translatable("betterstats.config.client.allow_chat_psa.tooltip"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor() { return translatable("betterstats.config.client.gui_mobs_follow_cursor"); }
 	public static final MutableComponent config_client_guiMobsFollowCursor_tooltip() { return translatable("betterstats.config.client.gui_mobs_follow_cursor.tooltip"); }
+	public static final MutableComponent config_client_reducedGui() { return translatable("betterstats.config.client.reduced_gui"); }
+	public static final MutableComponent config_client_reducedGui_tooltip() { return translatable("betterstats.config.client.reduced_gui.tooltip"); }
 	// --------------------------------------------------
 	public static final MutableComponent gui_screen_editSivGoal_statType() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_type"); }
 	public static final MutableComponent gui_screen_editSivGoal_statSubject() { return translatable("betterstats.gui.screen.edit_siv_goal.stat_subject"); }
@@ -115,6 +117,7 @@ public final class BLanguage
 	public static final MutableComponent gui_statsview_stats_noGoals() { return translatable("betterstats.gui.statsview.stats.no_goals"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewErrorInfo() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_error_info"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_viewOnWiki() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_on_wiki"); }
+	public static final MutableComponent gui_statsview_stats_ctxMenu_viewInREI() { return translatable("betterstats.gui.statsview.stats.ctxmenu.view_in_roughlyenoughitems"); }
 	public static final MutableComponent gui_statsview_stats_ctxMenu_createGoal() { return translatable("betterstats.gui.statsview.stats.ctxmenu.create_goal"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals() { return translatable("betterstats.gui.statsview.mcbs_goals"); }
 	public static final MutableComponent gui_statsview_stats_mcbsGoals_alert1Prefix() { return translatable("betterstats.gui.statsview.mcbs_goals.alert1.prefix"); }

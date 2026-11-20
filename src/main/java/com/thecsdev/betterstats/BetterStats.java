@@ -87,7 +87,7 @@ public class BetterStats
 		BetterStatsRestAPI.RateLimitingInfo.init();
 		CommandEvent.INIT_COMMANDS.addListener((dispatcher, commandBuildContext, _) -> {
 			//do not register if commands are disabled
-			if(!CONFIG.canRegisterCommands()) return;
+			if(!CONFIG.getCanRegisterCommands()) return;
 			//otherwise register commands
 			StatisticsCommand.register(dispatcher, commandBuildContext);
 		});
