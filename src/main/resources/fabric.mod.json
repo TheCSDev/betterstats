@@ -29,5 +29,17 @@
 		"fabricloader": "${properties["fabric.json.depends.fabricloader"]}",
 		"fabric-api":   "${properties["fabric.json.depends.fabric-api"]}",
 		"tcdcommons":   "${properties["fabric.json.depends.tcdcommons"]}"
+	},
+	"custom":
+	{
+		"modmenu":
+		{
+			"links":
+			{
+				"modmenu.curseforge": "${properties["mod.link.curseforge"]}",
+				"modmenu.modrinth":   "${properties["mod.link.modrinth"]}",
+				"modmenu.donate":     "${properties["mod.link.support_me"]}"
+			}
+		}
 	}
 }
